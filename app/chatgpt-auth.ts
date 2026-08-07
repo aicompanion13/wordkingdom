@@ -114,7 +114,10 @@ function isLocalPreviewHost(host: string): boolean {
   return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1"
     || hostname.startsWith("10.")
     || hostname.startsWith("192.168.")
-    || /^172\.(1[6-9]|2\d|3[0-1])\./.test(hostname);
+    || /^172\.(1[6-9]|2\d|3[0-1])\./.test(hostname)
+    // The Cloudflare Workers test deployment has no ChatGPT auth proxy in
+    // front of it, so QA test profiles are the only sign-in that can work.
+    || hostname.endsWith(".workers.dev");
 }
 
 function safeDecodeURIComponent(value: string): string | null {

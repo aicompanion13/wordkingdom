@@ -3,8 +3,11 @@ import { defineConfig } from "vite";
 import hostingConfig from "./.openai/hosting.json";
 import { sites } from "./build/sites-vite-plugin";
 
-const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
-  "00000000-0000-4000-8000-000000000000";
+// Real Cloudflare D1 database for the word-kingdom Workers deployment.
+// Local dev simulates this binding in Miniflare; only `wrangler deploy`
+// (via the build artifact config) talks to the remote database.
+const WORD_KINGDOM_DATABASE_ID = "dac86fe2-58cc-4c87-b1d4-51e11df3539f";
+const WORD_KINGDOM_DATABASE_NAME = "word-kingdom-db";
 
 const { d1, r2 } = hostingConfig;
 
@@ -18,8 +21,8 @@ const localBindingConfig = {
     ? [
         {
           binding: d1,
-          database_name: "site-creator-d1",
-          database_id: SITE_CREATOR_PLACEHOLDER_DATABASE_ID,
+          database_name: WORD_KINGDOM_DATABASE_NAME,
+          database_id: WORD_KINGDOM_DATABASE_ID,
         },
       ]
     : [],
