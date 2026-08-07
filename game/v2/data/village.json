@@ -1,0 +1,7 @@
+[
+  { "id": "townHall", "name": "Town Hall", "icon": "🏰", "description": "The heart of your growing kingdom", "costs": [250, 650, 1500, 3200, 6800] },
+  { "id": "well", "name": "Royal Well", "icon": "⛲", "description": "Keeps every citizen refreshed", "costs": [180, 480, 1100, 2500, 5200] },
+  { "id": "farm", "name": "Golden Farm", "icon": "🌾", "description": "Feeds the village and its armies", "costs": [150, 420, 950, 2100, 4500] },
+  { "id": "house", "name": "King's Houses", "icon": "🏡", "description": "Welcomes new wordsmiths home", "costs": [200, 540, 1250, 2700, 5700] },
+  { "id": "tower", "name": "Defense Tower", "icon": "🗼", "description": "Protects your hard-earned coins", "costs": [300, 800, 1800, 3900, 8200] }
+]

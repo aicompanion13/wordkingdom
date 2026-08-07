@@ -1,0 +1,25 @@
+{
+  "version": 4,
+  "energy": 45,
+  "energyUpdatedAt": 0,
+  "coins": 1200,
+  "stars": 6,
+  "shields": 0,
+  "vaultStars": 24,
+  "currentLevel": 1,
+  "unlockedChapterIds": ["chapter_ocean"],
+  "completedLevels": [],
+  "claimedSetRewards": [],
+  "claimedAlbumRewards": [],
+  "cards": {
+    "ocean_01": 1,
+    "ocean_02": 1,
+    "ocean_03": 2,
+    "ocean_10": 1,
+    "ocean_11": 1
+  },
+  "goldPity": 0,
+  "royalDictionary": [],
+  "recentWordsByArea": { "1": [], "2": [], "3": [], "4": [], "5": [] },
+  "settings": { "sfx": true, "bgm": true, "haptics": true }
+}

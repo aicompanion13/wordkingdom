@@ -1,0 +1,868 @@
+{
+  "generatorVersion": 2,
+  "seed": 731501,
+  "generationSubSeed": 535335343,
+  "generationAttempt": 1,
+  "gridSize": {
+    "rows": 8,
+    "cols": 8
+  },
+  "chainRevealRatioActual": 0.5,
+  "initialGrid": [
+    [
+      "D",
+      "R",
+      "A",
+      "Z",
+      "Z",
+      "I",
+      "L",
+      "B"
+    ],
+    [
+      "C",
+      "R",
+      "Y",
+      "S",
+      "T",
+      "A",
+      "L",
+      "T"
+    ],
+    [
+      "R",
+      "E",
+      "S",
+      "E",
+      "A",
+      "L",
+      "A",
+      "U"
+    ],
+    [
+      "D",
+      "D",
+      "T",
+      "T",
+      "R",
+      "H",
+      "R",
+      "N"
+    ],
+    [
+      "S",
+      "N",
+      "O",
+      "W",
+      "S",
+      "I",
+      "C",
+      "D"
+    ],
+    [
+      "E",
+      "H",
+      "H",
+      "A",
+      "R",
+      "L",
+      "T",
+      "R"
+    ],
+    [
+      "I",
+      "N",
+      "P",
+      "O",
+      "L",
+      "L",
+      "R",
+      "A"
+    ],
+    [
+      "U",
+      "T",
+      "C",
+      "R",
+      "O",
+      "W",
+      "C",
+      "U"
+    ]
+  ],
+  "obstacles": [
+    {
+      "cell": [
+        2,
+        0
+      ],
+      "type": "SNOW"
+    },
+    {
+      "cell": [
+        3,
+        2
+      ],
+      "type": "SNOW"
+    },
+    {
+      "cell": [
+        5,
+        1
+      ],
+      "type": "ICE"
+    },
+    {
+      "cell": [
+        6,
+        1
+      ],
+      "type": "SNOW"
+    },
+    {
+      "cell": [
+        7,
+        0
+      ],
+      "type": "CRYSTAL"
+    }
+  ],
+  "stages": [
+    {
+      "stageIndex": 0,
+      "activeWords": [
+        {
+          "word": "SEAL",
+          "path": [
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              5
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "CHILL",
+          "revealsPath": [
+            [
+              2,
+              5
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              5,
+              5
+            ],
+            [
+              6,
+              5
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                2,
+                2
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                2,
+                3
+              ],
+              "letter": "J"
+            },
+            {
+              "cell": [
+                2,
+                4
+              ],
+              "letter": "I"
+            },
+            {
+              "cell": [
+                2,
+                5
+              ],
+              "letter": "C"
+            }
+          ]
+        },
+        {
+          "word": "SNOW",
+          "path": [
+            [
+              4,
+              0
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              4,
+              3
+            ]
+          ],
+          "type": "STATIC",
+          "transmuteMap": [
+            {
+              "cell": [
+                4,
+                0
+              ],
+              "letter": "G"
+            },
+            {
+              "cell": [
+                4,
+                1
+              ],
+              "letter": "A"
+            },
+            {
+              "cell": [
+                4,
+                2
+              ],
+              "letter": "M"
+            },
+            {
+              "cell": [
+                4,
+                3
+              ],
+              "letter": "S"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stageIndex": 1,
+      "activeWords": [
+        {
+          "word": "CHILL",
+          "path": [
+            [
+              2,
+              5
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              5,
+              5
+            ],
+            [
+              6,
+              5
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "POLAR",
+          "revealsPath": [
+            [
+              6,
+              2
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              6,
+              4
+            ],
+            [
+              6,
+              5
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                2,
+                5
+              ],
+              "letter": "N"
+            },
+            {
+              "cell": [
+                3,
+                5
+              ],
+              "letter": "T"
+            },
+            {
+              "cell": [
+                4,
+                5
+              ],
+              "letter": "B"
+            },
+            {
+              "cell": [
+                5,
+                5
+              ],
+              "letter": "O"
+            },
+            {
+              "cell": [
+                6,
+                5
+              ],
+              "letter": "A"
+            }
+          ]
+        },
+        {
+          "word": "BLIZZARD",
+          "path": [
+            [
+              0,
+              7
+            ],
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "type": "STATIC",
+          "transmuteMap": [
+            {
+              "cell": [
+                0,
+                7
+              ],
+              "letter": "H"
+            },
+            {
+              "cell": [
+                0,
+                6
+              ],
+              "letter": "S"
+            },
+            {
+              "cell": [
+                0,
+                5
+              ],
+              "letter": "O"
+            },
+            {
+              "cell": [
+                0,
+                4
+              ],
+              "letter": "U"
+            },
+            {
+              "cell": [
+                0,
+                3
+              ],
+              "letter": "A"
+            },
+            {
+              "cell": [
+                0,
+                2
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                0,
+                1
+              ],
+              "letter": "S"
+            },
+            {
+              "cell": [
+                0,
+                0
+              ],
+              "letter": "N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stageIndex": 2,
+      "activeWords": [
+        {
+          "word": "POLAR",
+          "path": [
+            [
+              6,
+              2
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              6,
+              4
+            ],
+            [
+              6,
+              5
+            ],
+            [
+              6,
+              6
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "ARCTIC",
+          "revealsPath": [
+            [
+              2,
+              6
+            ],
+            [
+              3,
+              6
+            ],
+            [
+              4,
+              6
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              6
+            ],
+            [
+              7,
+              6
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                6,
+                2
+              ],
+              "letter": "N"
+            },
+            {
+              "cell": [
+                6,
+                3
+              ],
+              "letter": "G"
+            },
+            {
+              "cell": [
+                6,
+                4
+              ],
+              "letter": "N"
+            },
+            {
+              "cell": [
+                6,
+                5
+              ],
+              "letter": "N"
+            },
+            {
+              "cell": [
+                6,
+                6
+              ],
+              "letter": "I"
+            }
+          ]
+        },
+        {
+          "word": "TUNDRA",
+          "path": [
+            [
+              1,
+              7
+            ],
+            [
+              2,
+              7
+            ],
+            [
+              3,
+              7
+            ],
+            [
+              4,
+              7
+            ],
+            [
+              5,
+              7
+            ],
+            [
+              6,
+              7
+            ]
+          ],
+          "type": "STATIC",
+          "transmuteMap": [
+            {
+              "cell": [
+                1,
+                7
+              ],
+              "letter": "R"
+            },
+            {
+              "cell": [
+                2,
+                7
+              ],
+              "letter": "P"
+            },
+            {
+              "cell": [
+                3,
+                7
+              ],
+              "letter": "F"
+            },
+            {
+              "cell": [
+                4,
+                7
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                5,
+                7
+              ],
+              "letter": "H"
+            },
+            {
+              "cell": [
+                6,
+                7
+              ],
+              "letter": "E"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stageIndex": 3,
+      "activeWords": [
+        {
+          "word": "ARCTIC",
+          "path": [
+            [
+              2,
+              6
+            ],
+            [
+              3,
+              6
+            ],
+            [
+              4,
+              6
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              6
+            ],
+            [
+              7,
+              6
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "CROWN",
+          "revealsPath": [
+            [
+              7,
+              2
+            ],
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              4
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              6
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                2,
+                6
+              ],
+              "letter": "P"
+            },
+            {
+              "cell": [
+                3,
+                6
+              ],
+              "letter": "G"
+            },
+            {
+              "cell": [
+                4,
+                6
+              ],
+              "letter": "T"
+            },
+            {
+              "cell": [
+                5,
+                6
+              ],
+              "letter": "D"
+            },
+            {
+              "cell": [
+                6,
+                6
+              ],
+              "letter": "N"
+            },
+            {
+              "cell": [
+                7,
+                6
+              ],
+              "letter": "N"
+            }
+          ]
+        },
+        {
+          "word": "CRYSTAL",
+          "path": [
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              1,
+              6
+            ]
+          ],
+          "type": "STATIC",
+          "transmuteMap": [
+            {
+              "cell": [
+                1,
+                0
+              ],
+              "letter": "N"
+            },
+            {
+              "cell": [
+                1,
+                1
+              ],
+              "letter": "T"
+            },
+            {
+              "cell": [
+                1,
+                2
+              ],
+              "letter": "T"
+            },
+            {
+              "cell": [
+                1,
+                3
+              ],
+              "letter": "D"
+            },
+            {
+              "cell": [
+                1,
+                4
+              ],
+              "letter": "L"
+            },
+            {
+              "cell": [
+                1,
+                5
+              ],
+              "letter": "R"
+            },
+            {
+              "cell": [
+                1,
+                6
+              ],
+              "letter": "O"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "completionWords": [
+    {
+      "word": "CROWN",
+      "path": [
+        [
+          7,
+          2
+        ],
+        [
+          7,
+          3
+        ],
+        [
+          7,
+          4
+        ],
+        [
+          7,
+          5
+        ],
+        [
+          7,
+          6
+        ]
+      ]
+    }
+  ],
+  "accidentalWords": [
+    {
+      "word": "TIDE",
+      "path": [
+        [
+          3,
+          5
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          2
+        ]
+      ]
+    }
+  ],
+  "validation": {
+    "allStagesVerified": true,
+    "solveOrderIndependent": true,
+    "stagesVerified": 4,
+    "postTransmuteStatesVerified": 12
+  },
+  "levelNumber": 21,
+  "localLevel": 1,
+  "areaId": 5,
+  "themeKey": "FROZEN_KEEP",
+  "themeName": "Frost Crown"
+}

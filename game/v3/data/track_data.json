@@ -1,0 +1,61 @@
+[
+  {
+    "chapterId": "chapter_ocean",
+    "areaId": 1,
+    "themeKey": "OCEAN_ABYSS",
+    "displayName": "Coral Conquest",
+    "subtitle": "Follow the tide to the Sunken Crown",
+    "startLevel": 1,
+    "endLevel": 5,
+    "accent": "#13a9c5",
+    "albumId": "album_ocean",
+    "gatewayTo": "chapter_forest"
+  },
+  {
+    "chapterId": "chapter_forest",
+    "areaId": 2,
+    "themeKey": "ENCHANTED_FOREST",
+    "displayName": "Whispering Trail",
+    "subtitle": "Wake the guardians of the ancient grove",
+    "startLevel": 6,
+    "endLevel": 10,
+    "accent": "#65a83e",
+    "albumId": "album_forest",
+    "gatewayTo": "chapter_desert"
+  },
+  {
+    "chapterId": "chapter_desert",
+    "areaId": 3,
+    "themeKey": "DESERT_RUINS",
+    "displayName": "Sunstone Trail",
+    "subtitle": "Unearth the crown beneath the dunes",
+    "startLevel": 11,
+    "endLevel": 15,
+    "accent": "#dc8f27",
+    "albumId": "album_desert",
+    "gatewayTo": "chapter_space"
+  },
+  {
+    "chapterId": "chapter_space",
+    "areaId": 4,
+    "themeKey": "STARFALL_REALM",
+    "displayName": "Starfall Passage",
+    "subtitle": "Carry the kingdom beyond the sky",
+    "startLevel": 16,
+    "endLevel": 20,
+    "accent": "#7f62d9",
+    "albumId": "album_space",
+    "gatewayTo": "chapter_frost"
+  },
+  {
+    "chapterId": "chapter_frost",
+    "areaId": 5,
+    "themeKey": "FROZEN_KEEP",
+    "displayName": "Frost Crown Ascent",
+    "subtitle": "Break the spell over the frozen north",
+    "startLevel": 21,
+    "endLevel": 25,
+    "accent": "#418fd1",
+    "albumId": "album_frost"
+  }
+]

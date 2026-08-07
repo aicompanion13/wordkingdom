@@ -1,0 +1,864 @@
+{
+  "generatorVersion": 2,
+  "seed": 731305,
+  "generationSubSeed": 1026514644,
+  "generationAttempt": 0,
+  "gridSize": {
+    "rows": 8,
+    "cols": 8
+  },
+  "chainRevealRatioActual": 0.5,
+  "initialGrid": [
+    [
+      "E",
+      "O",
+      "D",
+      "M",
+      "O",
+      "U",
+      "S",
+      "B"
+    ],
+    [
+      "Q",
+      "N",
+      "F",
+      "H",
+      "E",
+      "O",
+      "A",
+      "R"
+    ],
+    [
+      "U",
+      "O",
+      "D",
+      "U",
+      "N",
+      "E",
+      "S",
+      "O"
+    ],
+    [
+      "A",
+      "M",
+      "M",
+      "I",
+      "R",
+      "A",
+      "D",
+      "E"
+    ],
+    [
+      "R",
+      "A",
+      "T",
+      "E",
+      "M",
+      "P",
+      "L",
+      "Z"
+    ],
+    [
+      "T",
+      "D",
+      "E",
+      "E",
+      "B",
+      "R",
+      "T",
+      "E"
+    ],
+    [
+      "Z",
+      "L",
+      "E",
+      "M",
+      "A",
+      "C",
+      "A",
+      "R"
+    ],
+    [
+      "D",
+      "I",
+      "M",
+      "A",
+      "R",
+      "Y",
+      "P",
+      "E"
+    ]
+  ],
+  "obstacles": [
+    {
+      "cell": [
+        0,
+        0
+      ],
+      "type": "STONE"
+    },
+    {
+      "cell": [
+        1,
+        2
+      ],
+      "type": "STONE"
+    },
+    {
+      "cell": [
+        1,
+        4
+      ],
+      "type": "STONE"
+    },
+    {
+      "cell": [
+        5,
+        2
+      ],
+      "type": "SAND"
+    },
+    {
+      "cell": [
+        5,
+        5
+      ],
+      "type": "SAND"
+    },
+    {
+      "cell": [
+        5,
+        6
+      ],
+      "type": "STONE"
+    },
+    {
+      "cell": [
+        6,
+        6
+      ],
+      "type": "STONE"
+    },
+    {
+      "cell": [
+        7,
+        7
+      ],
+      "type": "SAND"
+    }
+  ],
+  "stages": [
+    {
+      "stageIndex": 0,
+      "activeWords": [
+        {
+          "word": "DUNES",
+          "path": [
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              5
+            ],
+            [
+              2,
+              6
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "SAND",
+          "revealsPath": [
+            [
+              0,
+              6
+            ],
+            [
+              1,
+              6
+            ],
+            [
+              2,
+              6
+            ],
+            [
+              3,
+              6
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                2,
+                2
+              ],
+              "letter": "H"
+            },
+            {
+              "cell": [
+                2,
+                3
+              ],
+              "letter": "O"
+            },
+            {
+              "cell": [
+                2,
+                4
+              ],
+              "letter": "A"
+            },
+            {
+              "cell": [
+                2,
+                5
+              ],
+              "letter": "P"
+            },
+            {
+              "cell": [
+                2,
+                6
+              ],
+              "letter": "N"
+            }
+          ]
+        },
+        {
+          "word": "QUARTZ",
+          "path": [
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              6,
+              0
+            ]
+          ],
+          "type": "STATIC",
+          "transmuteMap": [
+            {
+              "cell": [
+                1,
+                0
+              ],
+              "letter": "O"
+            },
+            {
+              "cell": [
+                2,
+                0
+              ],
+              "letter": "R"
+            },
+            {
+              "cell": [
+                3,
+                0
+              ],
+              "letter": "G"
+            },
+            {
+              "cell": [
+                4,
+                0
+              ],
+              "letter": "H"
+            },
+            {
+              "cell": [
+                5,
+                0
+              ],
+              "letter": "H"
+            },
+            {
+              "cell": [
+                6,
+                0
+              ],
+              "letter": "T"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stageIndex": 1,
+      "activeWords": [
+        {
+          "word": "SAND",
+          "path": [
+            [
+              0,
+              6
+            ],
+            [
+              1,
+              6
+            ],
+            [
+              2,
+              6
+            ],
+            [
+              3,
+              6
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "MIRAGE",
+          "revealsPath": [
+            [
+              3,
+              2
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              3,
+              6
+            ],
+            [
+              3,
+              7
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                0,
+                6
+              ],
+              "letter": "A"
+            },
+            {
+              "cell": [
+                1,
+                6
+              ],
+              "letter": "O"
+            },
+            {
+              "cell": [
+                2,
+                6
+              ],
+              "letter": "I"
+            },
+            {
+              "cell": [
+                3,
+                6
+              ],
+              "letter": "G"
+            }
+          ]
+        },
+        {
+          "word": "PYRAMID",
+          "path": [
+            [
+              7,
+              6
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              4
+            ],
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              2
+            ],
+            [
+              7,
+              1
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          "type": "STATIC",
+          "transmuteMap": [
+            {
+              "cell": [
+                7,
+                6
+              ],
+              "letter": "T"
+            },
+            {
+              "cell": [
+                7,
+                5
+              ],
+              "letter": "A"
+            },
+            {
+              "cell": [
+                7,
+                4
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                7,
+                3
+              ],
+              "letter": "L"
+            },
+            {
+              "cell": [
+                7,
+                2
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                7,
+                1
+              ],
+              "letter": "A"
+            },
+            {
+              "cell": [
+                7,
+                0
+              ],
+              "letter": "I"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stageIndex": 2,
+      "activeWords": [
+        {
+          "word": "MIRAGE",
+          "path": [
+            [
+              3,
+              2
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              3,
+              6
+            ],
+            [
+              3,
+              7
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "BRONZE",
+          "revealsPath": [
+            [
+              0,
+              7
+            ],
+            [
+              1,
+              7
+            ],
+            [
+              2,
+              7
+            ],
+            [
+              3,
+              7
+            ],
+            [
+              4,
+              7
+            ],
+            [
+              5,
+              7
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                3,
+                2
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                3,
+                3
+              ],
+              "letter": "L"
+            },
+            {
+              "cell": [
+                3,
+                4
+              ],
+              "letter": "W"
+            },
+            {
+              "cell": [
+                3,
+                5
+              ],
+              "letter": "G"
+            },
+            {
+              "cell": [
+                3,
+                6
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                3,
+                7
+              ],
+              "letter": "N"
+            }
+          ]
+        },
+        {
+          "word": "NOMAD",
+          "path": [
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              5,
+              1
+            ]
+          ],
+          "type": "STATIC",
+          "transmuteMap": [
+            {
+              "cell": [
+                1,
+                1
+              ],
+              "letter": "O"
+            },
+            {
+              "cell": [
+                2,
+                1
+              ],
+              "letter": "S"
+            },
+            {
+              "cell": [
+                3,
+                1
+              ],
+              "letter": "I"
+            },
+            {
+              "cell": [
+                4,
+                1
+              ],
+              "letter": "R"
+            },
+            {
+              "cell": [
+                5,
+                1
+              ],
+              "letter": "Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stageIndex": 3,
+      "activeWords": [
+        {
+          "word": "BRONZE",
+          "path": [
+            [
+              0,
+              7
+            ],
+            [
+              1,
+              7
+            ],
+            [
+              2,
+              7
+            ],
+            [
+              3,
+              7
+            ],
+            [
+              4,
+              7
+            ],
+            [
+              5,
+              7
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "TEMPLE",
+          "revealsPath": [
+            [
+              4,
+              2
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              4,
+              6
+            ],
+            [
+              4,
+              7
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                0,
+                7
+              ],
+              "letter": "T"
+            },
+            {
+              "cell": [
+                1,
+                7
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                2,
+                7
+              ],
+              "letter": "F"
+            },
+            {
+              "cell": [
+                3,
+                7
+              ],
+              "letter": "O"
+            },
+            {
+              "cell": [
+                4,
+                7
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                5,
+                7
+              ],
+              "letter": "I"
+            }
+          ]
+        },
+        {
+          "word": "CAMEL",
+          "path": [
+            [
+              6,
+              5
+            ],
+            [
+              6,
+              4
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "type": "STATIC",
+          "transmuteMap": [
+            {
+              "cell": [
+                6,
+                5
+              ],
+              "letter": "O"
+            },
+            {
+              "cell": [
+                6,
+                4
+              ],
+              "letter": "N"
+            },
+            {
+              "cell": [
+                6,
+                3
+              ],
+              "letter": "W"
+            },
+            {
+              "cell": [
+                6,
+                2
+              ],
+              "letter": "L"
+            },
+            {
+              "cell": [
+                6,
+                1
+              ],
+              "letter": "A"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "completionWords": [
+    {
+      "word": "TEMPLE",
+      "path": [
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          4,
+          6
+        ],
+        [
+          4,
+          7
+        ]
+      ]
+    }
+  ],
+  "accidentalWords": [],
+  "validation": {
+    "allStagesVerified": true,
+    "solveOrderIndependent": true,
+    "stagesVerified": 4,
+    "postTransmuteStatesVerified": 12
+  },
+  "levelNumber": 15,
+  "localLevel": 5,
+  "areaId": 3,
+  "themeKey": "DESERT_RUINS",
+  "themeName": "Sunstone Empire"
+}

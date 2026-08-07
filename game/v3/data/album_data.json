@@ -1,0 +1,196 @@
+[
+  {
+    "albumId": "album_ocean",
+    "albumName": "Ocean Treasures",
+    "themeKey": "OCEAN_ABYSS",
+    "chapterId": "chapter_ocean",
+    "accent": "#13a9c5",
+    "completionReward": { "frame": "Triton Gold", "badge": "Master of Tides" },
+    "sets": [
+      {
+        "setId": "ocean_relics",
+        "setName": "Deep Sea Relics",
+        "completionReward": { "energy": 100, "coins": 2500 },
+        "cards": [
+          { "cardId": "ocean_01", "name": "Golden Anchor", "rarity": 1, "spriteKey": "card_anchor", "icon": "⚓" },
+          { "cardId": "ocean_02", "name": "Pearl Shell", "rarity": 1, "spriteKey": "card_pearl", "icon": "🐚" },
+          { "cardId": "ocean_03", "name": "Captain's Map", "rarity": 2, "spriteKey": "card_map", "icon": "🗺️" },
+          { "cardId": "ocean_04", "name": "Coral Crown", "rarity": 2, "spriteKey": "card_crown", "icon": "👑" },
+          { "cardId": "ocean_05", "name": "Siren Harp", "rarity": 3, "spriteKey": "card_harp", "icon": "🎵" },
+          { "cardId": "ocean_06", "name": "Royal Nautilus", "rarity": 3, "spriteKey": "card_nautilus", "icon": "🐌" },
+          { "cardId": "ocean_07", "name": "Neptune Trident", "rarity": 4, "spriteKey": "card_trident", "icon": "🔱" },
+          { "cardId": "ocean_08", "name": "Sunken Throne", "rarity": 4, "spriteKey": "card_throne", "icon": "🪑" },
+          { "cardId": "ocean_09", "name": "Heart of Abyss", "rarity": 5, "spriteKey": "card_abyss", "icon": "💎" }
+        ]
+      },
+      {
+        "setId": "ocean_legends",
+        "setName": "Tales of the Tide",
+        "completionReward": { "energy": 100, "coins": 3000 },
+        "cards": [
+          { "cardId": "ocean_10", "name": "Brave Marlin", "rarity": 1, "spriteKey": "card_marlin", "icon": "🐟" },
+          { "cardId": "ocean_11", "name": "Dancing Dolphin", "rarity": 1, "spriteKey": "card_dolphin", "icon": "🐬" },
+          { "cardId": "ocean_12", "name": "Old Sea Turtle", "rarity": 2, "spriteKey": "card_turtle", "icon": "🐢" },
+          { "cardId": "ocean_13", "name": "Whale Song", "rarity": 2, "spriteKey": "card_whale", "icon": "🐋" },
+          { "cardId": "ocean_14", "name": "Mermaid Oath", "rarity": 3, "spriteKey": "card_mermaid", "icon": "🧜" },
+          { "cardId": "ocean_15", "name": "Kraken Wake", "rarity": 3, "spriteKey": "card_kraken", "icon": "🐙" },
+          { "cardId": "ocean_16", "name": "Shark King's Fang", "rarity": 4, "spriteKey": "card_fang", "icon": "🦈" },
+          { "cardId": "ocean_17", "name": "Moonlit Regatta", "rarity": 4, "spriteKey": "card_regatta", "icon": "⛵" },
+          { "cardId": "ocean_18", "name": "Leviathan", "rarity": 5, "spriteKey": "card_leviathan", "icon": "🌊" }
+        ]
+      },
+      {
+        "setId": "ocean_kingdom",
+        "setName": "Coral Kingdom",
+        "completionReward": { "energy": 125, "coins": 4000 },
+        "cards": [
+          { "cardId": "ocean_19", "name": "Kelp Garden", "rarity": 1, "spriteKey": "card_kelp", "icon": "🌿" },
+          { "cardId": "ocean_20", "name": "Bubble Gate", "rarity": 1, "spriteKey": "card_bubble", "icon": "🫧" },
+          { "cardId": "ocean_21", "name": "Pearl Fountain", "rarity": 2, "spriteKey": "card_fountain", "icon": "⛲" },
+          { "cardId": "ocean_22", "name": "Reef Market", "rarity": 2, "spriteKey": "card_market", "icon": "🏪" },
+          { "cardId": "ocean_23", "name": "Galleon Dock", "rarity": 3, "spriteKey": "card_dock", "icon": "🚢" },
+          { "cardId": "ocean_24", "name": "Triton Guard", "rarity": 3, "spriteKey": "card_guard", "icon": "🛡️" },
+          { "cardId": "ocean_25", "name": "Coral Palace", "rarity": 4, "spriteKey": "card_palace", "icon": "🏰" },
+          { "cardId": "ocean_26", "name": "Royal Lighthouse", "rarity": 4, "spriteKey": "card_lighthouse", "icon": "🗼" },
+          { "cardId": "ocean_27", "name": "Sunken Crown", "rarity": 5, "spriteKey": "card_sunken_crown", "icon": "👑" }
+        ]
+      }
+    ]
+  },
+  {
+    "albumId": "album_forest",
+    "albumName": "Forest Fables",
+    "themeKey": "ENCHANTED_FOREST",
+    "chapterId": "chapter_forest",
+    "accent": "#65a83e",
+    "completionReward": { "frame": "Ancient Oak", "badge": "Guardian of the Grove" },
+    "sets": [
+      {
+        "setId": "forest_friends",
+        "setName": "Woodland Friends",
+        "completionReward": { "energy": 100, "coins": 3000 },
+        "cards": [
+          { "cardId": "forest_01", "name": "Clever Fox", "rarity": 1, "spriteKey": "card_fox", "icon": "🦊" },
+          { "cardId": "forest_02", "name": "Little Rabbit", "rarity": 1, "spriteKey": "card_rabbit", "icon": "🐇" },
+          { "cardId": "forest_03", "name": "Mossy Badger", "rarity": 2, "spriteKey": "card_badger", "icon": "🦡" },
+          { "cardId": "forest_04", "name": "Moonlit Owl", "rarity": 2, "spriteKey": "card_owl", "icon": "🦉" },
+          { "cardId": "forest_05", "name": "Silver Stag", "rarity": 3, "spriteKey": "card_stag", "icon": "🦌" },
+          { "cardId": "forest_06", "name": "River Heron", "rarity": 3, "spriteKey": "card_heron", "icon": "🪶" },
+          { "cardId": "forest_07", "name": "Ancient Wolf", "rarity": 4, "spriteKey": "card_wolf", "icon": "🐺" },
+          { "cardId": "forest_08", "name": "Emerald Beetle", "rarity": 4, "spriteKey": "card_beetle", "icon": "🪲" },
+          { "cardId": "forest_09", "name": "Spirit Guardian", "rarity": 5, "spriteKey": "card_spirit", "icon": "✨" }
+        ]
+      },
+      {
+        "setId": "forest_magic",
+        "setName": "Grove Magic",
+        "completionReward": { "energy": 100, "coins": 3500 },
+        "cards": [
+          { "cardId": "forest_10", "name": "Lucky Acorn", "rarity": 1, "spriteKey": "card_acorn", "icon": "🌰" },
+          { "cardId": "forest_11", "name": "Fern Charm", "rarity": 1, "spriteKey": "card_fern", "icon": "🌿" },
+          { "cardId": "forest_12", "name": "Moon Petal", "rarity": 2, "spriteKey": "card_petal", "icon": "🌸" },
+          { "cardId": "forest_13", "name": "Willow Wand", "rarity": 2, "spriteKey": "card_wand", "icon": "🪄" },
+          { "cardId": "forest_14", "name": "Firefly Lantern", "rarity": 3, "spriteKey": "card_lantern", "icon": "🏮" },
+          { "cardId": "forest_15", "name": "River Rune", "rarity": 3, "spriteKey": "card_rune", "icon": "💧" },
+          { "cardId": "forest_16", "name": "Canopy Spell", "rarity": 4, "spriteKey": "card_canopy", "icon": "🍃" },
+          { "cardId": "forest_17", "name": "Grove Portal", "rarity": 4, "spriteKey": "card_portal", "icon": "🌀" },
+          { "cardId": "forest_18", "name": "Heartwood Gem", "rarity": 5, "spriteKey": "card_heartwood", "icon": "💚" }
+        ]
+      },
+      {
+        "setId": "forest_realm",
+        "setName": "Whispering Realm",
+        "completionReward": { "energy": 125, "coins": 4500 },
+        "cards": [
+          { "cardId": "forest_19", "name": "Birch Bridge", "rarity": 1, "spriteKey": "card_bridge", "icon": "🌉" },
+          { "cardId": "forest_20", "name": "Mushroom Inn", "rarity": 1, "spriteKey": "card_inn", "icon": "🍄" },
+          { "cardId": "forest_21", "name": "Ranger Lodge", "rarity": 2, "spriteKey": "card_lodge", "icon": "🏡" },
+          { "cardId": "forest_22", "name": "Moon Well", "rarity": 2, "spriteKey": "card_well", "icon": "⛲" },
+          { "cardId": "forest_23", "name": "Maple Market", "rarity": 3, "spriteKey": "card_maple", "icon": "🍁" },
+          { "cardId": "forest_24", "name": "Vine Gate", "rarity": 3, "spriteKey": "card_gate", "icon": "🌱" },
+          { "cardId": "forest_25", "name": "Great Oak Hall", "rarity": 4, "spriteKey": "card_oak", "icon": "🌳" },
+          { "cardId": "forest_26", "name": "Stag Monument", "rarity": 4, "spriteKey": "card_monument", "icon": "🦌" },
+          { "cardId": "forest_27", "name": "Crown of Leaves", "rarity": 5, "spriteKey": "card_leaf_crown", "icon": "👑" }
+        ]
+      }
+    ]
+  },
+  {
+    "albumId": "album_desert",
+    "albumName": "Sunstone Relics",
+    "themeKey": "DESERT_RUINS",
+    "chapterId": "chapter_desert",
+    "accent": "#dc8f27",
+    "completionReward": { "frame": "Sunstone Gold", "badge": "Keeper of the Dunes" },
+    "sets": [
+      {
+        "setId": "desert_relics",
+        "setName": "Buried Kingdom",
+        "completionReward": { "energy": 100, "coins": 4000 },
+        "cards": [
+          { "cardId": "desert_01", "name": "Royal Scarab", "rarity": 1, "spriteKey": "card_scarab", "icon": "🪲" },
+          { "cardId": "desert_02", "name": "Oasis Palm", "rarity": 1, "spriteKey": "card_oasis", "icon": "🌴" },
+          { "cardId": "desert_03", "name": "Nomad Compass", "rarity": 2, "spriteKey": "card_compass", "icon": "🧭" },
+          { "cardId": "desert_04", "name": "Cobra Seal", "rarity": 2, "spriteKey": "card_cobra", "icon": "🐍" },
+          { "cardId": "desert_05", "name": "Falcon Standard", "rarity": 3, "spriteKey": "card_falcon", "icon": "🦅" },
+          { "cardId": "desert_06", "name": "Pharaoh Mask", "rarity": 3, "spriteKey": "card_pharaoh", "icon": "🎭" },
+          { "cardId": "desert_07", "name": "Sphinx Gate", "rarity": 4, "spriteKey": "card_sphinx", "icon": "🦁" },
+          { "cardId": "desert_08", "name": "Golden Pyramid", "rarity": 4, "spriteKey": "card_pyramid", "icon": "🔺" },
+          { "cardId": "desert_09", "name": "Sunstone Crown", "rarity": 5, "spriteKey": "card_sunstone", "icon": "👑" }
+        ]
+      }
+    ]
+  },
+  {
+    "albumId": "album_space",
+    "albumName": "Starfall Wonders",
+    "themeKey": "STARFALL_REALM",
+    "chapterId": "chapter_space",
+    "accent": "#7f62d9",
+    "completionReward": { "frame": "Cosmic Royal", "badge": "Sovereign of Stars" },
+    "sets": [
+      {
+        "setId": "space_wonders",
+        "setName": "Beyond the Sky",
+        "completionReward": { "energy": 100, "coins": 5000 },
+        "cards": [
+          { "cardId": "space_01", "name": "Moon Beacon", "rarity": 1, "spriteKey": "card_moon", "icon": "🌙" },
+          { "cardId": "space_02", "name": "Comet Trail", "rarity": 1, "spriteKey": "card_comet", "icon": "☄️" },
+          { "cardId": "space_03", "name": "Mars Rover", "rarity": 2, "spriteKey": "card_rover", "icon": "🛰️" },
+          { "cardId": "space_04", "name": "Saturn Ring", "rarity": 2, "spriteKey": "card_saturn", "icon": "🪐" },
+          { "cardId": "space_05", "name": "Nebula Bloom", "rarity": 3, "spriteKey": "card_nebula", "icon": "🌌" },
+          { "cardId": "space_06", "name": "Rocket Guard", "rarity": 3, "spriteKey": "card_rocket", "icon": "🚀" },
+          { "cardId": "space_07", "name": "Pulsar Gem", "rarity": 4, "spriteKey": "card_pulsar", "icon": "💎" },
+          { "cardId": "space_08", "name": "Galaxy Throne", "rarity": 4, "spriteKey": "card_galaxy", "icon": "🌠" },
+          { "cardId": "space_09", "name": "Starfall Crown", "rarity": 5, "spriteKey": "card_starfall", "icon": "👑" }
+        ]
+      }
+    ]
+  },
+  {
+    "albumId": "album_frost",
+    "albumName": "Frost Crown",
+    "themeKey": "FROZEN_KEEP",
+    "chapterId": "chapter_frost",
+    "accent": "#418fd1",
+    "completionReward": { "frame": "Aurora Crystal", "badge": "Guardian of Winter" },
+    "sets": [
+      {
+        "setId": "frost_crown",
+        "setName": "Frozen North",
+        "completionReward": { "energy": 100, "coins": 6000 },
+        "cards": [
+          { "cardId": "frost_01", "name": "Snowy Seal", "rarity": 1, "spriteKey": "card_seal", "icon": "🦭" },
+          { "cardId": "frost_02", "name": "Husky Scout", "rarity": 1, "spriteKey": "card_husky", "icon": "🐕" },
+          { "cardId": "frost_03", "name": "Polar Banner", "rarity": 2, "spriteKey": "card_polar", "icon": "🐻‍❄️" },
+          { "cardId": "frost_04", "name": "Crystal Flake", "rarity": 2, "spriteKey": "card_flake", "icon": "❄️" },
+          { "cardId": "frost_05", "name": "Aurora Ribbon", "rarity": 3, "spriteKey": "card_aurora", "icon": "🌌" },
+          { "cardId": "frost_06", "name": "Wolf Guardian", "rarity": 3, "spriteKey": "card_wolf", "icon": "🐺" },
+          { "cardId": "frost_07", "name": "Glacier Palace", "rarity": 4, "spriteKey": "card_glacier", "icon": "🏰" },
+          { "cardId": "frost_08", "name": "Crystal Scepter", "rarity": 4, "spriteKey": "card_scepter", "icon": "💎" },
+          { "cardId": "frost_09", "name": "Frost Crown", "rarity": 5, "spriteKey": "card_frost_crown", "icon": "👑" }
+        ]
+      }
+    ]
+  }
+]

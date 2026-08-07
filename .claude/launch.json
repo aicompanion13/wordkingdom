@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "word-kingdom-dev",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["exec", "vite"],
+      "port": 5173
+    }
+  ]
+}

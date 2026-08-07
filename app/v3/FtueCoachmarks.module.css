@@ -1,0 +1,37 @@
+.coachRoot { position:fixed; z-index:12000; inset:0; pointer-events:none; font-family:var(--game-ui,Arial,sans-serif); }
+.dismissLayer { position:fixed; z-index:1; inset:0; border:0; padding:0; pointer-events:auto; background:transparent; }
+.dimmer { position:absolute; inset:0; pointer-events:none; background:rgba(2,19,50,.48); animation:ftueFade .2s ease both; }
+.spotlight { position:fixed; z-index:2; border:3px solid #fff; border-radius:16px; pointer-events:none; box-shadow:0 0 0 5px rgba(255,255,255,.35),0 0 0 200vmax rgba(4,24,58,.25); animation:spotlightPulse 1.25s ease-in-out infinite; }
+.coachCard { position:fixed; z-index:5; left:50%; top:max(calc(env(safe-area-inset-top) + 88px),94px); width:min(calc(100vw - 28px),390px); display:grid; grid-template-columns:64px 1fr; align-items:center; gap:10px; transform:translateX(-50%); border:2px solid #f0dcae; border-radius:20px; padding:10px 46px 10px 14px; pointer-events:auto; color:#17386d; background:#fff8ea; box-shadow:0 10px 24px rgba(0,0,0,.3); text-align:left; }
+.coachClose { position:absolute; right:9px; top:9px; display:grid; place-items:center; width:32px; height:32px; border:2px solid #fff; border-radius:50%; padding:0; color:#fff; background:linear-gradient(#2f83d1,#174f9c); box-shadow:0 2px 0 rgba(0,0,0,.35); font:900 14px/1 var(--game-ui,Arial,sans-serif); }
+.coachIcon { width:58px; height:58px; display:grid; place-items:center; overflow:hidden; border:2px solid #f0dcae; border-radius:15px; background:#fff4cf; }
+.coachCard b { display:block; font-family:var(--game-display,var(--game-ui)); font-size:19px; line-height:1; color:#0d3473; }
+.coachCard p { margin:4px 0 0; font-size:13px; font-weight:900; line-height:1.2; color:#5b3c24; }
+.swipePath { position:fixed; z-index:3; height:10px; transform-origin:left center; border-radius:99px; background:linear-gradient(90deg,rgba(255,255,255,.3),#fff,rgba(255,255,255,.3)); box-shadow:0 0 12px rgba(255,255,255,.6); }
+.finger { position:fixed; z-index:6; left:var(--finger-x); top:var(--finger-y); width:108px; height:108px; display:block; pointer-events:none; object-fit:contain; transform-origin:72% 88%; transform:translate(-72%,-88%) rotate(-55deg) scale(1); filter:drop-shadow(0 5px 0 rgba(26,20,15,.3)) drop-shadow(0 0 9px rgba(255,225,91,.78)); }
+.swipeFinger { animation:swipeFinger 2.1s ease-in-out infinite; }
+.tapFinger { animation:tapFinger 1.35s ease-in-out infinite; }
+.discoveryArtwork { display:block; width:100%; height:100%; background-image:url('/word-kingdom-level1-discoveries.png'); background-repeat:no-repeat; background-size:200% 200%; }
+.discoveryArtwork[data-artwork="coral-castle"] { background-position:0 0; }
+.discoveryArtwork[data-artwork="pearl"] { background-position:100% 0; }
+.discoveryArtwork[data-artwork="sea-turtle"] { background-position:0 100%; }
+.discoveryArtwork[data-artwork="album"] { background-position:100% 100%; }
+.discoveryMessage { position:fixed; z-index:11900; left:50%; top:23%; width:min(calc(100vw - 32px),360px); display:grid; grid-template-columns:92px 1fr; align-items:center; gap:12px; transform:translateX(-50%); border:2px solid #f0dcae; border-radius:22px; padding:10px; color:#153a74; background:#fff8ea; box-shadow:0 14px 32px rgba(0,0,0,.4); animation:discoveryEnter 1.45s ease both; }
+.discoveryMessage > span { width:92px; height:92px; overflow:hidden; border:2px solid #f0dcae; border-radius:18px; }
+.discoveryMessage b { display:block; font-family:var(--game-display,var(--game-ui)); font-size:20px; line-height:1; }
+.discoveryMessage p { margin:5px 0; font-size:13px; font-weight:900; line-height:1.2; color:#5a3b24; }
+.discoveryMessage div span { display:inline-grid; place-items:center; min-width:48px; border-radius:99px; padding:4px 9px; color:#fff; background:#195fa7; font-size:12px; font-weight:1000; }
+.conceptRoot { position:fixed; z-index:12500; inset:0; display:grid; place-items:center; padding:24px; }
+.conceptScrim { position:absolute; inset:0; background:rgba(6,20,46,.55); animation:ftueFade .2s ease both; }
+.conceptCard { position:relative; width:min(100%,320px); border:3px solid #fff; border-radius:20px; padding:24px 20px 18px; text-align:center; color:#142c63; background:#fff8ea; box-shadow:0 20px 40px rgba(0,0,0,.5); animation:conceptRise .28s cubic-bezier(.2,.85,.28,1.15) both; }
+.conceptCard b { display:block; font-family:var(--game-display,var(--game-ui)); font-weight:600; font-size:19px; line-height:1.25; margin-bottom:8px; }
+.conceptCard p { margin:0 0 18px; font-size:13px; font-weight:600; line-height:1.5; color:#4a4034; }
+.conceptCta { width:100%; min-height:44px; border:3px solid #fff; border-radius:14px; color:#fff; font-family:var(--game-display,var(--game-ui)); font-weight:600; font-size:15px; background:linear-gradient(#5bd45a,#1f9b3f); box-shadow:0 4px 0 #1f9b3f,0 9px 14px -4px rgba(0,0,0,.4); cursor:pointer; }
+@keyframes conceptRise { from{opacity:0;transform:translateY(10px) scale(.96)} to{opacity:1;transform:none} }
+@keyframes ftueFade { from{opacity:0} to{opacity:1} }
+@keyframes spotlightPulse { 50%{filter:brightness(1.2);transform:scale(1.025)} }
+@keyframes swipeFinger { 0%,18%{transform:translate(-72%,-88%) rotate(-55deg) scale(1)} 28%{transform:translate(-72%,-88%) rotate(-55deg) scale(.9)} 72%{transform:translate(calc(-72% + var(--finger-dx)),calc(-88% + var(--finger-dy))) rotate(-55deg) scale(.9)} 82%,100%{transform:translate(calc(-72% + var(--finger-dx)),calc(-88% + var(--finger-dy))) rotate(-55deg) scale(1)} }
+@keyframes tapFinger { 0%,45%,100%{transform:translate(-72%,-88%) rotate(-30deg) scale(1)} 58%,70%{transform:translate(-72%,-79%) rotate(-30deg) scale(.87)} }
+@keyframes discoveryEnter { 0%{opacity:0;transform:translate(-50%,18px) scale(.82)} 18%,72%{opacity:1;transform:translate(-50%,0) scale(1)} 100%{opacity:0;transform:translate(-50%,-26px) scale(.76)} }
+@media(max-width:350px){.coachCard{grid-template-columns:52px 1fr;padding:8px 42px 8px 10px}.coachIcon{width:48px;height:48px}.coachCard b{font-size:17px}.coachCard p{font-size:11px}.discoveryMessage{grid-template-columns:74px 1fr}.discoveryMessage>span{width:74px;height:74px}}
+@media(prefers-reduced-motion:reduce){.spotlight,.swipeFinger,.tapFinger,.discoveryMessage{animation:none!important}.swipePath{opacity:.65}.finger{transform:translate(-72%,-88%) rotate(-55deg) scale(1)}}

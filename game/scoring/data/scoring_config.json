@@ -1,0 +1,11 @@
+{
+  "basePointsPerLetter": 100,
+  "speedTiers": [
+    { "maxSeconds": 3, "multiplier": 1.5 },
+    { "maxSeconds": 6, "multiplier": 1.25 },
+    { "maxSeconds": 999, "multiplier": 1.0 }
+  ],
+  "comboLadder": [1.0, 1.2, 1.5, 2.0, 2.5, 3.0],
+  "comboIdleTimeoutSeconds": 15,
+  "hintBreaksCombo": true
+}

@@ -1,0 +1,908 @@
+{
+  "generatorVersion": 2,
+  "seed": 731102,
+  "generationSubSeed": 2691725971,
+  "generationAttempt": 0,
+  "gridSize": {
+    "rows": 8,
+    "cols": 8
+  },
+  "chainRevealRatioActual": 0.5,
+  "initialGrid": [
+    [
+      "H",
+      "S",
+      "A",
+      "B",
+      "M",
+      "O",
+      "Y",
+      "F"
+    ],
+    [
+      "L",
+      "A",
+      "V",
+      "N",
+      "U",
+      "A",
+      "R",
+      "S"
+    ],
+    [
+      "R",
+      "N",
+      "O",
+      "N",
+      "C",
+      "O",
+      "A",
+      "T"
+    ],
+    [
+      "P",
+      "D",
+      "Y",
+      "T",
+      "F",
+      "H",
+      "O",
+      "T"
+    ],
+    [
+      "T",
+      "P",
+      "A",
+      "E",
+      "I",
+      "A",
+      "O",
+      "D"
+    ],
+    [
+      "D",
+      "E",
+      "O",
+      "K",
+      "M",
+      "D",
+      "O",
+      "R"
+    ],
+    [
+      "E",
+      "H",
+      "E",
+      "R",
+      "N",
+      "C",
+      "E",
+      "A"
+    ],
+    [
+      "O",
+      "S",
+      "A",
+      "I",
+      "L",
+      "O",
+      "R",
+      "O"
+    ]
+  ],
+  "obstacles": [
+    {
+      "cell": [
+        1,
+        1
+      ],
+      "type": "BUBBLE_FENCE"
+    },
+    {
+      "cell": [
+        1,
+        6
+      ],
+      "type": "BUBBLE_FENCE"
+    },
+    {
+      "cell": [
+        3,
+        1
+      ],
+      "type": "ALGAE"
+    },
+    {
+      "cell": [
+        4,
+        4
+      ],
+      "type": "ALGAE"
+    },
+    {
+      "cell": [
+        6,
+        0
+      ],
+      "type": "ALGAE"
+    },
+    {
+      "cell": [
+        6,
+        1
+      ],
+      "type": "BUBBLE_FENCE"
+    }
+  ],
+  "stages": [
+    {
+      "stageIndex": 0,
+      "activeWords": [
+        {
+          "word": "SAILOR",
+          "path": [
+            [
+              7,
+              1
+            ],
+            [
+              7,
+              2
+            ],
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              4
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              6
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "DOCK",
+          "revealsPath": [
+            [
+              4,
+              7
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              5
+            ],
+            [
+              7,
+              4
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                7,
+                1
+              ],
+              "letter": "O"
+            },
+            {
+              "cell": [
+                7,
+                2
+              ],
+              "letter": "F"
+            },
+            {
+              "cell": [
+                7,
+                3
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                7,
+                4
+              ],
+              "letter": "K"
+            },
+            {
+              "cell": [
+                7,
+                5
+              ],
+              "letter": "S"
+            },
+            {
+              "cell": [
+                7,
+                6
+              ],
+              "letter": "F"
+            }
+          ]
+        },
+        {
+          "word": "ANCHOR",
+          "path": [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              6
+            ],
+            [
+              5,
+              7
+            ]
+          ],
+          "type": "SIDE_REVEAL",
+          "reveals": "BOAT",
+          "revealsPath": [
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              5
+            ],
+            [
+              2,
+              6
+            ],
+            [
+              2,
+              7
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                0,
+                2
+              ],
+              "letter": "F"
+            },
+            {
+              "cell": [
+                1,
+                3
+              ],
+              "letter": "H"
+            },
+            {
+              "cell": [
+                2,
+                4
+              ],
+              "letter": "B"
+            },
+            {
+              "cell": [
+                3,
+                5
+              ],
+              "letter": "T"
+            },
+            {
+              "cell": [
+                4,
+                6
+              ],
+              "letter": "N"
+            },
+            {
+              "cell": [
+                5,
+                7
+              ],
+              "letter": "P"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stageIndex": 1,
+      "activeWords": [
+        {
+          "word": "DOCK",
+          "path": [
+            [
+              4,
+              7
+            ],
+            [
+              5,
+              6
+            ],
+            [
+              6,
+              5
+            ],
+            [
+              7,
+              4
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "PORT",
+          "revealsPath": [
+            [
+              4,
+              1
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              7,
+              4
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                4,
+                7
+              ],
+              "letter": "I"
+            },
+            {
+              "cell": [
+                5,
+                6
+              ],
+              "letter": "R"
+            },
+            {
+              "cell": [
+                6,
+                5
+              ],
+              "letter": "G"
+            },
+            {
+              "cell": [
+                7,
+                4
+              ],
+              "letter": "T"
+            }
+          ]
+        },
+        {
+          "word": "BOAT",
+          "path": [
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              5
+            ],
+            [
+              2,
+              6
+            ],
+            [
+              2,
+              7
+            ]
+          ],
+          "type": "SIDE_REVEAL",
+          "reveals": "MAST",
+          "revealsPath": [
+            [
+              0,
+              4
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              2,
+              6
+            ],
+            [
+              3,
+              7
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                2,
+                4
+              ],
+              "letter": "K"
+            },
+            {
+              "cell": [
+                2,
+                5
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                2,
+                6
+              ],
+              "letter": "S"
+            },
+            {
+              "cell": [
+                2,
+                7
+              ],
+              "letter": "S"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stageIndex": 2,
+      "activeWords": [
+        {
+          "word": "PORT",
+          "path": [
+            [
+              4,
+              1
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              7,
+              4
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "DECK",
+          "revealsPath": [
+            [
+              5,
+              0
+            ],
+            [
+              5,
+              1
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              5,
+              3
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                4,
+                1
+              ],
+              "letter": "A"
+            },
+            {
+              "cell": [
+                5,
+                2
+              ],
+              "letter": "C"
+            },
+            {
+              "cell": [
+                6,
+                3
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                7,
+                4
+              ],
+              "letter": "R"
+            }
+          ]
+        },
+        {
+          "word": "MAST",
+          "path": [
+            [
+              0,
+              4
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              2,
+              6
+            ],
+            [
+              3,
+              7
+            ]
+          ],
+          "type": "SIDE_REVEAL",
+          "reveals": "BUOY",
+          "revealsPath": [
+            [
+              0,
+              3
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              6
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                0,
+                4
+              ],
+              "letter": "U"
+            },
+            {
+              "cell": [
+                1,
+                5
+              ],
+              "letter": "W"
+            },
+            {
+              "cell": [
+                2,
+                6
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                3,
+                7
+              ],
+              "letter": "Y"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stageIndex": 3,
+      "activeWords": [
+        {
+          "word": "DECK",
+          "path": [
+            [
+              5,
+              0
+            ],
+            [
+              5,
+              1
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              5,
+              3
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "VOYAGE",
+          "revealsPath": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              6,
+              2
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                5,
+                0
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                5,
+                1
+              ],
+              "letter": "T"
+            },
+            {
+              "cell": [
+                5,
+                2
+              ],
+              "letter": "G"
+            },
+            {
+              "cell": [
+                5,
+                3
+              ],
+              "letter": "I"
+            }
+          ]
+        },
+        {
+          "word": "BUOY",
+          "path": [
+            [
+              0,
+              3
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              6
+            ]
+          ],
+          "type": "STATIC",
+          "transmuteMap": [
+            {
+              "cell": [
+                0,
+                3
+              ],
+              "letter": "K"
+            },
+            {
+              "cell": [
+                0,
+                4
+              ],
+              "letter": "B"
+            },
+            {
+              "cell": [
+                0,
+                5
+              ],
+              "letter": "S"
+            },
+            {
+              "cell": [
+                0,
+                6
+              ],
+              "letter": "E"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "completionWords": [
+    {
+      "word": "VOYAGE",
+      "path": [
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          6,
+          2
+        ]
+      ]
+    }
+  ],
+  "accidentalWords": [
+    {
+      "word": "SAND",
+      "path": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ]
+      ]
+    },
+    {
+      "word": "TIDE",
+      "path": [
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          6,
+          6
+        ]
+      ]
+    }
+  ],
+  "validation": {
+    "allStagesVerified": true,
+    "solveOrderIndependent": true,
+    "stagesVerified": 4,
+    "postTransmuteStatesVerified": 12,
+    "reachableSettledStates": 25,
+    "reachableBranches": 40,
+    "completeMoveOrders": 70,
+    "deterministic": true,
+    "forwardOnly": true
+  },
+  "levelNumber": 2,
+  "localLevel": 2,
+  "areaId": 1,
+  "themeKey": "OCEAN_ABYSS",
+  "themeName": "Coral Kingdom",
+  "objectiveThemeKey": "SAILING_HARBORS",
+  "objectiveThemeName": "Sailing and Harbours",
+  "design": {
+    "title": "The Reef Responds",
+    "purpose": "Reinforce solving and readable local transformations",
+    "difficulty": "EASY",
+    "nodeKind": "STANDARD",
+    "authoringVersion": 2,
+    "objectiveCount": 8,
+    "objectiveThemeKey": "SAILING_HARBORS",
+    "objectiveThemeName": "Sailing and Harbours",
+    "intentionalBonusWords": [
+      {
+        "word": "SAND",
+        "path": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ]
+      },
+      {
+        "word": "TIDE",
+        "path": [
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            6,
+            6
+          ]
+        ]
+      }
+    ],
+    "completionPresentation": "STANDARD_VICTORY"
+  }
+}

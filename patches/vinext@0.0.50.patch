@@ -1,0 +1,17 @@
+diff --git a/dist/plugins/fonts.js b/dist/plugins/fonts.js
+index b749585da3386a2299a33d21f7265e80d3065656..f994aa81113d5dd851fb7e66bdd9a5ebf85b099f 100644
+--- a/dist/plugins/fonts.js
++++ b/dist/plugins/fonts.js
+@@ -87,9 +87,10 @@ function formatGoogleFontsErrorBody(body) {
+ * filesystems.
+ */
+ function _rewriteCachedFontCssToServedUrls(css, cacheDir, assetsDir = DEFAULT_ASSETS_DIR) {
+-	if (!cacheDir || !css.includes(cacheDir)) return css;
++	const normalizedCacheDir = cacheDir.replaceAll("\\", "/");
++	if (!cacheDir || !css.includes(normalizedCacheDir)) return css;
+ 	const prefix = assetsDir || DEFAULT_ASSETS_DIR;
+-	return css.split(cacheDir).join(`/${prefix}/${VINEXT_FONT_URL_NAMESPACE}`);
++	return css.split(normalizedCacheDir).join(`/${prefix}/${VINEXT_FONT_URL_NAMESPACE}`);
+ }
+ /**
+ * Default Vite `build.assetsDir` — mirrors Vite's own default. Used as

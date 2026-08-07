@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Word Kingdom: Spell &amp; Steal</title>
+  <defs><linearGradient id="parchment" x1="16" y1="14" x2="49" y2="52" gradientUnits="userSpaceOnUse"><stop stop-color="#fff9dd"/><stop offset="1" stop-color="#eab957"/></linearGradient></defs>
+  <rect x="4" y="4" width="56" height="56" rx="17" fill="#142c63" stroke="#f5bd32" stroke-width="4"/>
+  <rect x="11" y="10" width="42" height="42" rx="11" fill="url(#parchment)" stroke="#9b561c" stroke-width="3"/>
+  <path d="M17 20l7 27h7l4-14 4 14h7l7-27h-8l-3 16-4-16h-6l-4 16-3-16h-8z" fill="#8b2a19"/>
+</svg>

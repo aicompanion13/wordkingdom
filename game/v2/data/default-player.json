@@ -1,0 +1,15 @@
+{
+  "version": 3,
+  "energy": 45,
+  "energyUpdatedAt": 0,
+  "coins": 1200,
+  "stars": 6,
+  "shields": 0,
+  "currentLevel": 14,
+  "currentAreaId": 1,
+  "unlockedAreaIds": [1],
+  "areaProgress": { "1": {}, "2": {}, "3": {}, "4": {}, "5": {} },
+  "claimedAreaRewards": [],
+  "recentWordsByArea": { "1": [], "2": [], "3": [], "4": [], "5": [] },
+  "settings": { "sfx": true, "bgm": true, "haptics": true }
+}

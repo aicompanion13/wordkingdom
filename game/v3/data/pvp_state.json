@@ -1,0 +1,64 @@
+{
+  "playerId": "user_78921",
+  "displayName": "Young King",
+  "coinBank": 1200,
+  "activeShields": 0,
+  "shieldFragments": 0,
+  "maxShieldCapacity": 3,
+  "badgeProgress": { "attack": 0, "steal": 0, "shield": 0, "raid": 0 },
+  "readyActions": { "attack": 0, "steal": 0, "shield": 0, "raid": 0 },
+  "protectedCardIds": [],
+  "damagedCardIds": [],
+  "tutorialsCompleted": [],
+  "levelBriefingsAcknowledged": [],
+  "pendingSteal": null,
+  "pendingRaid": null,
+  "ftueProgress": {
+    "version": 6,
+    "hasCompletedFTUE": false,
+    "skipped": false,
+    "completedBeats": [],
+    "completedTutorials": [],
+    "grantedCredits": [],
+    "albumUnlocked": false,
+    "unlockedAlbumPages": [],
+    "viewedAlbumPages": [],
+    "pendingMandatoryStep": null,
+    "pendingTutorialAction": null,
+    "completedVisualSteps": [],
+    "level1ResultsAcknowledged": false,
+    "level1CompletionResult": null,
+    "oceanRewardLevel": null,
+    "oceanRewardPhase": null,
+    "oceanRewardedLevels": [],
+    "oceanCollectedStickers": [],
+    "oceanStickerRevealCount": 0,
+    "oceanCompletionResult": null,
+    "oceanPackMessageDismissed": false,
+    "oceanAlbumMessageDismissed": false
+  },
+  "pvpHistory": [],
+  "matchmakingQueue": [
+    { "playerId": "user_11042", "displayName": "Captain Coral", "avatar": "🧜", "coinBank": 18400, "activeShields": 1, "cards": [
+      { "cardId": "ocean_01", "name": "Golden Anchor", "rarity": 1, "spriteKey": "card_anchor", "icon": "⚓", "shielded": false, "damaged": false, "stolen": false, "protectedTutorial": true },
+      { "cardId": "ocean_02", "name": "Pearl Shell", "rarity": 2, "spriteKey": "card_pearl", "icon": "🐚", "shielded": true, "damaged": false, "stolen": false },
+      { "cardId": "ocean_03", "name": "Neptune Trident", "rarity": 4, "spriteKey": "card_trident", "icon": "🔱", "shielded": false, "damaged": false, "stolen": false }
+    ] },
+    { "playerId": "user_27119", "displayName": "Moss Queen", "avatar": "🧝", "coinBank": 26750, "activeShields": 0, "cards": [
+      { "cardId": "forest_01", "name": "Moonlit Acorn", "rarity": 1, "spriteKey": "card_acorn", "icon": "🌰", "shielded": false, "damaged": false, "stolen": false, "protectedTutorial": true },
+      { "cardId": "forest_02", "name": "Moss Crown", "rarity": 2, "spriteKey": "card_moss", "icon": "🌿", "shielded": true, "damaged": false, "stolen": false },
+      { "cardId": "forest_03", "name": "Ancient Stag", "rarity": 4, "spriteKey": "card_stag", "icon": "🦌", "shielded": false, "damaged": false, "stolen": false }
+    ] },
+    { "playerId": "user_48302", "displayName": "Sir Ledger", "avatar": "🦁", "coinBank": 43900, "activeShields": 2, "cards": [
+      { "cardId": "desert_01", "name": "Royal Scarab", "rarity": 1, "spriteKey": "card_scarab", "icon": "🪲", "shielded": false, "damaged": false, "stolen": false, "protectedTutorial": true },
+      { "cardId": "desert_02", "name": "Sun Tablet", "rarity": 2, "spriteKey": "card_tablet", "icon": "☀️", "shielded": true, "damaged": false, "stolen": false },
+      { "cardId": "desert_03", "name": "Sphinx Crown", "rarity": 4, "spriteKey": "card_sphinx", "icon": "👑", "shielded": false, "damaged": false, "stolen": false, "completedCollection": true }
+    ] },
+    { "playerId": "user_77201", "displayName": "Pearl Baron", "avatar": "🏴‍☠️", "coinBank": 31800, "activeShields": 0, "cards": [
+      { "cardId": "space_01", "name": "Comet Crown", "rarity": 1, "spriteKey": "card_comet", "icon": "☄️", "shielded": false, "damaged": false, "stolen": false, "protectedTutorial": true },
+      { "cardId": "space_02", "name": "Moon Compass", "rarity": 2, "spriteKey": "card_moon", "icon": "🌙", "shielded": true, "damaged": false, "stolen": false },
+      { "cardId": "space_03", "name": "Star Throne", "rarity": 4, "spriteKey": "card_star", "icon": "🌟", "shielded": false, "damaged": false, "stolen": false }
+    ] }
+  ],
+  "notificationOutbox": []
+}

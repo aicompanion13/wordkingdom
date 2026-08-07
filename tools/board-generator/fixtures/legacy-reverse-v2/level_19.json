@@ -1,0 +1,873 @@
+{
+  "generatorVersion": 2,
+  "seed": 731404,
+  "generationSubSeed": 891979138,
+  "generationAttempt": 0,
+  "gridSize": {
+    "rows": 8,
+    "cols": 8
+  },
+  "chainRevealRatioActual": 0.5,
+  "initialGrid": [
+    [
+      "T",
+      "E",
+      "V",
+      "N",
+      "E",
+      "I",
+      "L",
+      "A"
+    ],
+    [
+      "R",
+      "L",
+      "E",
+      "O",
+      "E",
+      "M",
+      "B",
+      "G"
+    ],
+    [
+      "A",
+      "U",
+      "R",
+      "O",
+      "R",
+      "A",
+      "T",
+      "A"
+    ],
+    [
+      "S",
+      "P",
+      "U",
+      "A",
+      "N",
+      "E",
+      "T",
+      "L"
+    ],
+    [
+      "O",
+      "T",
+      "S",
+      "O",
+      "G",
+      "I",
+      "T",
+      "A"
+    ],
+    [
+      "L",
+      "S",
+      "T",
+      "O",
+      "R",
+      "S",
+      "T",
+      "X"
+    ],
+    [
+      "A",
+      "A",
+      "Y",
+      "N",
+      "O",
+      "E",
+      "G",
+      "Y"
+    ],
+    [
+      "R",
+      "T",
+      "I",
+      "C",
+      "O",
+      "M",
+      "E",
+      "T"
+    ]
+  ],
+  "obstacles": [
+    {
+      "cell": [
+        0,
+        0
+      ],
+      "type": "STARDUST"
+    },
+    {
+      "cell": [
+        1,
+        0
+      ],
+      "type": "ASTEROID"
+    },
+    {
+      "cell": [
+        1,
+        4
+      ],
+      "type": "STARDUST"
+    },
+    {
+      "cell": [
+        1,
+        5
+      ],
+      "type": "STARDUST"
+    },
+    {
+      "cell": [
+        1,
+        6
+      ],
+      "type": "ASTEROID"
+    },
+    {
+      "cell": [
+        2,
+        6
+      ],
+      "type": "GRAVITY"
+    },
+    {
+      "cell": [
+        4,
+        4
+      ],
+      "type": "STARDUST"
+    },
+    {
+      "cell": [
+        6,
+        6
+      ],
+      "type": "STARDUST"
+    }
+  ],
+  "stages": [
+    {
+      "stageIndex": 0,
+      "activeWords": [
+        {
+          "word": "AURORA",
+          "path": [
+            [
+              2,
+              0
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              5
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "VENUS",
+          "revealsPath": [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              4,
+              2
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                2,
+                0
+              ],
+              "letter": "N"
+            },
+            {
+              "cell": [
+                2,
+                1
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                2,
+                2
+              ],
+              "letter": "N"
+            },
+            {
+              "cell": [
+                2,
+                3
+              ],
+              "letter": "I"
+            },
+            {
+              "cell": [
+                2,
+                4
+              ],
+              "letter": "T"
+            },
+            {
+              "cell": [
+                2,
+                5
+              ],
+              "letter": "D"
+            }
+          ]
+        },
+        {
+          "word": "COMET",
+          "path": [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              4
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              6
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          "type": "STATIC",
+          "transmuteMap": [
+            {
+              "cell": [
+                7,
+                3
+              ],
+              "letter": "F"
+            },
+            {
+              "cell": [
+                7,
+                4
+              ],
+              "letter": "H"
+            },
+            {
+              "cell": [
+                7,
+                5
+              ],
+              "letter": "T"
+            },
+            {
+              "cell": [
+                7,
+                6
+              ],
+              "letter": "L"
+            },
+            {
+              "cell": [
+                7,
+                7
+              ],
+              "letter": "H"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stageIndex": 1,
+      "activeWords": [
+        {
+          "word": "VENUS",
+          "path": [
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              4,
+              2
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "PLANET",
+          "revealsPath": [
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              3,
+              6
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                0,
+                2
+              ],
+              "letter": "F"
+            },
+            {
+              "cell": [
+                1,
+                2
+              ],
+              "letter": "I"
+            },
+            {
+              "cell": [
+                2,
+                2
+              ],
+              "letter": "T"
+            },
+            {
+              "cell": [
+                3,
+                2
+              ],
+              "letter": "L"
+            },
+            {
+              "cell": [
+                4,
+                2
+              ],
+              "letter": "L"
+            }
+          ]
+        },
+        {
+          "word": "GALAXY",
+          "path": [
+            [
+              1,
+              7
+            ],
+            [
+              2,
+              7
+            ],
+            [
+              3,
+              7
+            ],
+            [
+              4,
+              7
+            ],
+            [
+              5,
+              7
+            ],
+            [
+              6,
+              7
+            ]
+          ],
+          "type": "STATIC",
+          "transmuteMap": [
+            {
+              "cell": [
+                1,
+                7
+              ],
+              "letter": "L"
+            },
+            {
+              "cell": [
+                2,
+                7
+              ],
+              "letter": "H"
+            },
+            {
+              "cell": [
+                3,
+                7
+              ],
+              "letter": "U"
+            },
+            {
+              "cell": [
+                4,
+                7
+              ],
+              "letter": "S"
+            },
+            {
+              "cell": [
+                5,
+                7
+              ],
+              "letter": "F"
+            },
+            {
+              "cell": [
+                6,
+                7
+              ],
+              "letter": "S"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stageIndex": 2,
+      "activeWords": [
+        {
+          "word": "PLANET",
+          "path": [
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              3,
+              6
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "MOON",
+          "revealsPath": [
+            [
+              3,
+              3
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              5,
+              3
+            ],
+            [
+              6,
+              3
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                3,
+                1
+              ],
+              "letter": "O"
+            },
+            {
+              "cell": [
+                3,
+                2
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                3,
+                3
+              ],
+              "letter": "M"
+            },
+            {
+              "cell": [
+                3,
+                4
+              ],
+              "letter": "T"
+            },
+            {
+              "cell": [
+                3,
+                5
+              ],
+              "letter": "O"
+            },
+            {
+              "cell": [
+                3,
+                6
+              ],
+              "letter": "D"
+            }
+          ]
+        },
+        {
+          "word": "ALIEN",
+          "path": [
+            [
+              0,
+              7
+            ],
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              3
+            ]
+          ],
+          "type": "STATIC",
+          "transmuteMap": [
+            {
+              "cell": [
+                0,
+                7
+              ],
+              "letter": "R"
+            },
+            {
+              "cell": [
+                0,
+                6
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                0,
+                5
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                0,
+                4
+              ],
+              "letter": "I"
+            },
+            {
+              "cell": [
+                0,
+                3
+              ],
+              "letter": "W"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stageIndex": 3,
+      "activeWords": [
+        {
+          "word": "MOON",
+          "path": [
+            [
+              3,
+              3
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              5,
+              3
+            ],
+            [
+              6,
+              3
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "STAR",
+          "revealsPath": [
+            [
+              5,
+              1
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              5,
+              3
+            ],
+            [
+              5,
+              4
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                3,
+                3
+              ],
+              "letter": "T"
+            },
+            {
+              "cell": [
+                4,
+                3
+              ],
+              "letter": "H"
+            },
+            {
+              "cell": [
+                5,
+                3
+              ],
+              "letter": "A"
+            },
+            {
+              "cell": [
+                6,
+                3
+              ],
+              "letter": "O"
+            }
+          ]
+        },
+        {
+          "word": "SOLAR",
+          "path": [
+            [
+              3,
+              0
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          "type": "STATIC",
+          "transmuteMap": [
+            {
+              "cell": [
+                3,
+                0
+              ],
+              "letter": "P"
+            },
+            {
+              "cell": [
+                4,
+                0
+              ],
+              "letter": "A"
+            },
+            {
+              "cell": [
+                5,
+                0
+              ],
+              "letter": "M"
+            },
+            {
+              "cell": [
+                6,
+                0
+              ],
+              "letter": "O"
+            },
+            {
+              "cell": [
+                7,
+                0
+              ],
+              "letter": "S"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "completionWords": [
+    {
+      "word": "STAR",
+      "path": [
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          5,
+          4
+        ]
+      ]
+    }
+  ],
+  "accidentalWords": [
+    {
+      "word": "PLANE",
+      "path": [
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          3,
+          5
+        ]
+      ]
+    },
+    {
+      "word": "STARS",
+      "path": [
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          5
+        ]
+      ]
+    }
+  ],
+  "validation": {
+    "allStagesVerified": true,
+    "solveOrderIndependent": true,
+    "stagesVerified": 4,
+    "postTransmuteStatesVerified": 12
+  },
+  "levelNumber": 19,
+  "localLevel": 4,
+  "areaId": 4,
+  "themeKey": "STARFALL_REALM",
+  "themeName": "Starfall Citadel"
+}

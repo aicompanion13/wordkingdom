@@ -1,0 +1,42 @@
+[
+  {
+    "id": "royal-meadow",
+    "name": "Royal Meadow",
+    "subtitle": "Rebuild the king's first province",
+    "icon": "👑",
+    "accent": "#2f8d4e",
+    "words": ["CROWN", "CASTLE", "KNIGHT", "QUEST", "SCEPTER", "BANNER", "THRONE", "ROYAL", "KING", "TOWER", "FEAST", "JEWEL"]
+  },
+  {
+    "id": "coral-coast",
+    "name": "Coral Coast",
+    "subtitle": "Rescue words beneath the tide",
+    "icon": "⚓",
+    "accent": "#168bad",
+    "words": ["CORAL", "WHALE", "PEARL", "TIDAL", "ANCHOR", "SHELL", "DOLPHIN", "REEF", "WAVES", "OCEAN", "KELP", "SHARK"]
+  },
+  {
+    "id": "whispering-wood",
+    "name": "Whispering Wood",
+    "subtitle": "Wake the old forest guardians",
+    "icon": "🌲",
+    "accent": "#50812b",
+    "words": ["ACORN", "BADGER", "CANOPY", "FERN", "GROVE", "MOSS", "OWL", "RIVER", "ROOTS", "STAG", "TRAIL", "WILLOW"]
+  },
+  {
+    "id": "starfall-realm",
+    "name": "Starfall Realm",
+    "subtitle": "Chart the kingdom beyond the sky",
+    "icon": "🚀",
+    "accent": "#7254c7",
+    "words": ["COMET", "COSMOS", "GALAXY", "LUNAR", "METEOR", "NEBULA", "ORBIT", "PLANET", "SOLAR", "SPACE", "STAR", "VOID"]
+  },
+  {
+    "id": "frostkeep",
+    "name": "Frostkeep",
+    "subtitle": "Break the spell of the frozen north",
+    "icon": "❄️",
+    "accent": "#3a79b9",
+    "words": ["AURORA", "BLIZZARD", "FROST", "GLACIER", "ICEBERG", "NARWHAL", "POLAR", "SEAL", "SNOW", "TUNDRA", "WINTER", "WOLF"]
+  }
+]

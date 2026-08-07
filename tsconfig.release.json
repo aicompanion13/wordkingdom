@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "incremental": false
+  },
+  "include": [
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "build/**/*.ts",
+    "db/**/*.ts",
+    "game/**/*.ts",
+    "worker/**/*.ts",
+    "cloudflare-env.d.ts",
+    "next-env.d.ts"
+  ],
+  "exclude": [
+    "backups",
+    "dist",
+    "node_modules",
+    "tools",
+    "work"
+  ]
+}

@@ -1,0 +1,137 @@
+[
+  {
+    "areaId": 1,
+    "themeKey": "OCEAN_ABYSS",
+    "displayName": "Coral Kingdom",
+    "subtitle": "Restore a royal reef beneath the waves",
+    "icon": "🐚",
+    "accent": "#13a9c5",
+    "themeDictionary": ["CORAL", "SHARK", "OCEAN", "REEF", "SHELL", "ANCHOR", "PIRATE", "TIDE", "WAVE", "ISLAND", "PEARL", "WHALE", "KELP", "DOLPHIN", "TRIDENT", "SEAHORSE", "OCTOPUS", "TURTLE", "MARLIN", "LAGOON", "COVE", "SAILOR", "MERMAID", "NAUTILUS", "CURRENT", "BARNACLE", "REGATTA", "GULL"],
+    "visualAssets": {
+      "backgroundSprite": "bg_ocean_area_01",
+      "musicTrack": "bgm_underwater_vibes",
+      "particleEffect": "fx_rising_bubbles",
+      "buildings": [
+        { "id": "coral_palace", "name": "Coral Palace", "icon": "🏰", "maxLevel": 5, "baseCost": 200 },
+        { "id": "sunken_galleon", "name": "Sunken Galleon", "icon": "⛵", "maxLevel": 5, "baseCost": 350 },
+        { "id": "pearl_statue", "name": "Pearl Statue", "icon": "🫧", "maxLevel": 5, "baseCost": 500 },
+        { "id": "lighthouse", "name": "Coral Lighthouse", "icon": "🗼", "maxLevel": 5, "baseCost": 750 },
+        { "id": "triton_gate", "name": "Royal Triton Gate", "icon": "🔱", "maxLevel": 5, "baseCost": 1000 }
+      ]
+    },
+    "obstaclePalette": [
+      { "key": "ALGAE", "name": "Tangling Algae", "icon": "🌿" },
+      { "key": "BUBBLE_FENCE", "name": "Bubble Fence", "icon": "🫧" },
+      { "key": "PEARL_LOCK", "name": "Pearl Lock", "icon": "🦪" }
+    ],
+    "areaCompletionReward": { "coins": 2000, "energy": 50, "chestType": "GOLD" }
+  },
+  {
+    "areaId": 2,
+    "themeKey": "ENCHANTED_FOREST",
+    "displayName": "Whispering Woods",
+    "subtitle": "Wake the guardians of the ancient grove",
+    "icon": "🌲",
+    "accent": "#65a83e",
+    "themeDictionary": ["ACORN", "BADGER", "CANOPY", "FERN", "GROVE", "MOSS", "RIVER", "ROOTS", "STAG", "TRAIL", "WILLOW", "FOREST", "MAGIC", "BIRCH", "CEDAR", "MAPLE", "THICKET", "RABBIT", "HEDGE", "BLOOM", "PETAL", "BARK", "BRANCH", "FAWN", "BEETLE", "HERON", "POND", "FOXES"],
+    "visualAssets": {
+      "backgroundSprite": "bg_forest_area_01",
+      "musicTrack": "bgm_whispering_leaves",
+      "particleEffect": "fx_fireflies",
+      "buildings": [
+        { "id": "oak_hall", "name": "Great Oak Hall", "icon": "🌳", "maxLevel": 5, "baseCost": 500 },
+        { "id": "mushroom_inn", "name": "Mushroom Inn", "icon": "🍄", "maxLevel": 5, "baseCost": 700 },
+        { "id": "moon_well", "name": "Moonlit Well", "icon": "⛲", "maxLevel": 5, "baseCost": 950 },
+        { "id": "ranger_lodge", "name": "Ranger Lodge", "icon": "🏡", "maxLevel": 5, "baseCost": 1250 },
+        { "id": "stag_gate", "name": "Golden Stag Gate", "icon": "🦌", "maxLevel": 5, "baseCost": 1600 }
+      ]
+    },
+    "obstaclePalette": [
+      { "key": "VINES", "name": "Royal Vines", "icon": "🌿" },
+      { "key": "MOSS_STONE", "name": "Moss Stone", "icon": "🪨" },
+      { "key": "SPORE_CLOUD", "name": "Spore Cloud", "icon": "🍄" }
+    ],
+    "areaCompletionReward": { "coins": 4000, "energy": 50, "chestType": "GOLD" }
+  },
+  {
+    "areaId": 3,
+    "themeKey": "DESERT_RUINS",
+    "displayName": "Sunstone Empire",
+    "subtitle": "Unearth the kingdom buried by time",
+    "icon": "🏺",
+    "accent": "#dc8f27",
+    "themeDictionary": ["TEMPLE", "DESERT", "OASIS", "DUNES", "SCARAB", "SPHINX", "COBRA", "RELIC", "TOMB", "SAND", "CAMEL", "GOLD", "RUINS", "PHARAOH", "PYRAMID", "NOMAD", "CARAVAN", "PAPYRUS", "JACKAL", "MIRAGE", "DATE", "FALCON", "AMULET", "CANYON", "BRONZE", "SUNDIAL", "QUARTZ", "TORCH"],
+    "visualAssets": {
+      "backgroundSprite": "bg_desert_area_01",
+      "musicTrack": "bgm_sunstone_march",
+      "particleEffect": "fx_windborne_sand",
+      "buildings": [
+        { "id": "oasis", "name": "Royal Oasis", "icon": "🌴", "maxLevel": 5, "baseCost": 900 },
+        { "id": "scarab_shrine", "name": "Scarab Shrine", "icon": "🪲", "maxLevel": 5, "baseCost": 1200 },
+        { "id": "sun_obelisk", "name": "Sun Obelisk", "icon": "☀️", "maxLevel": 5, "baseCost": 1550 },
+        { "id": "sphinx_gate", "name": "Sphinx Gate", "icon": "🦁", "maxLevel": 5, "baseCost": 1950 },
+        { "id": "golden_temple", "name": "Golden Temple", "icon": "🏛️", "maxLevel": 5, "baseCost": 2400 }
+      ]
+    },
+    "obstaclePalette": [
+      { "key": "SAND", "name": "Drifting Sand", "icon": "⏳" },
+      { "key": "SCARAB", "name": "Scarab Seal", "icon": "🪲" },
+      { "key": "STONE", "name": "Temple Stone", "icon": "🧱" }
+    ],
+    "areaCompletionReward": { "coins": 7000, "energy": 50, "chestType": "ROYAL" }
+  },
+  {
+    "areaId": 4,
+    "themeKey": "STARFALL_REALM",
+    "displayName": "Starfall Citadel",
+    "subtitle": "Build a royal outpost beyond the sky",
+    "icon": "🚀",
+    "accent": "#7f62d9",
+    "themeDictionary": ["COMET", "COSMOS", "GALAXY", "LUNAR", "METEOR", "NEBULA", "ORBIT", "PLANET", "SOLAR", "SPACE", "STAR", "VOID", "ROCKET", "ALIEN", "MOON", "PULSAR", "QUASAR", "SATURN", "VENUS", "MARS", "ECLIPSE", "CRATER", "PROBE", "ASTRAL", "ZENITH", "STELLAR", "GRAVITY", "AURORA"],
+    "visualAssets": {
+      "backgroundSprite": "bg_space_area_01",
+      "musicTrack": "bgm_starfall_waltz",
+      "particleEffect": "fx_stardust",
+      "buildings": [
+        { "id": "moon_port", "name": "Moon Port", "icon": "🚀", "maxLevel": 5, "baseCost": 1500 },
+        { "id": "comet_forge", "name": "Comet Forge", "icon": "☄️", "maxLevel": 5, "baseCost": 1900 },
+        { "id": "orbital_garden", "name": "Orbital Garden", "icon": "🪐", "maxLevel": 5, "baseCost": 2400 },
+        { "id": "star_observatory", "name": "Star Observatory", "icon": "🔭", "maxLevel": 5, "baseCost": 3000 },
+        { "id": "cosmic_palace", "name": "Cosmic Palace", "icon": "🏰", "maxLevel": 5, "baseCost": 3700 }
+      ]
+    },
+    "obstaclePalette": [
+      { "key": "ASTEROID", "name": "Asteroid Block", "icon": "☄️" },
+      { "key": "GRAVITY", "name": "Gravity Well", "icon": "🌀" },
+      { "key": "STARDUST", "name": "Stardust Veil", "icon": "✨" }
+    ],
+    "areaCompletionReward": { "coins": 10000, "energy": 50, "chestType": "ROYAL" }
+  },
+  {
+    "areaId": 5,
+    "themeKey": "FROZEN_KEEP",
+    "displayName": "Frost Crown",
+    "subtitle": "Break the spell over the frozen north",
+    "icon": "❄️",
+    "accent": "#418fd1",
+    "themeDictionary": ["AURORA", "FROST", "GLACIER", "ICEBERG", "NARWHAL", "POLAR", "SEAL", "SNOW", "TUNDRA", "WINTER", "WOLF", "IGLOO", "SLEET", "CROWN", "CHILL", "ARCTIC", "BLIZZARD", "PENGUIN", "SLED", "HUSKY", "FLAKE", "CRYSTAL", "MITTEN", "GLACIAL", "ALPINE", "FREEZE", "ICICLE", "NORTH"],
+    "visualAssets": {
+      "backgroundSprite": "bg_frost_area_01",
+      "musicTrack": "bgm_crystal_crown",
+      "particleEffect": "fx_snowfall",
+      "buildings": [
+        { "id": "igloo_inn", "name": "Igloo Inn", "icon": "🧊", "maxLevel": 5, "baseCost": 2200 },
+        { "id": "aurora_well", "name": "Aurora Well", "icon": "🌌", "maxLevel": 5, "baseCost": 2800 },
+        { "id": "wolf_lodge", "name": "Wolf Lodge", "icon": "🐺", "maxLevel": 5, "baseCost": 3500 },
+        { "id": "crystal_tower", "name": "Crystal Tower", "icon": "💎", "maxLevel": 5, "baseCost": 4300 },
+        { "id": "frost_palace", "name": "Frost Palace", "icon": "🏰", "maxLevel": 5, "baseCost": 5200 }
+      ]
+    },
+    "obstaclePalette": [
+      { "key": "ICE", "name": "Frozen Tile", "icon": "🧊" },
+      { "key": "SNOW", "name": "Snow Drift", "icon": "☃️" },
+      { "key": "CRYSTAL", "name": "Crystal Lock", "icon": "💎" }
+    ],
+    "areaCompletionReward": { "coins": 15000, "energy": 50, "chestType": "ROYAL" }
+  }
+]

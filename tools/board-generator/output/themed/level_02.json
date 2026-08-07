@@ -1,0 +1,912 @@
+{
+  "generatorVersion": 2,
+  "seed": 731102,
+  "generationSubSeed": 2488376642,
+  "generationAttempt": 2,
+  "gridSize": {
+    "rows": 8,
+    "cols": 8
+  },
+  "chainRevealRatioActual": 0.5,
+  "initialGrid": [
+    [
+      "N",
+      "A",
+      "U",
+      "T",
+      "I",
+      "L",
+      "U",
+      "C"
+    ],
+    [
+      "N",
+      "A",
+      "A",
+      "A",
+      "C",
+      "R",
+      "O",
+      "R"
+    ],
+    [
+      "C",
+      "M",
+      "F",
+      "O",
+      "C",
+      "E",
+      "E",
+      "N"
+    ],
+    [
+      "H",
+      "N",
+      "K",
+      "L",
+      "E",
+      "G",
+      "T",
+      "C"
+    ],
+    [
+      "O",
+      "K",
+      "A",
+      "E",
+      "A",
+      "G",
+      "O",
+      "O"
+    ],
+    [
+      "R",
+      "A",
+      "T",
+      "T",
+      "U",
+      "R",
+      "E",
+      "N"
+    ],
+    [
+      "N",
+      "E",
+      "T",
+      "L",
+      "A",
+      "P",
+      "I",
+      "O"
+    ],
+    [
+      "T",
+      "A",
+      "M",
+      "L",
+      "R",
+      "L",
+      "I",
+      "N"
+    ]
+  ],
+  "obstacles": [
+    {
+      "cell": [
+        1,
+        2
+      ],
+      "type": "PEARL_LOCK"
+    },
+    {
+      "cell": [
+        5,
+        1
+      ],
+      "type": "BUBBLE_FENCE"
+    },
+    {
+      "cell": [
+        5,
+        6
+      ],
+      "type": "ALGAE"
+    },
+    {
+      "cell": [
+        5,
+        7
+      ],
+      "type": "PEARL_LOCK"
+    },
+    {
+      "cell": [
+        6,
+        7
+      ],
+      "type": "ALGAE"
+    },
+    {
+      "cell": [
+        7,
+        0
+      ],
+      "type": "ALGAE"
+    }
+  ],
+  "stages": [
+    {
+      "stageIndex": 0,
+      "activeWords": [
+        {
+          "word": "REGATTA",
+          "path": [
+            [
+              1,
+              7
+            ],
+            [
+              2,
+              6
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              4
+            ],
+            [
+              5,
+              3
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              7,
+              1
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "OCEAN",
+          "revealsPath": [
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              5
+            ],
+            [
+              2,
+              6
+            ],
+            [
+              2,
+              7
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                1,
+                7
+              ],
+              "letter": "N"
+            },
+            {
+              "cell": [
+                2,
+                6
+              ],
+              "letter": "A"
+            },
+            {
+              "cell": [
+                3,
+                5
+              ],
+              "letter": "D"
+            },
+            {
+              "cell": [
+                4,
+                4
+              ],
+              "letter": "H"
+            },
+            {
+              "cell": [
+                5,
+                3
+              ],
+              "letter": "A"
+            },
+            {
+              "cell": [
+                6,
+                2
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                7,
+                1
+              ],
+              "letter": "B"
+            }
+          ]
+        },
+        {
+          "word": "CORAL",
+          "path": [
+            [
+              3,
+              7
+            ],
+            [
+              4,
+              6
+            ],
+            [
+              5,
+              5
+            ],
+            [
+              6,
+              4
+            ],
+            [
+              7,
+              3
+            ]
+          ],
+          "type": "SIDE_REVEAL",
+          "reveals": "MARLIN",
+          "revealsPath": [
+            [
+              7,
+              2
+            ],
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              4
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              6
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                3,
+                7
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                4,
+                6
+              ],
+              "letter": "T"
+            },
+            {
+              "cell": [
+                5,
+                5
+              ],
+              "letter": "N"
+            },
+            {
+              "cell": [
+                6,
+                4
+              ],
+              "letter": "P"
+            },
+            {
+              "cell": [
+                7,
+                3
+              ],
+              "letter": "A"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stageIndex": 1,
+      "activeWords": [
+        {
+          "word": "OCEAN",
+          "path": [
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              5
+            ],
+            [
+              2,
+              6
+            ],
+            [
+              2,
+              7
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "COVE",
+          "revealsPath": [
+            [
+              0,
+              7
+            ],
+            [
+              1,
+              6
+            ],
+            [
+              2,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                2,
+                3
+              ],
+              "letter": "N"
+            },
+            {
+              "cell": [
+                2,
+                4
+              ],
+              "letter": "A"
+            },
+            {
+              "cell": [
+                2,
+                5
+              ],
+              "letter": "V"
+            },
+            {
+              "cell": [
+                2,
+                6
+              ],
+              "letter": "T"
+            },
+            {
+              "cell": [
+                2,
+                7
+              ],
+              "letter": "R"
+            }
+          ]
+        },
+        {
+          "word": "MARLIN",
+          "path": [
+            [
+              7,
+              2
+            ],
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              4
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              6
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          "type": "SIDE_REVEAL",
+          "reveals": "GULL",
+          "revealsPath": [
+            [
+              4,
+              5
+            ],
+            [
+              5,
+              4
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              7,
+              2
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                7,
+                2
+              ],
+              "letter": "L"
+            },
+            {
+              "cell": [
+                7,
+                3
+              ],
+              "letter": "W"
+            },
+            {
+              "cell": [
+                7,
+                4
+              ],
+              "letter": "H"
+            },
+            {
+              "cell": [
+                7,
+                5
+              ],
+              "letter": "A"
+            },
+            {
+              "cell": [
+                7,
+                6
+              ],
+              "letter": "C"
+            },
+            {
+              "cell": [
+                7,
+                7
+              ],
+              "letter": "G"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stageIndex": 2,
+      "activeWords": [
+        {
+          "word": "COVE",
+          "path": [
+            [
+              0,
+              7
+            ],
+            [
+              1,
+              6
+            ],
+            [
+              2,
+              5
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "NAUTILUS",
+          "revealsPath": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              7
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                0,
+                7
+              ],
+              "letter": "S"
+            },
+            {
+              "cell": [
+                1,
+                6
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                2,
+                5
+              ],
+              "letter": "W"
+            },
+            {
+              "cell": [
+                3,
+                4
+              ],
+              "letter": "N"
+            }
+          ]
+        },
+        {
+          "word": "GULL",
+          "path": [
+            [
+              4,
+              5
+            ],
+            [
+              5,
+              4
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              7,
+              2
+            ]
+          ],
+          "type": "SIDE_REVEAL",
+          "reveals": "KELP",
+          "revealsPath": [
+            [
+              3,
+              2
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              5,
+              4
+            ],
+            [
+              6,
+              5
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                4,
+                5
+              ],
+              "letter": "A"
+            },
+            {
+              "cell": [
+                5,
+                4
+              ],
+              "letter": "L"
+            },
+            {
+              "cell": [
+                6,
+                3
+              ],
+              "letter": "P"
+            },
+            {
+              "cell": [
+                7,
+                2
+              ],
+              "letter": "C"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stageIndex": 3,
+      "activeWords": [
+        {
+          "word": "NAUTILUS",
+          "path": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              0,
+              4
+            ],
+            [
+              0,
+              5
+            ],
+            [
+              0,
+              6
+            ],
+            [
+              0,
+              7
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "ANCHOR",
+          "revealsPath": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              5,
+              0
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                0,
+                0
+              ],
+              "letter": "A"
+            },
+            {
+              "cell": [
+                0,
+                1
+              ],
+              "letter": "C"
+            },
+            {
+              "cell": [
+                0,
+                2
+              ],
+              "letter": "P"
+            },
+            {
+              "cell": [
+                0,
+                3
+              ],
+              "letter": "H"
+            },
+            {
+              "cell": [
+                0,
+                4
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                0,
+                5
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                0,
+                6
+              ],
+              "letter": "O"
+            },
+            {
+              "cell": [
+                0,
+                7
+              ],
+              "letter": "O"
+            }
+          ]
+        },
+        {
+          "word": "KELP",
+          "path": [
+            [
+              3,
+              2
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              5,
+              4
+            ],
+            [
+              6,
+              5
+            ]
+          ],
+          "type": "STATIC",
+          "transmuteMap": [
+            {
+              "cell": [
+                3,
+                2
+              ],
+              "letter": "R"
+            },
+            {
+              "cell": [
+                4,
+                3
+              ],
+              "letter": "H"
+            },
+            {
+              "cell": [
+                5,
+                4
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                6,
+                5
+              ],
+              "letter": "E"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "completionWords": [
+    {
+      "word": "ANCHOR",
+      "path": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          5,
+          0
+        ]
+      ]
+    }
+  ],
+  "accidentalWords": [],
+  "validation": {
+    "allStagesVerified": true,
+    "solveOrderIndependent": true,
+    "stagesVerified": 4,
+    "postTransmuteStatesVerified": 12,
+    "reachableSettledStates": 25,
+    "reachableBranches": 40,
+    "deterministic": true,
+    "forwardOnly": true
+  },
+  "levelNumber": 2,
+  "localLevel": 2,
+  "areaId": 1,
+  "themeKey": "OCEAN_ABYSS",
+  "themeName": "Coral Kingdom"
+}

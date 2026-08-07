@@ -1,0 +1,33 @@
+{
+  "seed": 12345,
+  "gridSize": {
+    "rows": 8,
+    "cols": 8
+  },
+  "wordPool": [
+    "CORAL",
+    "SHELL",
+    "TIDE",
+    "WAVE",
+    "REEF",
+    "SAND",
+    "PEARL",
+    "OCEAN",
+    "ANCHOR",
+    "SHARK"
+  ],
+  "stageCount": 4,
+  "activeWordsPerStage": {
+    "min": 2,
+    "max": 3
+  },
+  "chainRevealRatio": 0.5,
+  "obstacleConfig": {
+    "count": 6,
+    "types": [
+      "ICE",
+      "VINE"
+    ]
+  },
+  "dictionaryPath": "tools/board-generator/data/wordlist.txt"
+}

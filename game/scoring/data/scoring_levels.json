@@ -1,0 +1,8 @@
+[
+  { "boardId": "b_001", "level": 1, "areaId": 1, "title": "Coral Current", "wordsToComplete": 8, "starThresholds": [3200, 6000, 8500] },
+  { "boardId": "b_002", "level": 2, "areaId": 1, "title": "Pearl Passage", "wordsToComplete": 8, "starThresholds": [3500, 6400, 9000] },
+  { "boardId": "b_003", "level": 3, "areaId": 1, "title": "Triton Trial", "wordsToComplete": 9, "starThresholds": [4200, 7400, 10200] },
+  { "boardId": "b_004", "level": 4, "areaId": 2, "title": "Whispering Grove", "wordsToComplete": 8, "starThresholds": [3500, 6500, 9100] },
+  { "boardId": "b_005", "level": 5, "areaId": 2, "title": "Moonroot Path", "wordsToComplete": 9, "starThresholds": [4300, 7600, 10400] },
+  { "boardId": "b_006", "level": 6, "areaId": 2, "title": "Ancient Oak", "wordsToComplete": 10, "starThresholds": [5000, 8800, 12000] }
+]

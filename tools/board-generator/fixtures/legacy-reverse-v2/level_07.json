@@ -1,0 +1,831 @@
+{
+  "generatorVersion": 2,
+  "seed": 731202,
+  "generationSubSeed": 2959756013,
+  "generationAttempt": 0,
+  "gridSize": {
+    "rows": 8,
+    "cols": 8
+  },
+  "chainRevealRatioActual": 0.5,
+  "initialGrid": [
+    [
+      "A",
+      "A",
+      "T",
+      "U",
+      "H",
+      "R",
+      "B",
+      "S"
+    ],
+    [
+      "T",
+      "O",
+      "G",
+      "I",
+      "C",
+      "O",
+      "R",
+      "H"
+    ],
+    [
+      "C",
+      "N",
+      "M",
+      "O",
+      "S",
+      "O",
+      "A",
+      "E"
+    ],
+    [
+      "A",
+      "L",
+      "O",
+      "A",
+      "E",
+      "T",
+      "N",
+      "R"
+    ],
+    [
+      "N",
+      "A",
+      "V",
+      "T",
+      "T",
+      "S",
+      "C",
+      "O"
+    ],
+    [
+      "F",
+      "O",
+      "E",
+      "E",
+      "S",
+      "P",
+      "H",
+      "N"
+    ],
+    [
+      "P",
+      "T",
+      "E",
+      "K",
+      "C",
+      "I",
+      "H",
+      "T"
+    ],
+    [
+      "Y",
+      "E",
+      "B",
+      "E",
+      "E",
+      "T",
+      "L",
+      "E"
+    ]
+  ],
+  "obstacles": [
+    {
+      "cell": [
+        0,
+        2
+      ],
+      "type": "SPORE_CLOUD"
+    },
+    {
+      "cell": [
+        0,
+        7
+      ],
+      "type": "VINES"
+    },
+    {
+      "cell": [
+        1,
+        4
+      ],
+      "type": "SPORE_CLOUD"
+    },
+    {
+      "cell": [
+        4,
+        3
+      ],
+      "type": "VINES"
+    },
+    {
+      "cell": [
+        5,
+        5
+      ],
+      "type": "MOSS_STONE"
+    },
+    {
+      "cell": [
+        7,
+        1
+      ],
+      "type": "SPORE_CLOUD"
+    }
+  ],
+  "stages": [
+    {
+      "stageIndex": 0,
+      "activeWords": [
+        {
+          "word": "ROOTS",
+          "path": [
+            [
+              0,
+              5
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              2,
+              5
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "MOSS",
+          "revealsPath": [
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              5
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                0,
+                5
+              ],
+              "letter": "S"
+            },
+            {
+              "cell": [
+                1,
+                5
+              ],
+              "letter": "N"
+            },
+            {
+              "cell": [
+                2,
+                5
+              ],
+              "letter": "S"
+            },
+            {
+              "cell": [
+                3,
+                5
+              ],
+              "letter": "H"
+            },
+            {
+              "cell": [
+                4,
+                5
+              ],
+              "letter": "L"
+            }
+          ]
+        },
+        {
+          "word": "HERON",
+          "path": [
+            [
+              1,
+              7
+            ],
+            [
+              2,
+              7
+            ],
+            [
+              3,
+              7
+            ],
+            [
+              4,
+              7
+            ],
+            [
+              5,
+              7
+            ]
+          ],
+          "type": "STATIC",
+          "transmuteMap": [
+            {
+              "cell": [
+                1,
+                7
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                2,
+                7
+              ],
+              "letter": "S"
+            },
+            {
+              "cell": [
+                3,
+                7
+              ],
+              "letter": "O"
+            },
+            {
+              "cell": [
+                4,
+                7
+              ],
+              "letter": "W"
+            },
+            {
+              "cell": [
+                5,
+                7
+              ],
+              "letter": "R"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stageIndex": 1,
+      "activeWords": [
+        {
+          "word": "MOSS",
+          "path": [
+            [
+              2,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              5
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "GROVE",
+          "revealsPath": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              5,
+              2
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                2,
+                2
+              ],
+              "letter": "R"
+            },
+            {
+              "cell": [
+                2,
+                3
+              ],
+              "letter": "I"
+            },
+            {
+              "cell": [
+                2,
+                4
+              ],
+              "letter": "A"
+            },
+            {
+              "cell": [
+                2,
+                5
+              ],
+              "letter": "E"
+            }
+          ]
+        },
+        {
+          "word": "THICKET",
+          "path": [
+            [
+              6,
+              7
+            ],
+            [
+              6,
+              6
+            ],
+            [
+              6,
+              5
+            ],
+            [
+              6,
+              4
+            ],
+            [
+              6,
+              3
+            ],
+            [
+              6,
+              2
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "type": "STATIC",
+          "transmuteMap": [
+            {
+              "cell": [
+                6,
+                7
+              ],
+              "letter": "U"
+            },
+            {
+              "cell": [
+                6,
+                6
+              ],
+              "letter": "I"
+            },
+            {
+              "cell": [
+                6,
+                5
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                6,
+                4
+              ],
+              "letter": "I"
+            },
+            {
+              "cell": [
+                6,
+                3
+              ],
+              "letter": "E"
+            },
+            {
+              "cell": [
+                6,
+                2
+              ],
+              "letter": "W"
+            },
+            {
+              "cell": [
+                6,
+                1
+              ],
+              "letter": "O"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stageIndex": 2,
+      "activeWords": [
+        {
+          "word": "GROVE",
+          "path": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              5,
+              2
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "FOXES",
+          "revealsPath": [
+            [
+              5,
+              0
+            ],
+            [
+              5,
+              1
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              5,
+              3
+            ],
+            [
+              5,
+              4
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                1,
+                2
+              ],
+              "letter": "U"
+            },
+            {
+              "cell": [
+                2,
+                2
+              ],
+              "letter": "B"
+            },
+            {
+              "cell": [
+                3,
+                2
+              ],
+              "letter": "I"
+            },
+            {
+              "cell": [
+                4,
+                2
+              ],
+              "letter": "C"
+            },
+            {
+              "cell": [
+                5,
+                2
+              ],
+              "letter": "X"
+            }
+          ]
+        },
+        {
+          "word": "BEETLE",
+          "path": [
+            [
+              7,
+              2
+            ],
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              4
+            ],
+            [
+              7,
+              5
+            ],
+            [
+              7,
+              6
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          "type": "STATIC",
+          "transmuteMap": [
+            {
+              "cell": [
+                7,
+                2
+              ],
+              "letter": "P"
+            },
+            {
+              "cell": [
+                7,
+                3
+              ],
+              "letter": "F"
+            },
+            {
+              "cell": [
+                7,
+                4
+              ],
+              "letter": "W"
+            },
+            {
+              "cell": [
+                7,
+                5
+              ],
+              "letter": "N"
+            },
+            {
+              "cell": [
+                7,
+                6
+              ],
+              "letter": "A"
+            },
+            {
+              "cell": [
+                7,
+                7
+              ],
+              "letter": "N"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "stageIndex": 3,
+      "activeWords": [
+        {
+          "word": "FOXES",
+          "path": [
+            [
+              5,
+              0
+            ],
+            [
+              5,
+              1
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              5,
+              3
+            ],
+            [
+              5,
+              4
+            ]
+          ],
+          "type": "REVEAL_TRIGGER",
+          "reveals": "CANOPY",
+          "revealsPath": [
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          "transmuteMap": [
+            {
+              "cell": [
+                5,
+                0
+              ],
+              "letter": "O"
+            },
+            {
+              "cell": [
+                5,
+                1
+              ],
+              "letter": "S"
+            },
+            {
+              "cell": [
+                5,
+                2
+              ],
+              "letter": "L"
+            },
+            {
+              "cell": [
+                5,
+                3
+              ],
+              "letter": "U"
+            },
+            {
+              "cell": [
+                5,
+                4
+              ],
+              "letter": "N"
+            }
+          ]
+        },
+        {
+          "word": "BRANCH",
+          "path": [
+            [
+              0,
+              6
+            ],
+            [
+              1,
+              6
+            ],
+            [
+              2,
+              6
+            ],
+            [
+              3,
+              6
+            ],
+            [
+              4,
+              6
+            ],
+            [
+              5,
+              6
+            ]
+          ],
+          "type": "STATIC",
+          "transmuteMap": [
+            {
+              "cell": [
+                0,
+                6
+              ],
+              "letter": "A"
+            },
+            {
+              "cell": [
+                1,
+                6
+              ],
+              "letter": "F"
+            },
+            {
+              "cell": [
+                2,
+                6
+              ],
+              "letter": "N"
+            },
+            {
+              "cell": [
+                3,
+                6
+              ],
+              "letter": "O"
+            },
+            {
+              "cell": [
+                4,
+                6
+              ],
+              "letter": "J"
+            },
+            {
+              "cell": [
+                5,
+                6
+              ],
+              "letter": "R"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "completionWords": [
+    {
+      "word": "CANOPY",
+      "path": [
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          6,
+          0
+        ],
+        [
+          7,
+          0
+        ]
+      ]
+    }
+  ],
+  "accidentalWords": [],
+  "validation": {
+    "allStagesVerified": true,
+    "solveOrderIndependent": true,
+    "stagesVerified": 4,
+    "postTransmuteStatesVerified": 12
+  },
+  "levelNumber": 7,
+  "localLevel": 2,
+  "areaId": 2,
+  "themeKey": "ENCHANTED_FOREST",
+  "themeName": "Whispering Woods"
+}

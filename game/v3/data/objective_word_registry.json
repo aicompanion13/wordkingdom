@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "expectedObjectiveCount": 80,
+  "rules": {
+    "maximumLength": 8,
+    "minimumLength": 3,
+    "objectiveWordsAreGloballyUnique": true,
+    "rejectSimpleInflections": true,
+    "bonusWordsExcluded": true
+  },
+  "themes": {
+    "GOLDEN_FTUE": {
+      "displayName": "Golden Coral FTUE",
+      "approvedWords": ["SHORE", "WAVE", "CORAL", "PEARL", "STAR", "OCEAN", "REEF", "FIN"]
+    },
+    "SAILING_HARBORS": {
+      "displayName": "Sailing and Harbours",
+      "approvedWords": ["SAILOR", "ANCHOR", "DOCK", "BOAT", "PORT", "MAST", "DECK", "BUOY", "VOYAGE"]
+    },
+    "MARINE_ANIMALS": {
+      "displayName": "Marine Animals",
+      "approvedWords": ["WHALE", "DOLPHIN", "SHARK", "TURTLE", "OCTOPUS", "SEAL", "CRAB", "MARLIN", "WILDLIFE"]
+    },
+    "DANGEROUS_DEPTHS": {
+      "displayName": "Deep Ocean and Dangerous Waters",
+      "approvedWords": ["ABYSS", "TRENCH", "CURRENT", "STORM", "VORTEX", "DEPTH", "RIPTIDE", "ICEBERG", "DANGER"]
+    },
+    "MYTHIC_OCEAN": {
+      "displayName": "Mythical Ocean Kingdom",
+      "approvedWords": ["TRIDENT", "MERMAID", "NEPTUNE", "ATLANTIS", "PALACE", "CROWN", "SIREN", "TEMPLE", "KINGDOM"]
+    },
+    "FOREST_GATE": {
+      "displayName": "Forest Plants and Entrance",
+      "approvedWords": ["GATE", "TRAIL", "FERN", "MOSS", "BIRCH", "MAPLE", "VINES", "HEDGE", "FOREST"]
+    },
+    "WOODLAND_ANIMALS": {
+      "displayName": "Woodland Animals",
+      "approvedWords": ["BADGER", "RABBIT", "FOXES", "DEER", "OTTER", "BEETLE", "HERON", "STAG", "ANIMALS"]
+    },
+    "FOREST_FLOOR": {
+      "displayName": "Forest Floor and Hidden Habitats",
+      "approvedWords": ["BURROW", "CAVE", "NEST", "ROOTS", "STUMP", "STONE", "SOIL", "POND", "HABITAT"]
+    },
+    "ANCIENT_CANOPY": {
+      "displayName": "Ancient Forest and Canopy",
+      "approvedWords": ["CANOPY", "BRANCH", "REDWOOD", "WILLOW", "CEDAR", "GROVE", "THICKET", "ACORN", "TREES"]
+    },
+    "ENCHANTED_FOREST": {
+      "displayName": "Enchanted Forest",
+      "approvedWords": ["MAGIC", "SPELL", "FAIRY", "PIXIE", "CHARM", "RUNE", "WIZARD", "UNICORN", "CRYSTAL", "WONDER"]
+    }
+  },
+  "levels": [
+    { "levelNumber": 1, "themeKey": "GOLDEN_FTUE", "theme": "Golden Coral FTUE", "words": ["SHORE", "WAVE", "CORAL", "PEARL", "STAR", "OCEAN", "REEF", "FIN"] },
+    { "levelNumber": 2, "themeKey": "SAILING_HARBORS", "theme": "Sailing and Harbours", "words": ["SAILOR", "ANCHOR", "DOCK", "BOAT", "PORT", "MAST", "DECK", "BUOY"] },
+    { "levelNumber": 3, "themeKey": "MARINE_ANIMALS", "theme": "Marine Animals", "words": ["WHALE", "DOLPHIN", "SHARK", "TURTLE", "OCTOPUS", "SEAL", "CRAB", "MARLIN"] },
+    { "levelNumber": 4, "themeKey": "DANGEROUS_DEPTHS", "theme": "Deep Ocean and Dangerous Waters", "words": ["ABYSS", "TRENCH", "CURRENT", "STORM", "VORTEX", "DEPTH", "RIPTIDE", "ICEBERG"] },
+    { "levelNumber": 5, "themeKey": "MYTHIC_OCEAN", "theme": "Mythical Ocean Kingdom", "words": ["TRIDENT", "MERMAID", "NEPTUNE", "ATLANTIS", "PALACE", "CROWN", "SIREN", "TEMPLE"] },
+    { "levelNumber": 6, "themeKey": "FOREST_GATE", "theme": "Forest Plants and Entrance", "words": ["GATE", "TRAIL", "FERN", "MOSS", "BIRCH", "MAPLE", "VINES", "HEDGE"] },
+    { "levelNumber": 7, "themeKey": "WOODLAND_ANIMALS", "theme": "Woodland Animals", "words": ["BADGER", "RABBIT", "FOXES", "DEER", "OTTER", "BEETLE", "HERON", "STAG"] },
+    { "levelNumber": 8, "themeKey": "FOREST_FLOOR", "theme": "Forest Floor and Hidden Habitats", "words": ["BURROW", "CAVE", "NEST", "ROOTS", "STUMP", "STONE", "SOIL", "POND"] },
+    { "levelNumber": 9, "themeKey": "ANCIENT_CANOPY", "theme": "Ancient Forest and Canopy", "words": ["CANOPY", "BRANCH", "REDWOOD", "WILLOW", "CEDAR", "GROVE", "THICKET", "ACORN"] },
+    { "levelNumber": 10, "themeKey": "ENCHANTED_FOREST", "theme": "Enchanted Forest", "words": ["MAGIC", "SPELL", "FAIRY", "PIXIE", "CHARM", "RUNE", "WIZARD", "UNICORN"] }
+  ]
+}
