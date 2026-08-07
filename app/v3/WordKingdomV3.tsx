@@ -2005,6 +2005,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       <div className={styles.summaryAtmosphere} aria-hidden="true"><i /><i /><i /><i /><i /><span>🪙</span><span>🪙</span></div>
       <section className={`${base.summaryCard} ${styles.summaryCard}`} data-complete={summary.objectiveComplete}>
         <div className={styles.summaryRays} aria-hidden="true" />
+        {summary.objectiveComplete && <CelebrationBurst />}
         <div className={`${base.summaryCrown} ${styles.summaryCrownMedal}`}><span>{summary.objectiveComplete ? "👑" : "🛡️"}</span><i aria-hidden="true">◆</i></div>
         <span className={`${base.kicker} ${styles.summaryKicker}`}>LEVEL {summary.node.level} · {summary.node.title}</span>
         <h1>{summary.objectiveComplete ? "Conquest Complete!" : "Objective Not Met"}</h1>
@@ -2199,6 +2200,7 @@ function LevelOneResults({ summary, onContinue }: { summary: V3RunSummary; onCon
 function ConquestCompletePanel({ summary, title, cta, onContinue }: { summary: V3RunSummary; title: string; cta: string; onContinue: () => void }) {
   return <section className={`${base.summaryCard} ${styles.summaryCard} ${styles.ftueSummaryCard}`} role="dialog" aria-modal="true" aria-labelledby="ftue-results-title" data-complete="true">
     <div className={styles.summaryRays} aria-hidden="true" />
+    <CelebrationBurst />
     <div className={`${base.summaryCrown} ${styles.summaryCrownMedal}`}><span>👑</span><i aria-hidden="true">◆</i></div>
     <span className={`${base.kicker} ${styles.summaryKicker}`}>WORD KINGDOM · LEVEL {summary.node.level}</span>
     <h1 id="ftue-results-title">{title}</h1>
@@ -2211,6 +2213,22 @@ function ConquestCompletePanel({ summary, title, cta, onContinue }: { summary: V
     </div>
     <button className={`${base.primaryCta} ${styles.summaryPrimaryCta} ${styles.ftuePrimaryContinue}`} onClick={onContinue}><span>{cta}</span></button>
   </section>;
+}
+
+const CELEBRATION_BURST_GLYPHS = ["🪙", "✦", "⭐", "◆", "🪙", "✦", "⭐", "◆"];
+
+function CelebrationBurst() {
+  return <>
+    <div className={styles.celebrationBurst} aria-hidden="true">
+      {CELEBRATION_BURST_GLYPHS.map((glyph, index) => <i
+        key={index}
+        style={{ "--burst-angle": `${index * 45}deg`, "--burst-delay": `${(index % 4) * 45}ms` } as CSSProperties}
+      >{glyph}</i>)}
+    </div>
+    <div className={styles.celebrationRain} aria-hidden="true">
+      {Array.from({ length: 12 }, (_, index) => <em key={index} />)}
+    </div>
+  </>;
 }
 
 const OCEAN_STICKER_SYMBOLS: Record<OceanDiscoveryStickerId, string> = {
