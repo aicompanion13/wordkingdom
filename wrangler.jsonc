@@ -1,7 +1,8 @@
 {
   // Cloudflare Workers deploy config for Word Kingdom.
   // Build first with `pnpm exec vinext build`, then deploy with `npx wrangler deploy`.
-  "name": "word-kingdom",
+  // Must match the git-connected Worker project name in the Cloudflare dashboard.
+  "name": "wordkingdom",
   "account_id": "a4b25bd663465a16a2680a3d8fc15e76",
   "main": "dist/server/index.js",
   // nodejs_compat comes from vite.config.ts's shared binding config; declaring
