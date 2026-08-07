@@ -2048,15 +2048,19 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     "--theme-background-image": chapterTheme.backgroundImage ? `url("${chapterTheme.backgroundImage}")` : "none",
   } as CSSProperties;
   return <main data-chapter-theme={chapterTheme.id} className={`${base.shell} ${base.boardShell} ${styles.boardShell} ${isGoldenRun ? styles.goldenBoard : ""} ${boardLocked ? styles.boardPaused : ""} ${juiceShake ? styles.juiceScreenShake : ""}`} style={chapterStyle}>
-    {isGoldenRun && !player.completedLevels.includes(1)
-      ? <FtueGameTopBar onBack={returnHome} />
-      : <GameTopBar player={player} timer={energyTimer(player, clock)} onBack={returnHome} onSettings={() => setSettingsOpen(true)} coinPulse={coinCounterPulse} />}
+    {!(isGoldenRun && !player.completedLevels.includes(1))
+      && <GameTopBar player={player} timer={energyTimer(player, clock)} onBack={returnHome} onSettings={() => setSettingsOpen(true)} coinPulse={coinCounterPulse} />}
     <section className={styles.chapterIdentity} aria-label={`${chapterTheme.chapterTitle}, Level ${node.level}`}>
-      <div className={styles.chapterBannerLine}>
-        <i aria-hidden="true">{chapterTheme.ornaments[0]}</i>
-        <h1>{chapterTheme.chapterTitle}</h1>
-        <small>LV {node.level}</small>
-        <i aria-hidden="true">{chapterTheme.ornaments[1]}</i>
+      <div className={styles.chapterTopRow}>
+        {isGoldenRun && !player.completedLevels.includes(1) && <button className={styles.ftueInlineBack} onClick={returnHome} aria-label="Return to menu">‹</button>}
+        <div className={styles.chapterBannerLine}>
+          <i aria-hidden="true">{chapterTheme.ornaments[0]}</i>
+          <h1>{chapterTheme.chapterTitle}</h1>
+          <div className={styles.chapterBannerRight}>
+            <small>LV {node.level}</small>
+            <i aria-hidden="true">{chapterTheme.ornaments[1]}</i>
+          </div>
+        </div>
       </div>
       <div className={styles.previewScoreHud} aria-label={isGoldenRun ? "Guided tutorial with no timer" : `Score ${formatNumber(score.score)}, combo x${score.comboMultiplier.toFixed(1)}`}>
         <span><small>{isGoldenRun ? "GUIDED" : "SCORE"}</small><b>{isGoldenRun ? "LEVEL 1" : formatNumber(score.score)}</b></span>
@@ -2282,10 +2286,6 @@ function TopBar({ player, timer, locked = false, onShop, onSettings }: { player:
 
 function GameTopBar({ player, timer, onBack, onSettings, coinPulse }: { player: V3PlayerState; timer: string; onBack: () => void; onSettings: () => void; coinPulse: boolean }) {
   return <header className={`${base.gameTopBar} ${styles.largeTopBar}`}><button className={`${base.gameBack} ${styles.largeTopIcon}`} onClick={onBack}>‹</button><Resource icon="⚡" value={`${player.energy}/${ENERGY_CAP}`} sub={timer} /><Resource icon="⭐" value={String(player.stars)} sub="STARS" /><div data-coin-counter className={`${base.coinResource} ${styles.largeCoin} ${styles.gameCoin} ${coinPulse ? styles.coinCounterImpact : ""}`}><span>🪙</span><b>{formatResourceNumber(player.coins)}</b><i>+</i></div><button className={`${base.settingsButton} ${styles.largeTopIcon}`} onClick={onSettings}>⚙</button></header>;
-}
-
-function FtueGameTopBar({ onBack }: { onBack: () => void }) {
-  return <header className={styles.ftueGameTopBar}><button onClick={onBack} aria-label="Return to menu">‹</button></header>;
 }
 
 function Resource({ icon, value, sub }: { icon: string; value: string; sub?: string }) { return <div className={`${base.navResource} ${styles.largeResource}`}><span>{icon}</span><b>{value}</b>{sub && <small>{sub}</small>}</div>; }
