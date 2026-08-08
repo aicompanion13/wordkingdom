@@ -14,12 +14,14 @@
   position: relative;
   width: min(100%,380px);
   margin-top: 34px;
-  border: 4px solid #f2ba31;
-  border-radius: 28px;
-  padding: 40px 20px 20px;
+  border: 22px solid transparent;
+  border-image-source: url('/kingdom-popup-border-9slice.webp');
+  border-image-slice: 400 fill;
+  border-image-width: 22px;
+  border-image-repeat: stretch;
+  padding: 20px 6px 6px;
   text-align: center;
-  background: linear-gradient(145deg,#fffdf0 0%,#fff1c7 62%,#efd28b 100%);
-  box-shadow: 0 8px 0 #7e4019,0 22px 46px rgba(6,16,42,.45),inset 0 0 0 2px #fff5cf;
+  box-shadow: 0 18px 40px rgba(6,16,42,.45);
   animation: kingdomPopupPop 260ms cubic-bezier(.2,.85,.3,1.3) both;
 }
 
