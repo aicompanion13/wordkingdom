@@ -1,6 +1,6 @@
 {
   "title": "Ocean Kingdom",
-  "backgroundImage": "/word-kingdom-coral-bg.png",
+  "backgroundImage": "/word-kingdom-coral-bg.webp",
   "stickers": [
     { "id": "coral-castle", "x": 21, "y": 23, "rotation": -5, "scale": 1.08 },
     { "id": "pearl", "x": 50, "y": 18, "rotation": 3, "scale": 0.92 },

@@ -26,7 +26,7 @@ export default async function VersionThreePage() {
       <main className={styles.loginShell}>
         <section className={styles.loginCard}>
           <Image
-            src="/word-kingdom-mobile-v3.png"
+            src="/word-kingdom-mobile-v3.webp"
             alt="The young king holding the Word Kingdom board"
             width={768}
             height={1365}

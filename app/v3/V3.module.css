@@ -2035,7 +2035,7 @@
 .oceanAlbumSlot b { max-width:76px; margin-top:-2px; border:1.5px solid #f0dcae; border-radius:99px; padding:2px 5px; overflow:hidden; color:#183e73; background:#fff4c7; box-shadow:0 1px 0 rgba(117,66,29,.4); font-family:var(--game-display); font-size:6px; text-overflow:ellipsis; white-space:nowrap; }
 .oceanAlbumSlot:not([data-collected="true"]) { filter:none; }
 .oceanAlbumSlot:not([data-collected="true"]) b { color:#789; background:#b9cad1; border-color:#7b96a4; }
-.oceanAlbumCover { display:grid; place-items:center; width:min(100%,520px); height:100%; margin:auto; border:3px solid #fff; border-radius:24px; padding:18px; background:linear-gradient(rgba(5,44,89,.26),rgba(3,33,72,.62)),url('/word-kingdom-coral-bg.png') center/cover; box-shadow:0 12px 28px rgba(0,0,0,.35); }
+.oceanAlbumCover { display:grid; place-items:center; width:min(100%,520px); height:100%; margin:auto; border:3px solid #fff; border-radius:24px; padding:18px; background:linear-gradient(rgba(5,44,89,.26),rgba(3,33,72,.62)),url('/word-kingdom-coral-bg.webp') center/cover; box-shadow:0 12px 28px rgba(0,0,0,.35); }
 .oceanAlbumCover>div { width:min(100%,350px); border:2px solid #fff; border-radius:20px; padding:18px; color:#153b73; background:rgba(255,246,209,.96); box-shadow:0 14px 22px rgba(0,26,62,.3); text-align:center; }
 .oceanAlbumCover [data-artwork] { width:100px; height:80px; margin:auto; }
 .oceanAlbumCover h1 { margin:4px 0; font-family:var(--game-display); font-size:34px; }

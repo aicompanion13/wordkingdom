@@ -2307,7 +2307,7 @@ function PowerProgress({ kinds, badgeCounts, readyActions, impactSlots }: { kind
 function HomeMenu({ player, hydrated, playRef, guideLevelTwo, onPlay }: { player: V3PlayerState; hydrated: boolean; playRef: RefObject<HTMLButtonElement | null>; guideLevelTwo: boolean; onPlay: () => void }) {
   return <section className={styles.mainMenu}>
     <div className={styles.heroArtwork}>
-      <img src="/word-kingdom-mobile-v3.png" alt="Word Kingdom: Spell & Steal with the young king, living word board, and castle raid" />
+      <img src="/word-kingdom-mobile-v3.webp" alt="Word Kingdom: Spell & Steal with the young king, living word board, and castle raid" />
       <div className={styles.heroShine} />
     </div>
     <button ref={playRef} className={`${styles.mainPlayButton} ${guideLevelTwo ? styles.guidedLevelTwoButton : ""}`} disabled={!hydrated || (!guideLevelTwo && player.energy < 1)} onClick={onPlay}>
