@@ -84,6 +84,7 @@ import type { FtueCreditId, FtueTutorialId, FtueVisualStep, OceanDiscoverySticke
 import type { CardAttackResult, IncomingCardActionResult, MetaTutorialId, PowerUpKind, PvpState, RaidSession, RivalProfile, StealSession } from "@/game/v3/pvp-types";
 import type { AlbumDefinition, CardDefinition, ChapterDefinition, ObstacleState, PackResult, PackTier, TrackNode, V3PlayerState, V3RunSummary } from "@/game/v3/types";
 import { JuiceFxLayer } from "./JuiceFxLayer";
+import { KingdomPopup } from "./KingdomPopup";
 import { ConceptCard, DiscoveryArtwork, FtueCoachmark } from "./FtueCoachmarks";
 import base from "../v2/V2.module.css";
 import styles from "./V3.module.css";
@@ -2005,12 +2006,23 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     return <main data-chapter-theme={summaryTheme.id} className={`${base.shell} ${base.summaryShell} ${styles.summaryShell}`} style={summaryStyle}>
       <GameTopBar player={player} timer={energyTimer(player, clock)} onBack={returnHome} onSettings={() => setSettingsOpen(true)} coinPulse={coinCounterPulse} />
       <div className={styles.summaryAtmosphere} aria-hidden="true"><i /><i /><i /><i /><i /><span>🪙</span><span>🪙</span></div>
-      <section className={`${base.summaryCard} ${styles.summaryCard}`} data-complete={summary.objectiveComplete}>
-        <div className={styles.summaryRays} aria-hidden="true" />
-        {summary.objectiveComplete && <CelebrationBurst />}
-        <div className={`${base.summaryCrown} ${styles.summaryCrownMedal}`}><span>{summary.objectiveComplete ? "👑" : "🛡️"}</span><i aria-hidden="true">◆</i></div>
-        <span className={`${base.kicker} ${styles.summaryKicker}`}>LEVEL {summary.node.level} · {summary.node.title}</span>
-        <h1>{summary.objectiveComplete ? "Conquest Complete!" : "Objective Not Met"}</h1>
+      {summary.objectiveComplete && <CelebrationBurst />}
+      <KingdomPopup
+        title={summary.objectiveComplete ? "Conquest Complete!" : "Objective Not Met"}
+        subtitle={`LEVEL ${summary.node.level} · ${summary.node.title}`}
+        icon={summary.objectiveComplete ? "👑" : "🛡️"}
+        tone={summary.objectiveComplete ? "success" : "setback"}
+        celebrate={summary.objectiveComplete}
+        onClose={returnHome}
+        secondaryText="Return to Conquest Track"
+        onSecondary={returnHome}
+        ctaText={<><span>{summary.objectiveComplete ? summary.node.level === 1 && ftueProgress.pendingMandatoryStep ? "CONTINUE" : `Play Level ${player.currentLevel}` : "Retry Level"}</span><small>{summary.objectiveComplete && summary.node.level === 1 && ftueProgress.pendingMandatoryStep ? "OPEN YOUR NEW ALBUM" : "1 ⚡ Ticket"}</small></>}
+        onCta={() => {
+          if (!summary.objectiveComplete) requestLevelStart(summary.node);
+          else if (summary.node.level === 1 && ftueProgressRef.current.pendingMandatoryStep) returnHome();
+          else requestLevelStart(track.node(player.currentLevel));
+        }}
+      >
         {summary.objectiveComplete && summary.node.level > 5 && summary.node.level <= 10 && <div className={styles.albumUnlockNotice}>📖 <b>New Album page unlocked!</b><button onClick={() => openAlbumPage(summary.node.level)}>OPEN</button></div>}
         <div className={`${base.stars} ${styles.summaryStars}`} aria-label={`${summary.stars} of 3 stars earned`}>{[1, 2, 3].map((star) => <span data-earned={star <= summary.stars && summary.objectiveComplete ? "true" : undefined} className={star <= summary.stars && summary.objectiveComplete ? base.starEarned : ""} key={star}>★</span>)}</div>
         <div className={`${base.summaryGrid} ${styles.royalSummaryGrid}`}><Result label="Score" value={formatNumber(summary.score)} /><Result label="Time" value={`${summary.elapsedSeconds}s`} /><Result label="Accuracy" value={`${Math.round(summary.accuracy * 100)}%`} /><Result label="Longest Word" value={summary.longestWord || "—"} /><Result label="Hints" value={String(summary.hints)} /><Result label="Objective" value={summary.objectiveComplete ? "Complete" : "Retry"} /></div>
@@ -2022,13 +2034,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
           </div>
           {summary.packResult && <button className={styles.rewardPackButton} onClick={() => setPackReveal(summary.packResult!)}><span aria-hidden="true">🎁</span><b>{summary.packResult.tier} PACK</b><small>OPEN</small></button>}
         </div>}
-        <button className={`${base.primaryCta} ${styles.summaryPrimaryCta}`} onClick={() => {
-          if (!summary.objectiveComplete) requestLevelStart(summary.node);
-          else if (summary.node.level === 1 && ftueProgressRef.current.pendingMandatoryStep) returnHome();
-          else requestLevelStart(track.node(player.currentLevel));
-        }}><span>{summary.objectiveComplete ? summary.node.level === 1 && ftueProgress.pendingMandatoryStep ? "CONTINUE" : `Play Level ${player.currentLevel}` : "Retry Level"}</span><small>{summary.objectiveComplete && summary.node.level === 1 && ftueProgress.pendingMandatoryStep ? "OPEN YOUR NEW ALBUM" : "1 ⚡ Ticket"}</small></button>
-        <button className={`${base.secondaryCta} ${styles.summarySecondaryCta}`} onClick={returnHome}>Return to Conquest Track</button>
-      </section>
+      </KingdomPopup>
       {packReveal && <PackModal result={packReveal} onClose={closePackReveal} />}
       {pvpOverlay && <PvpEventOverlay state={pvpOverlay} ownedCards={ownedCards()} onAttack={chooseAttackCard} onSteal={performSteal} onUseLater={deferSteal} onShield={chooseShieldCard} onPick={pickRaidChest} onClose={closePvpOverlay} />}
       {pvpOverlay?.tutorial && <PowerTutorialPrompt kind={pvpOverlay.kind} />}
