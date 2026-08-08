@@ -925,7 +925,6 @@
   --theme-background-image: none;
   min-height: 100dvh;
   overflow-x: clip;
-  padding-top: max(8px,env(safe-area-inset-top));
   padding-bottom: max(34px,env(safe-area-inset-bottom));
   background-color: #082859!important;
   background-image: linear-gradient(var(--theme-veil),var(--theme-veil)),var(--theme-background-image),linear-gradient(180deg,#0b4f8d,#082858)!important;
@@ -942,6 +941,7 @@
   background: radial-gradient(circle at 50% 20%,transparent 0 28%,rgba(3,18,52,.16) 70%,rgba(3,14,42,.34));
 }
 .boardShell > * { position: relative; z-index: 1; }
+.boardShell > *:first-child { padding-top: max(8px,env(safe-area-inset-top)); }
 .boardShell[data-chapter-theme="coral"] { color: #142c63; }
 .boardShell[data-chapter-theme="forest"] { color: #142c63; }
 .boardShell {
@@ -1009,17 +1009,34 @@
   -webkit-text-stroke: .45px #704013;
   text-shadow: 0 2px 0 #713a13,0 4px 7px rgba(4,18,53,.34);
 }
-.chapterBannerRight > small {
-  border: 1.5px solid #f0dcae;
-  border-radius: 999px;
-  padding: 4px 7px;
-  color: #19427e;
-  background: #fff8ea;
+.levelMedal {
+  position: relative;
+  flex: 0 0 auto;
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 24%,#fff8bd,#ffd452 42%,#e5961d 70%,#b85d16);
+  box-shadow: 0 2px 0 #7f4017,0 4px 8px rgba(84,43,14,.4);
+}
+.levelMedal::before {
+  content: "";
+  position: absolute;
+  inset: 2.5px;
+  border: 1px solid rgba(255,255,255,.55);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.levelMedal b {
+  position: relative;
+  color: #6b3410;
   font-family: var(--game-display);
-  font-size: 8px;
+  font-size: 12px;
   font-weight: 1000;
   line-height: 1;
-  box-shadow: 0 2px 0 rgba(216,192,143,.53);
+  text-shadow: 0 1px 0 rgba(255,255,255,.45);
 }
 .permanentBrand {
   border: 1.5px solid rgba(255,255,255,.5);
@@ -1346,7 +1363,8 @@
   .chapterBannerLine > i, .chapterBannerRight > i { font-size:14px; }
   .chapterBannerLine > b { font-size:6px; }
   .chapterBannerLine h1 { font-size:clamp(15px,4.5vw,18px); }
-  .chapterBannerRight > small { padding:3px 5px; font-size:6.5px; }
+  .levelMedal { width:23px; height:23px; }
+  .levelMedal b { font-size:10px; }
   .permanentBrand { font-size:clamp(6px,1.75vw,7px); padding:3px 5px; }
   .themeObjectiveWords > div { min-height: 33px; font-size: clamp(11px,3.8vw,14px); }
   .powerProgressGrid { gap: 3px; }
@@ -1366,7 +1384,8 @@
   .chapterBannerLine { gap:4px; padding-inline:4px; }
   .chapterBannerLine > i, .chapterBannerRight > i { display:none; }
   .chapterBannerLine h1 { font-size:14px; }
-  .chapterBannerRight > small { padding-inline:4px; }
+  .levelMedal { width:21px; height:21px; }
+  .levelMedal b { font-size:9px; }
   .themeObjectiveRail { margin-bottom: 7px; }
   .themeObjectiveHeading span { padding-inline:7px; }
   .themeObjectiveWords > div { flex-basis: 92px; }
@@ -2238,10 +2257,13 @@
     font-size: clamp(16px,4.8vw,21px);
   }
 
-  .chapterBannerRight > small {
-    flex: 0 0 auto;
-    padding: 3px 5px;
-    font-size: 7px;
+  .levelMedal {
+    width: 24px;
+    height: 24px;
+  }
+
+  .levelMedal b {
+    font-size: 10.5px;
   }
 
   .permanentBrand {

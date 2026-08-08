@@ -2059,7 +2059,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
           <i aria-hidden="true">{chapterTheme.ornaments[0]}</i>
           <h1>{chapterTheme.chapterTitle}</h1>
           <div className={styles.chapterBannerRight}>
-            <small>LV {node.level}</small>
+            <span className={styles.levelMedal} aria-hidden="true"><b>{node.level}</b></span>
             <i aria-hidden="true">{chapterTheme.ornaments[1]}</i>
           </div>
         </div>
@@ -2280,14 +2280,14 @@ function OceanRewardExperience({ level, phase, summary, revealCount, collectedCo
 function TopBar({ player, timer, locked = false, onShop, onSettings }: { player: V3PlayerState; timer: string; locked?: boolean; onShop: () => void; onSettings: () => void }) {
   return <header className={`${base.hubTopBar} ${styles.largeTopBar} ${styles.mobileResourceBar}`}>
     <Resource icon="⚡" value={`${player.energy}/${ENERGY_CAP}`} sub={timer} />
-    <Resource icon="⭐" value={String(player.stars)} sub="STARS" />
+    <Resource icon="⭐" value={String(player.stars)} />
     <button disabled={locked} data-coin-counter className={`${base.coinResource} ${styles.largeCoin} ${styles.hubCoin}`} onClick={onShop} aria-label={`Coins: ${formatNumber(player.coins)}. Open shop`}><span>🪙</span><b>{formatResourceNumber(player.coins)}</b><small>COINS</small><i>+</i></button>
     <button disabled={locked} className={`${base.settingsButton} ${styles.largeTopIcon} ${styles.hubSettings}`} onClick={onSettings} aria-label="Settings">⚙</button>
   </header>;
 }
 
 function GameTopBar({ player, timer, onBack, onSettings, coinPulse }: { player: V3PlayerState; timer: string; onBack: () => void; onSettings: () => void; coinPulse: boolean }) {
-  return <header className={`${base.gameTopBar} ${styles.largeTopBar}`}><button className={`${base.gameBack} ${styles.largeTopIcon}`} onClick={onBack}>‹</button><Resource icon="⚡" value={`${player.energy}/${ENERGY_CAP}`} sub={timer} /><Resource icon="⭐" value={String(player.stars)} sub="STARS" /><div data-coin-counter className={`${base.coinResource} ${styles.largeCoin} ${styles.gameCoin} ${coinPulse ? styles.coinCounterImpact : ""}`}><span>🪙</span><b>{formatResourceNumber(player.coins)}</b><i>+</i></div><button className={`${base.settingsButton} ${styles.largeTopIcon}`} onClick={onSettings}>⚙</button></header>;
+  return <header className={`${base.gameTopBar} ${styles.largeTopBar}`}><button className={`${base.gameBack} ${styles.largeTopIcon}`} onClick={onBack}>‹</button><Resource icon="⚡" value={`${player.energy}/${ENERGY_CAP}`} sub={timer} /><Resource icon="⭐" value={String(player.stars)} /><div data-coin-counter className={`${base.coinResource} ${styles.largeCoin} ${styles.gameCoin} ${coinPulse ? styles.coinCounterImpact : ""}`}><span>🪙</span><b>{formatResourceNumber(player.coins)}</b><i>+</i></div><button className={`${base.settingsButton} ${styles.largeTopIcon}`} onClick={onSettings}>⚙</button></header>;
 }
 
 function Resource({ icon, value, sub }: { icon: string; value: string; sub?: string }) { return <div className={`${base.navResource} ${styles.largeResource}`}><span>{icon}</span><b>{value}</b>{sub && <small>{sub}</small>}</div>; }
