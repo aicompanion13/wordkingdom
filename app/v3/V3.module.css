@@ -1465,6 +1465,14 @@
     linear-gradient(145deg,var(--royal-cream-100),var(--royal-cream-200) 62%,var(--royal-cream-300))!important;
   box-shadow: var(--panel-shadow)!important;
 }
+/* Let the chapter backdrop tint through the board's own frame instead of
+   sitting on a fully opaque card, so more of the theme art reads around
+   the (still fully opaque) letter grid. */
+.boardShell :global([class*="boardCard"]) {
+  background:
+    linear-gradient(120deg,rgba(255,255,255,.38),transparent 34%),
+    linear-gradient(145deg,rgba(255,253,240,.9),rgba(255,241,199,.86) 62%,rgba(239,210,139,.82))!important;
+}
 .themeObjectiveRail::after,
 .powerProgress::after {
   content: "";
