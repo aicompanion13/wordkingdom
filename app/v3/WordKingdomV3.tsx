@@ -109,6 +109,7 @@ const oceanAlbum = oceanAlbumJson as {
 const track = new TrackManager(chapters, areas);
 const albumManager = new AlbumManager(albums);
 const INITIAL_COMBO = scoringConfig.comboLadder[0];
+const COMBO_URGENT_RATIO = 7 / scoringConfig.comboIdleTimeoutSeconds;
 const PACK_COSTS: Record<PackTier, number> = { GREEN: 500, BLUE: 1200, GOLD: 2500 };
 const CARD_REPAIR_COST = 300;
 const EMPTY_SCORE: ScoreManagerSnapshot = {
@@ -506,6 +507,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   );
   const boardLocked = animating || Boolean(levelOneCoach?.messageOpen) || pvpOverlay !== null || packReveal !== null || settingsOpen || Boolean(boardSession.current && !boardSession.current.canAcceptInput());
   const comboDrain = score.comboMultiplier === INITIAL_COMBO ? 0 : scorer.current?.snapshot(clock).idleRemainingRatio ?? score.idleRemainingRatio;
+  const comboUrgent = comboDrain > 0 && comboDrain <= COMBO_URGENT_RATIO;
   const runStepTarget = generatedRun?.totalWords ?? 5;
   const isQaRun = generatedRun?.qa ?? false;
   const isGoldenRun = goldenRun && Boolean(generatedRun);
@@ -2062,10 +2064,6 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
           </div>
         </div>
       </div>
-      <div className={styles.previewScoreHud} aria-label={isGoldenRun ? "Guided tutorial with no timer" : `Score ${formatNumber(score.score)}, combo x${score.comboMultiplier.toFixed(1)}`}>
-        <span><small>{isGoldenRun ? "GUIDED" : "SCORE"}</small><b>{isGoldenRun ? "LEVEL 1" : formatNumber(score.score)}</b></span>
-        <i style={isGoldenRun ? undefined : { backgroundImage: "linear-gradient(#ffe378,#f6b92f),linear-gradient(#897653,#6f654e)", backgroundPosition: "left top", backgroundRepeat: "no-repeat", backgroundSize: `${Math.round(comboDrain * 100)}% 100%,100% 100%`, transition: "background-size 1s linear" }}>{isGoldenRun ? "NO TIMER" : `x${score.comboMultiplier.toFixed(1)}`}</i>
-      </div>
     </section>
     <section className={styles.themeObjectiveRail} data-ftue-stall={ftueActive ? ftueStall : undefined}>
       <div className={styles.themeObjectiveHeading}><span>FIND</span><small>{activeWords.length} ACTIVE</small></div>
@@ -2111,6 +2109,10 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
             </button>;
           })}
         </div>
+        {!isGoldenRun && node.level <= 10 && <div className={styles.comboTimerBar} data-urgent={comboUrgent ? "true" : undefined} aria-label={`Combo x${score.comboMultiplier.toFixed(1)}`}>
+          <i style={{ width: `${Math.round(comboDrain * 100)}%` }} />
+          <b>{`x${score.comboMultiplier.toFixed(1)}`}</b>
+        </div>}
         <div className={base.boardActions} data-ftue-actions={isGoldenRun ? "true" : undefined}>
           {!isGoldenRun && standardHintVisible && <button onClick={useHint} disabled={boardLocked}>💡 Hint <small>resets combo</small></button>}
           {isGoldenRun && (ftueStall === "HINT" || !ftueActive) && <button onClick={useHint} disabled={boardLocked || hintsUsed >= FTUE_HINT_LIMIT}>💡 {ftueActive ? "Need a clue?" : "Hint"}<small>{Math.max(0, FTUE_HINT_LIMIT - hintsUsed)} left</small></button>}
