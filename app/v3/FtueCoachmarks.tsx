@@ -1,9 +1,9 @@
 "use client";
 
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, ReactNode, RefObject } from "react";
 import styles from "./FtueCoachmarks.module.css";
-import { KingdomPopup } from "./KingdomPopup";
+import tutorialStyles from "./TutorialCard.module.css";
 
 export type DiscoveryArtworkKind = "coral-castle" | "pearl" | "sea-turtle" | "album";
 
@@ -114,11 +114,34 @@ export function ConceptCard({
   onDismiss: () => void;
   testId?: string;
 }) {
+  const ctaRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!messageOpen) return;
+    ctaRef.current?.focus();
+    const onKeyDown = (event: KeyboardEvent) => { if (event.key === "Escape") onDismiss(); };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [messageOpen, onDismiss]);
+
   if (!messageOpen) return null;
-  return <div data-testid={testId}>
-    <KingdomPopup title={title} icon={icon} ctaText={cta} onCta={onDismiss} onClose={onDismiss} celebrate={false}>
-      {message}
-    </KingdomPopup>
+  return <div
+    className={tutorialStyles.overlay}
+    data-testid={testId}
+    onClick={(event) => { if (event.target === event.currentTarget) onDismiss(); }}
+  >
+    <section className={tutorialStyles.card} role="dialog" aria-modal="true" aria-labelledby="tutorial-card-title">
+      <img className={tutorialStyles.frame} src="/tutorial/word-kingdom-tutorial-card-frame.webp" alt="" />
+      <button className={tutorialStyles.close} type="button" onClick={onDismiss} aria-label="Close">×</button>
+      <div className={tutorialStyles.illustration} aria-hidden="true"><span>{icon}</span></div>
+      <div className={tutorialStyles.copy}>
+        <h2 id="tutorial-card-title" className={tutorialStyles.title}>{title}</h2>
+        <p className={tutorialStyles.body}>{message}</p>
+      </div>
+      <div className={tutorialStyles.actions}>
+        <button ref={ctaRef} className={tutorialStyles.cta} type="button" onClick={onDismiss}>{cta}</button>
+      </div>
+    </section>
   </div>;
 }
 

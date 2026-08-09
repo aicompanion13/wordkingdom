@@ -1,0 +1,131 @@
+.overlay {
+  position: fixed;
+  z-index: 12500;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(4,14,36,.6);
+  backdrop-filter: blur(6px);
+  animation: tutorialCardFade 180ms ease-out both;
+}
+
+.card {
+  position: relative;
+  width: min(380px, calc(100vw - 24px));
+  aspect-ratio: 760 / 1175;
+  color: #17365f;
+  filter: drop-shadow(0 12px 22px rgba(37,28,18,.28));
+  animation: tutorialCardPop 260ms cubic-bezier(.2,.85,.3,1.3) both;
+}
+
+.frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+.close {
+  position: absolute;
+  top: 6.2%;
+  right: 3.6%;
+  width: 10.5%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #fff4d2;
+  font: 800 clamp(18px,6vw,25px)/1 var(--game-ui,system-ui,sans-serif);
+  text-shadow: 0 2px 2px rgba(8,26,54,.45);
+  cursor: pointer;
+}
+
+.illustration {
+  position: absolute;
+  top: 10.5%;
+  left: 21%;
+  width: 58%;
+  height: 21%;
+  display: grid;
+  place-items: center;
+}
+
+.illustration span {
+  font-size: clamp(42px,14vw,58px);
+  line-height: 1;
+  filter: drop-shadow(0 5px 5px rgba(34,26,14,.22));
+}
+
+.copy {
+  position: absolute;
+  top: 39%;
+  left: 15%;
+  width: 70%;
+  text-align: center;
+}
+
+.title {
+  margin: 0 0 10px;
+  color: #17365f;
+  font: 900 clamp(22px,7.4vw,30px)/1.04 var(--game-display,ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif);
+  letter-spacing: -.02em;
+}
+
+.body {
+  margin: 0;
+  color: #604c35;
+  font: 650 clamp(13px,4.2vw,16px)/1.35 var(--game-ui,system-ui,sans-serif);
+}
+
+.actions {
+  position: absolute;
+  left: 16%;
+  bottom: 7.2%;
+  width: 68%;
+  height: 9.5%;
+  display: grid;
+  place-items: center;
+}
+
+.cta {
+  width: calc(100% - 12px);
+  min-height: 44px;
+  padding: 10px 18px 11px;
+  border: 2px solid #9b6414;
+  border-radius: 999px;
+  background: linear-gradient(180deg,#ffe28a,#d79a22);
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,.55),
+    inset 0 -3px 0 rgba(122,74,12,.2),
+    0 4px 0 #8b5915,
+    0 7px 12px rgba(87,51,12,.24);
+  color: #293c55;
+  font: 900 clamp(14px,4.6vw,18px)/1 var(--game-display,ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif);
+  letter-spacing: .01em;
+  cursor: pointer;
+}
+
+.cta:active {
+  transform: translateY(2px);
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,.45),
+    inset 0 -2px 0 rgba(122,74,12,.18),
+    0 2px 0 #8b5915;
+}
+
+@keyframes tutorialCardFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes tutorialCardPop { 0% { opacity: 0; transform: scale(.82) translateY(10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay, .card { animation: none!important; }
+}
+
+@media (max-width:350px) {
+  .title { margin-bottom: 6px; }
+}
