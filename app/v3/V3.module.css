@@ -1146,49 +1146,67 @@
 .powerProgressGrid article[data-power="attack"] > div > span { color: #a43b2f; }
 .powerProgressGrid article[data-power="steal"] > div > span { color: #6c388d; }
 .powerProgressGrid article[data-power="shield"] > div > span { color: #175d96; }
-.powerProgressGrid[data-count="1"] { grid-template-columns: minmax(0,1fr); }
+.powerProgressGrid[data-count="1"] { grid-template-columns: max-content; justify-content: center; }
 .powerProgressGrid[data-count="2"] { grid-template-columns: repeat(2,minmax(0,1fr)); }
 .powerProgressGrid[data-count="3"] { grid-template-columns: repeat(3,minmax(0,1fr)); }
 
-/* Compact single-power layout: a big square card looks oversized when it's the only one shown (e.g. levels 3-5, raid only). */
+/* Compact single-power layout: a big square card looks oversized when it's the only one shown (e.g. levels 3-5, raid only). Shrinks to content width instead of stretching full-card, with a punchier pill treatment. */
 .powerProgressGrid[data-count="1"] article {
   min-height: 0!important;
   display: flex!important;
   align-items: center!important;
-  gap: 8px!important;
-  padding: 6px 10px!important;
+  gap: 10px!important;
+  padding: 8px 18px!important;
+  border-radius: 999px!important;
+  border: 2px solid #f2c34d!important;
+  background: linear-gradient(180deg,#fffaea 0%,#fbe4a4 100%)!important;
+  box-shadow: 0 3px 0 rgba(130,69,27,.35), inset 0 1px 0 rgba(255,255,255,.7)!important;
 }
 .powerProgressGrid[data-count="1"] article > div {
   display: flex!important;
   align-items: center!important;
-  gap: 6px!important;
-  flex: 1 1 auto!important;
+  gap: 8px!important;
+  flex: none!important;
   min-width: 0!important;
 }
 .powerProgressGrid[data-count="1"] article > div > b {
   grid-row: auto!important;
-  width: 26px!important;
-  height: 26px!important;
-  font-size: 15px!important;
+  width: 32px!important;
+  height: 32px!important;
+  font-size: 19px!important;
   flex: none!important;
+  animation: powerIconPulse 1.8s ease-in-out infinite;
 }
 .powerProgressGrid[data-count="1"] article > div > span {
   align-self: auto!important;
-  font-size: 8px!important;
+  font-size: 12px!important;
 }
 .powerProgressGrid[data-count="1"] article > div > strong {
   grid-column: auto!important;
   align-self: auto!important;
-  font-size: 7px!important;
+  font-size: 10px!important;
   margin-left: 2px;
 }
 .powerProgressGrid[data-count="1"] article > div > em {
   position: static!important;
-  margin-left: auto;
+  margin-left: 4px;
+  padding: 3px 7px!important;
+  font-size: 9px!important;
 }
 .powerProgressGrid[data-count="1"] article > p {
   flex: none!important;
   margin: 0!important;
+}
+.powerProgressGrid[data-count="1"] article > p > i {
+  width: 9px!important;
+  height: 9px!important;
+}
+@keyframes powerIconPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .powerProgressGrid[data-count="1"] article > div > b { animation: none!important; }
 }
 
 .shoreGuideLine {
