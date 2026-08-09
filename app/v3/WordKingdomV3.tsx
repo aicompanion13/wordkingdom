@@ -25,6 +25,8 @@ import {
   GOLDEN_LEVEL_1,
 } from "@/game/v3/board-session-factory";
 import { EconomyManagerV3, ENERGY_CAP, ENERGY_REGEN_MS, HINT_POOL_CAP } from "@/game/v3/economy-manager";
+import { FeedbackOverlay } from "@/game/v3/feedback/FeedbackOverlay";
+import { useLongPress } from "@/game/v3/feedback/useLongPress";
 import { JuiceAnimationSystem } from "@/game/v3/juice-animation-system";
 import type { FxPoint, JuiceEffect } from "@/game/v3/juice-animation-system";
 import { ObjectiveManager } from "@/game/v3/objective-manager";
@@ -238,6 +240,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const [selectedNode, setSelectedNode] = useState<TrackNode | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [debugOpen, setDebugOpen] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [board, setBoard] = useState<BoardSnapshot | null>(null);
   const [activeWords, setActiveWords] = useState<SessionActiveWord[]>([]);
@@ -314,6 +317,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const celebrationTimeout = useRef<number | undefined>(undefined);
   const celebrationLeaveTimeout = useRef<number | undefined>(undefined);
   const celebrationShown = useRef({ royalCombo: false, onFire: false });
+  const boardCardRef = useRef<HTMLDivElement | null>(null);
   const cloudReady = useRef(false);
   const cloudSaveTimer = useRef<number | null>(null);
   const cloudSaveInFlight = useRef<Promise<void> | null>(null);
@@ -545,7 +549,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     () => new Set([...(obstacles?.tileIds ?? []), ...Object.keys(generatedObstacleTypes)]),
     [obstacles, generatedObstacleTypes],
   );
-  const boardLocked = animating || Boolean(levelOneCoach?.messageOpen) || contextualPrompt || pvpOverlay !== null || packReveal !== null || settingsOpen || Boolean(boardSession.current && !boardSession.current.canAcceptInput());
+  const boardLocked = animating || Boolean(levelOneCoach?.messageOpen) || contextualPrompt || pvpOverlay !== null || packReveal !== null || settingsOpen || feedbackOpen || Boolean(boardSession.current && !boardSession.current.canAcceptInput());
   const comboDrain = score.comboMultiplier === INITIAL_COMBO ? 0 : scorer.current?.snapshot(clock).idleRemainingRatio ?? score.idleRemainingRatio;
   const comboUrgent = comboDrain > 0 && comboDrain <= COMBO_URGENT_RATIO;
   const runStepTarget = generatedRun?.totalWords ?? 5;
@@ -1721,6 +1725,14 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     setSelectedIds([]);
   };
 
+  const boardLongPress = useLongPress(() => {
+    dragging.current = false;
+    dragStart.current = null;
+    selection.current = [];
+    setSelectedIds([]);
+    setFeedbackOpen(true);
+  }, boardLocked);
+
   const onKeyboardTile = (tile: Tile) => {
     if (boardLocked) return;
     if (selection.current.length === 0 || selection.current.length > 1) { updateSelection([tile]); return; }
@@ -2221,7 +2233,15 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       <section className={styles.objectiveBar} data-complete={objectiveProgress.complete}><span>🔤</span><div><small>LEVEL OBJECTIVE</small><b>{node.objective.label}</b></div><em>{objectiveProgress.current}/{objectiveProgress.target}</em></section>
     </>}
     <section className={base.boardLayout}>
-      <div className={`${base.boardCard} ${shake ? base.shake : ""}`}>
+      <div
+        className={`${base.boardCard} ${shake ? base.shake : ""}`}
+        ref={boardCardRef}
+        onPointerDown={boardLongPress.onPointerDown}
+        onPointerMove={boardLongPress.onPointerMove}
+        onPointerUp={boardLongPress.onPointerUp}
+        onPointerCancel={boardLongPress.onPointerCancel}
+        onContextMenu={(event) => event.preventDefault()}
+      >
         <div className={base.boardMessage} role="status" aria-live="polite">{message}</div>
         {celebration && <div className={styles.celebrationBanner} data-leaving={celebrationLeaving ? "true" : undefined} role="status" aria-live="polite">
           <img src={CELEBRATION_BANNERS[celebration].src} alt={CELEBRATION_BANNERS[celebration].alt} />
@@ -2298,6 +2318,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       </div>}
     </section>
     <JuiceFxLayer effects={juiceEffects} />
+    <FeedbackOverlay open={feedbackOpen} targetRef={boardCardRef} level={node.level} onClose={() => setFeedbackOpen(false)} />
     {levelOneCoach?.kind === "welcome" && <ConceptCard
       title="Welcome to Word Kingdom!"
       message="Find hidden words, collect royal cards, raid rival kingdoms, and gather gold as you build your realm."

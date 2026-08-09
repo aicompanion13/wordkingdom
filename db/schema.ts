@@ -8,3 +8,13 @@ export const playerProfiles = sqliteTable("player_profiles", {
   createdAt: integer("created_at").notNull(),
   updatedAt: integer("updated_at").notNull(),
 });
+
+export const feedbackSubmissions = sqliteTable("feedback_submissions", {
+  id: text("id").primaryKey(),
+  email: text("email").notNull(),
+  displayName: text("display_name").notNull(),
+  level: integer("level").notNull(),
+  screenshotDataUrl: text("screenshot_data_url").notNull(),
+  audioDataUrl: text("audio_data_url").notNull(),
+  createdAt: integer("created_at").notNull(),
+});

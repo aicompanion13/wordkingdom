@@ -1,0 +1,85 @@
+.shell {
+  min-height: 100dvh;
+  padding: 24px 16px 60px;
+  background: linear-gradient(180deg, #173a7a, #0d2559 60%, #091a42);
+  color: #fff;
+  font-family: "Trebuchet MS", Arial, sans-serif;
+}
+
+.header {
+  max-width: 900px;
+  margin: 0 auto 20px;
+}
+
+.header h1 {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+
+.header p {
+  margin: 0;
+  color: #b9c9f0;
+  font-size: 14px;
+}
+
+.empty {
+  max-width: 900px;
+  margin: 40px auto;
+  text-align: center;
+  color: #b9c9f0;
+}
+
+.grid {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  gap: 16px;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: minmax(0, 260px) 1fr;
+  gap: 16px;
+  padding: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  background: rgba(10, 25, 60, 0.6);
+}
+
+.screenshot {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  display: block;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  color: #cfe0ff;
+}
+
+.badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.audio {
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .card {
+    grid-template-columns: 1fr;
+  }
+}
