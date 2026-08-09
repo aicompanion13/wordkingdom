@@ -125,6 +125,20 @@ const EMPTY_SCORE: ScoreManagerSnapshot = {
   wordsFound: 0,
   idleRemainingRatio: 0,
 };
+type CelebrationBannerKind = "great-word" | "royal-combo" | "bonus-found" | "keep-going" | "on-fire" | "one-more";
+const CELEBRATION_BANNERS: Record<CelebrationBannerKind, { src: string; alt: string }> = {
+  "great-word": { src: "/banners/great-word.webp", alt: "Great Word!" },
+  "royal-combo": { src: "/banners/royal-combo.webp", alt: "Royal Combo!" },
+  "bonus-found": { src: "/banners/bonus-found.webp", alt: "Bonus Found!" },
+  "keep-going": { src: "/banners/keep-going.webp", alt: "Keep Going!" },
+  "on-fire": { src: "/banners/on-fire.webp", alt: "On Fire!" },
+  "one-more": { src: "/banners/one-more.webp", alt: "One More!" },
+};
+const GREAT_WORD_MIN_LENGTH = 7;
+const ROYAL_COMBO_THRESHOLD = scoringConfig.comboLadder[3];
+const ON_FIRE_THRESHOLD = scoringConfig.comboLadder[scoringConfig.comboLadder.length - 1];
+const KEEP_GOING_MIN_BROKEN_COMBO = scoringConfig.comboLadder[1];
+const CELEBRATION_DISPLAY_MS = 1300;
 const BADGES: Record<BadgeType, { icon: string; label: string }> = {
   attack: { icon: "⚔️", label: "Attack" }, steal: { icon: "🃏", label: "Steal" }, raid: { icon: "💰", label: "Raid" }, shield: { icon: "🛡️", label: "Shield" },
 };
@@ -251,6 +265,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const [generatedFlipPhase, setGeneratedFlipPhase] = useState<GeneratedFlipPhase>(null);
   const [canonicalDebug, setCanonicalDebug] = useState<CanonicalBoardSnapshot | null>(null);
   const [levelOneCoach, setLevelOneCoach] = useState<LevelOneCoachState>(null);
+  const [celebration, setCelebration] = useState<CelebrationBannerKind | null>(null);
 
   const economy = useRef<EconomyManagerV3 | null>(null);
   const pvp = useRef<PvpManager | null>(null);
@@ -276,6 +291,8 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const levelOneAutoStarted = useRef(false);
   const dragStart = useRef<Position | null>(null);
   const dragging = useRef(false);
+  const celebrationTimeout = useRef<number | undefined>(undefined);
+  const celebrationShown = useRef({ royalCombo: false, onFire: false });
   const cloudReady = useRef(false);
   const cloudSaveTimer = useRef<number | null>(null);
   const cloudSaveInFlight = useRef<Promise<void> | null>(null);
@@ -562,6 +579,12 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     setCoinCounterPulse(false);
   };
 
+  const fireCelebration = (kind: CelebrationBannerKind) => {
+    window.clearTimeout(celebrationTimeout.current);
+    setCelebration(kind);
+    celebrationTimeout.current = window.setTimeout(() => setCelebration(null), CELEBRATION_DISPLAY_MS);
+  };
+
   const elementCenter = (element: Element): FxPoint => {
     const rect = element.getBoundingClientRect();
     return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
@@ -705,8 +728,12 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     boardSession.current = session;
     const nextScorer = new ScoreManager(activatedAt);
     scoreIdleUnsubscribe.current?.();
+    celebrationShown.current = { royalCombo: false, onFire: false };
     scoreIdleUnsubscribe.current = nextScorer.on("OnComboBreak", (event) => {
-      if (event.reason === "idle-timeout") setScore(nextScorer.snapshot());
+      if (event.reason === "idle-timeout") {
+        setScore(nextScorer.snapshot());
+        if (event.previous >= KEEP_GOING_MIN_BROKEN_COMBO - 0.001) fireCelebration("keep-going");
+      }
     });
     scorer.current = nextScorer;
     const savedPowerUps = pvp.current?.snapshot() ?? pvpState;
@@ -788,8 +815,12 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     runArea.current = activeArea;
     const nextScorer = new ScoreManager(activatedAt);
     scoreIdleUnsubscribe.current?.();
+    celebrationShown.current = { royalCombo: false, onFire: false };
     scoreIdleUnsubscribe.current = nextScorer.on("OnComboBreak", (event) => {
-      if (event.reason === "idle-timeout") setScore(nextScorer.snapshot());
+      if (event.reason === "idle-timeout") {
+        setScore(nextScorer.snapshot());
+        if (event.previous >= KEEP_GOING_MIN_BROKEN_COMBO - 0.001) fireCelebration("keep-going");
+      }
     });
     scorer.current = nextScorer;
     badges.current = null;
@@ -845,8 +876,12 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     runArea.current = activeArea;
     const nextScorer = new ScoreManager(activatedAt);
     scoreIdleUnsubscribe.current?.();
+    celebrationShown.current = { royalCombo: false, onFire: false };
     scoreIdleUnsubscribe.current = nextScorer.on("OnComboBreak", (event) => {
-      if (event.reason === "idle-timeout") setScore(nextScorer.snapshot());
+      if (event.reason === "idle-timeout") {
+        setScore(nextScorer.snapshot());
+        if (event.previous >= KEEP_GOING_MIN_BROKEN_COMBO - 0.001) fireCelebration("keep-going");
+      }
     });
     scorer.current = nextScorer;
     badges.current = null;
@@ -1254,6 +1289,19 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       queueBadgeFx(badgeResult);
       saveBadgeResult(badgeResult);
     }
+    if (!isGoldenRun) {
+      const comboNow = scorer.current?.snapshot().comboMultiplier ?? INITIAL_COMBO;
+      if (comboNow >= ON_FIRE_THRESHOLD - 0.001 && !celebrationShown.current.onFire) {
+        celebrationShown.current.onFire = true;
+        celebrationShown.current.royalCombo = true;
+        fireCelebration("on-fire");
+      } else if (comboNow >= ROYAL_COMBO_THRESHOLD - 0.001 && !celebrationShown.current.royalCombo) {
+        celebrationShown.current.royalCombo = true;
+        fireCelebration("royal-combo");
+      } else if (word.word.length >= GREAT_WORD_MIN_LENGTH) {
+        fireCelebration("great-word");
+      }
+    }
     setAnimating(true);
     setAcceptedWordKind("objective");
     setAcceptedPathIds([...animationPlan.acceptedPath]);
@@ -1282,6 +1330,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       setTransformationDiffIds(result.flippedTileIds);
       setBoard(result.board);
       setActiveWords(result.activeWords);
+      if (!isGoldenRun && !result.complete && result.activeWords.length === 1) fireCelebration("one-more");
       setCanonicalDebug(session.debugSnapshot());
       setCascades(result.solved);
       setObjectiveProgress({
@@ -1452,6 +1501,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     const shouldTeachBonus = (runNode.current?.level ?? player.currentLevel) === 4
       && !ftueProgressRef.current.completedTutorials.includes("level-4-bonus");
     if (shouldTeachBonus) markTutorialComplete("level-4-bonus");
+    else if (bonusTutorialVisible) fireCelebration("bonus-found");
     setMessage(bonusTutorialVisible
       ? shouldTeachBonus
         ? "Bonus Word! It was added to your Royal Dictionary."
@@ -2085,6 +2135,9 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     <section className={base.boardLayout}>
       <div className={`${base.boardCard} ${shake ? base.shake : ""}`}>
         <div className={base.boardMessage} role="status" aria-live="polite">{message}</div>
+        {celebration && <div className={styles.celebrationBanner} role="status" aria-live="polite">
+          <img src={CELEBRATION_BANNERS[celebration].src} alt={CELEBRATION_BANNERS[celebration].alt} />
+        </div>}
         <div className={`${base.letterGrid} ${styles.boardLetterGrid}`} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerCancel}>
           {isGoldenRun && ftueActive && goldenTutorial.phase === "FIRST_WORD" && <div className={styles.shoreGuideLine} aria-hidden="true"><i /><span>➜</span></div>}
           {board?.tiles.flat().map((tile) => {
