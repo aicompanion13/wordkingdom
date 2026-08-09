@@ -194,7 +194,7 @@
 .activeShieldRack{display:grid;grid-template-columns:auto auto;align-items:center;gap:6px}.activeShieldRack small,.fragmentMeter small{font-size:5px;font-weight:900;letter-spacing:.06em}.activeShieldRack>span{display:flex;gap:2px}.activeShieldRack i,.shieldForge i{font-size:16px;font-style:normal;filter:grayscale(1);opacity:.32}.activeShieldRack i.activeShield,.shieldForge i.activeShield{filter:none;opacity:1;filter:drop-shadow(0 0 4px #7fe4ff)}
 .fragmentMeter{display:grid;grid-template-columns:1fr auto;align-items:center;gap:3px 7px}.fragmentMeter small{grid-column:1/3;color:#c9e9ff}.fragmentMeter>i,.fragmentForge>i{height:8px;overflow:hidden;border:1px solid #8acff2;border-radius:99px;background:#071f4c}.fragmentMeter>i em,.fragmentForge>i em{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#40aee5,#9ff0ff);box-shadow:0 0 8px #67d8ff}.fragmentMeter>b{font-size:7px;white-space:nowrap}
 .pvpOverlay{z-index:65!important}.pvpEventCard{max-height:calc(100dvh - 20px);overflow:auto;color:#243c69}.pvpEventCard>p b{color:#9b541e}.raidStatus{display:flex;align-items:center;justify-content:space-between;border:2px solid rgba(255,255,255,.5);border-radius:11px;margin-bottom:9px;padding:7px 9px;color:#fff;background:linear-gradient(145deg,#2c72af,#173b7b)}.raidStatus span{font-size:7px;font-weight:900}.raidStatus b{font-family:var(--game-display);font-size:13px}
-.vaultGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.vaultGrid button{min-height:96px;border:2px solid #fff;border-radius:13px;padding:8px;color:#243c68;background:#f2dca0;box-shadow:0 3px 0 rgba(134,73,29,.4);cursor:pointer}.vaultGrid button>span,.vaultGrid button>b,.vaultGrid button>small{display:block}.vaultGrid button>span{font-size:30px}.vaultGrid button>b{margin:4px 0;font-size:9px}.vaultGrid button>small{color:#8a6841;font-size:6px}.vaultGrid button[data-revealed=true]{border-color:#fff;color:#fff;background:linear-gradient(145deg,#2c9f49,#1d6f32);box-shadow:0 3px 0 rgba(17,83,38,.6)}.vaultGrid button[data-small=true]{filter:saturate(.62);background:linear-gradient(145deg,#9d9580,#655d4e)}.vaultGrid button[data-revealed=true]>small{color:#d8ffdc}.vaultGrid button:disabled{cursor:default}
+.vaultGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.vaultGrid button{min-height:96px;border:none;border-radius:13px;padding:2px;color:#243c68;background:transparent;box-shadow:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}.vaultGrid button img{width:100%;height:100%;max-height:78px;object-fit:contain}.vaultGrid button>b{margin:0;font-size:10px;font-weight:900;color:#1c3f7c}.vaultGrid button>small{color:#8a6841;font-size:6px;font-weight:900;letter-spacing:.04em}.vaultGrid button:disabled{cursor:default}
 .pvpResultBanner{display:grid;gap:2px;border:2px solid #fff;border-radius:12px;margin-top:10px;padding:9px;color:#fff;background:linear-gradient(145deg,#2b9f49,#1a7032);box-shadow:0 2px 0 rgba(17,81,37,.5)}.pvpResultBanner small{font-size:6px;font-weight:900;letter-spacing:.08em}.pvpResultBanner b{font-family:var(--game-display);font-size:19px}.pvpResultBanner span{font-size:7px}.blockedBanner{background:linear-gradient(145deg,#357eb7,#1a477f);box-shadow:0 2px 0 rgba(16,45,90,.6)}.successBanner{background:linear-gradient(145deg,#b7392e,#76231e);box-shadow:0 2px 0 rgba(82,23,19,.6)}
 
 .canonicalDebug{grid-column:1/-1;min-width:0;display:grid;gap:6px;border:1px solid #173b68;border-radius:9px;padding:8px;color:#dff7ff;background:#081a35;font:600 7px/1.35 ui-monospace,SFMono-Regular,Consolas,monospace}.canonicalDebug header{display:flex;justify-content:space-between;gap:6px}.canonicalDebug header b{color:#7ee7aa;font-size:10px}.canonicalDebug header em{color:#ffd66b;font-style:normal}.canonicalDebug p,.canonicalDebug footer{margin:0;overflow-wrap:anywhere}.canonicalDebug pre{margin:0;border:1px solid #305983;border-radius:6px;padding:6px;color:#fff3ae;background:#041020;font:800 9px/1.3 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.12em}.canonicalDebug dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;margin:0}.canonicalDebug dl div{min-width:0;border:1px solid #274b70;border-radius:5px;padding:4px}.canonicalDebug dt{color:#7fb8db}.canonicalDebug dd{margin:1px 0 0;overflow-wrap:anywhere;color:#fff}.canonicalDebug article{display:grid;gap:2px;border-left:2px solid #23a6c5;padding-left:6px}.canonicalDebug article span,.canonicalDebug article small{display:block;color:#b8d8ee;overflow-wrap:anywhere}.canonicalDebug footer{border-top:1px solid #274b70;padding-top:5px;color:#9fc7df}
@@ -356,8 +356,7 @@
 .metaCardChoice small { display: block; font-size: 7px; margin-top: 3px; }
 
 .nineVaultGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.nineVaultGrid button { min-height: 72px; }
-.nineVaultGrid button[data-tier="jackpot"] { background: linear-gradient(#fff8a8, #f0ae20); }
+.nineVaultGrid button { min-height: 96px; }
 
 .protectedCard { box-shadow: 0 0 0 3px #4fc5ff, 0 0 18px rgba(79, 197, 255, .65); }
 .damagedCard { filter: grayscale(.45); border-color: #b94b43 !important; }
@@ -1132,6 +1131,7 @@
 .powerProgressGrid article { position: relative; min-width: 0; min-height: 61px; overflow: hidden; border: 2px solid #fff; border-radius: 13px; padding: 5px 4px 6px; background: #fdf1d9; box-shadow: 0 3px 0 rgba(130,69,27,.35); }
 .powerProgressGrid article > div { position:relative; display: grid; grid-template-columns: minmax(22px,32px) minmax(0,1fr); grid-template-rows: 1fr auto; align-items: center; gap: 1px 3px; }
 .powerProgressGrid article > div > b { grid-row: 1/3; width: clamp(24px,7vw,32px); height: clamp(24px,7vw,32px); display:grid; place-items:center; border:1.5px solid rgba(255,255,255,.9); border-radius:10px; font-size: clamp(16px,5vw,22px); background:rgba(255,255,255,.75); box-shadow:0 2px 0 rgba(119,66,21,.28); }
+.powerProgressGrid article > div > b img { width: 78%; height: 78%; object-fit: contain; }
 .powerProgressGrid article > div > span { align-self:end; overflow: hidden; color: #233c6b; font-family: var(--game-display); font-size: clamp(6.5px,2vw,9px); line-height:1; font-weight: 1000; text-overflow: ellipsis; text-transform: uppercase; }
 .powerProgressGrid article > div > strong { grid-column:2; align-self:start; color:#8a5220; font-family:var(--game-display); font-size:clamp(6px,1.8vw,8px); line-height:1; }
 .powerProgressGrid article > div > em { position:absolute; left:1px; top:25px; border-radius:99px; padding:1px 3px; color: #fff; background:#25813b; font-size: 4.5px; font-weight: 1000; font-style: normal; white-space: nowrap; }
@@ -1414,6 +1414,19 @@
   will-change: transform,filter,opacity;
 }
 .tileLetter { display: block; line-height: 1; pointer-events: none; }
+.tileBadgeIcon {
+  background: none!important;
+  border: none!important;
+  box-shadow: none!important;
+  width: 17px!important;
+  height: 17px!important;
+}
+.tileBadgeIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.45));
+}
 .boldTile[class*="selected"] .tileFace { border-color: #fff0a0; color: #fff; background: linear-gradient(145deg,#ffd95e,#df7d17); box-shadow: inset 0 2px 0 #fff4b2,0 0 14px #ffc438; }
 .boldTile[class*="hinted"] .tileFace { outline: 2px solid #fff09a; }
 .acceptedWordTile { background: linear-gradient(180deg,#2d83c4,#0b4d91)!important; box-shadow: 0 2px 0 #07366e,0 0 14px #ffd64d!important; }
