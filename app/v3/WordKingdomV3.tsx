@@ -248,7 +248,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const [albumPageLevel, setAlbumPageLevel] = useState<number | null>(null);
   const [albumTransition, setAlbumTransition] = useState<AlbumTransitionState | null>(null);
   const [tutorialLibraryOpen, setTutorialLibraryOpen] = useState(false);
-  const [contextualPrompt, setContextualPrompt] = useState<string | null>(null);
+  const [contextualPrompt, setContextualPrompt] = useState(false);
   const [obstacles, setObstacles] = useState<ObstacleState | null>(null);
   const [objectiveProgress, setObjectiveProgress] = useState({ current: 0, target: 5, complete: false });
   const [summary, setSummary] = useState<V3RunSummary | null>(null);
@@ -312,6 +312,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const ftueRecoveryAttempted = useRef(false);
   const albumButtonRef = useRef<HTMLButtonElement>(null);
   const levelPlayButtonRef = useRef<HTMLButtonElement>(null);
+  const hintButtonRef = useRef<HTMLButtonElement>(null);
 
   const queueCloudSave = (nextPlayer: V3PlayerState, nextPvp: PvpState) => {
     if (!cloudReady.current) return;
@@ -515,7 +516,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const visiblePowers = visiblePowerKinds(currentRunLevel);
   const shoreTutorialPath = activeWords.find((word) => word.id === "a0-shore")?.tileIds ?? [];
   const standardHintVisible = currentRunLevel >= 4
-    || (currentRunLevel === 3 && (contextualPrompt !== null || ftueProgress.completedTutorials.includes("level-3-hint")))
+    || (currentRunLevel === 3 && (contextualPrompt || ftueProgress.completedTutorials.includes("level-3-hint")))
     || (currentRunLevel === 2 && Math.max(0, clock - ftueLastUsefulAt.current) >= 10_000);
   const badgeByTile = useMemo(() => {
     const result = new Map<string, BadgeType>();
@@ -531,7 +532,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     () => new Set([...(obstacles?.tileIds ?? []), ...Object.keys(generatedObstacleTypes)]),
     [obstacles, generatedObstacleTypes],
   );
-  const boardLocked = animating || Boolean(levelOneCoach?.messageOpen) || pvpOverlay !== null || packReveal !== null || settingsOpen || Boolean(boardSession.current && !boardSession.current.canAcceptInput());
+  const boardLocked = animating || Boolean(levelOneCoach?.messageOpen) || contextualPrompt || pvpOverlay !== null || packReveal !== null || settingsOpen || Boolean(boardSession.current && !boardSession.current.canAcceptInput());
   const comboDrain = score.comboMultiplier === INITIAL_COMBO ? 0 : scorer.current?.snapshot(clock).idleRemainingRatio ?? score.idleRemainingRatio;
   const comboUrgent = comboDrain > 0 && comboDrain <= COMBO_URGENT_RATIO;
   const runStepTarget = generatedRun?.totalWords ?? 5;
@@ -568,7 +569,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     const hintTutorialComplete = ftueProgress.completedTutorials.includes("level-3-hint");
     if (screen !== "board" || currentRunLevel !== 3 || hintTutorialComplete || boardLocked) return;
     const idleMs = Math.max(0, clock - ftueLastUsefulAt.current);
-    if (idleMs >= 8_000) setContextualPrompt("Need help? Tap Hint to reveal your next move.");
+    if (idleMs >= 8_000) setContextualPrompt(true);
   }, [boardLocked, clock, currentRunLevel, ftueProgress.completedTutorials, screen]);
 
   const scheduleJuice = (callback: () => void, delayMs: number) => {
@@ -798,7 +799,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     setAcceptedWordKind(null);
     setBonusWordsFound(0);
     setNeutralShakeIds([]);
-    setContextualPrompt(null);
+    setContextualPrompt(false);
     selection.current = [];
     setCascades(0);
     setSummary(null);
@@ -947,7 +948,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     setSummary(null);
     setSelectedNode(null);
     setDebugOpen(false);
-    setContextualPrompt(null);
+    setContextualPrompt(false);
     setMessage(ftueGuidanceEnabled(ftueProgress) ? "Swipe across the letters to find SHORE." : "Find either active word");
     setScreen("board");
   };
@@ -982,6 +983,11 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const dismissLevelThreeRaidCoach = () => {
     markFtueVisualStep("level-3-raid-guidance");
     setLevelOneCoach(null);
+  };
+
+  const dismissHintCoach = () => {
+    markTutorialComplete("level-3-hint");
+    setContextualPrompt(false);
   };
 
   const refreshPowerState = () => {
@@ -1706,7 +1712,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     if (isGoldenRun) noteUsefulFtueInteraction();
     if ((runNode.current?.level ?? player.currentLevel) === 3 && !ftueProgressRef.current.completedTutorials.includes("level-3-hint")) {
       markTutorialComplete("level-3-hint");
-      setContextualPrompt(null);
+      setContextualPrompt(false);
     }
     setMessage(`${word.word} begins with ${word.word[0]}`);
     window.setTimeout(() => setHintedId(null), 1500);
@@ -1867,7 +1873,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     setAlbumPageLevel(null);
     setAlbumTransition(null);
     setTutorialLibraryOpen(false);
-    setContextualPrompt(null);
+    setContextualPrompt(false);
     stealResolutionLock.current = false;
     setObstacles(null);
     setObjectiveProgress({ current: 0, target: 5, complete: false });
@@ -2152,7 +2158,18 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       <div className={styles.themeObjectiveHeading}><span>FIND</span><small>{activeWords.length} ACTIVE</small></div>
       <div className={styles.themeObjectiveWords}>{activeWords.map((word, index) => <div data-ftue-active-word="true" className={`${base.activeWordChip} ${goldenTutorial.recommendedObjectiveId === word.id ? styles.tutorialRecommendedWord : ""} ${goldenTutorial.localSuccessorObjectiveId === word.id ? styles.tutorialSuccessorWord : ""} ${ftueActive && ftueStall === "SUGGESTION" && index === 0 ? styles.ftueSuggestedWord : ""}`} aria-label={`${word.word}${goldenTutorial.recommendedObjectiveId === word.id ? ", recommended first word" : ""}`} key={word.id}><span>{word.word}</span></div>)}</div>
     </section>
-    {contextualPrompt && <aside className={styles.contextualFtuePrompt} role="status">{contextualPrompt}</aside>}
+    {contextualPrompt && <FtueCoachmark
+      icon={<span aria-hidden="true">💡</span>}
+      title="Need a hint?"
+      message="If you're ever stuck, tap Hint to reveal your next move."
+      targetRef={hintButtonRef}
+      gesture="tap"
+      dim
+      messageOpen
+      onDismiss={dismissHintCoach}
+      reducedMotion={prefersReducedMotion}
+      testId="level-3-hint-guide"
+    />}
     {!isGoldenRun && visiblePowers.length > 0 && <div className={styles.mobilePowerProgress}><PowerProgress kinds={visiblePowers} badgeCounts={badgeCounts} readyActions={pvpState.readyActions} impactSlots={trayImpactSlots} /></div>}
     {node.level > 10 && <>
       <section className={`${base.runHeader} ${styles.runHeaderWithPreview}`}><div><span className={base.kicker}>{`${area.icon} ${area.displayName} · Level ${node.level}`}</span><h1>{node.kind === "BOSS" ? "Guardian Board" : "Living Board"}</h1></div><div className={styles.previewScoreHud}><span><small>SCORE</small><b>{formatNumber(score.score)}</b></span><i>{`x${score.comboMultiplier.toFixed(1)}`}</i></div><div className={`${base.cascadeCounter} ${styles.largeCascadeCounter}`}><b>{cascades}</b><span>/ {runStepTarget}</span><small>Steps</small></div></section>
@@ -2200,7 +2217,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
           <b>{`x${score.comboMultiplier.toFixed(1)}`}</b>
         </div>}
         <div className={base.boardActions} data-ftue-actions={isGoldenRun ? "true" : undefined}>
-          {!isGoldenRun && standardHintVisible && <button onClick={useHint} disabled={boardLocked}>💡 Hint <small>resets combo</small></button>}
+          {!isGoldenRun && standardHintVisible && <button ref={hintButtonRef} onClick={useHint} disabled={boardLocked}>💡 Hint <small>resets combo</small></button>}
           {isGoldenRun && (ftueStall === "HINT" || !ftueActive) && <button onClick={useHint} disabled={boardLocked || hintsUsed >= FTUE_HINT_LIMIT}>💡 {ftueActive ? "Need a clue?" : "Hint"}<small>{Math.max(0, FTUE_HINT_LIMIT - hintsUsed)} left</small></button>}
           <span>{boardLocked ? generatedRun ? "Tiles are changing in place" : "Board paused for royal action" : isGoldenRun ? "Drag in a straight line · no timer" : "Drag or tap two endpoints"}</span>
           {isGoldenRun && ftueActive && <button className={styles.skipTipsButton} onClick={skipFtueTips} disabled={boardLocked}>Skip tips</button>}

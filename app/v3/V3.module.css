@@ -1191,23 +1191,6 @@
   margin: 0!important;
 }
 
-.contextualFtuePrompt {
-  position: relative;
-  z-index: 4;
-  width: min(92%, 560px);
-  margin: 5px auto;
-  border: 2px solid #f4c851;
-  border-radius: 14px;
-  padding: 7px 12px;
-  color: #fff9d8;
-  background: linear-gradient(180deg,#257bc0,#123d80);
-  box-shadow: 0 4px 0 #092456,0 7px 14px rgba(4,25,58,.25),inset 0 1px 0 rgba(255,255,255,.45);
-  font-family: var(--game-ui);
-  font-size: clamp(11px,3vw,14px);
-  font-weight: 900;
-  text-align: center;
-}
-
 .shoreGuideLine {
   position: absolute;
   z-index: 8;
