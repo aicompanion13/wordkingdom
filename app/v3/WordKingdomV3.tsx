@@ -1025,7 +1025,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       ? beginLevelTwoAlbumReveal(current)
       : current);
     setAlbumTransition({ level, kind: theme.albumTransition });
-    const transitionMs = prefersReducedMotion ? 220 : theme.albumTransition === "bubbles" ? 2250 : 900;
+    const transitionMs = prefersReducedMotion ? 220 : theme.albumTransition === "bubbles" ? 1500 : 900;
     window.setTimeout(() => {
       setScreen("hub");
       setTab("albums");
@@ -2519,7 +2519,7 @@ function AlbumPanel({ albums, pages, pageLevel, unlockedPages, ftueProgress, red
       <header><small>WORD KINGDOM COLLECTION</small><h1>{oceanAlbum.title}</h1><p>{collected.size}/12 stickers collected</p></header>
       <div className={styles.oceanAlbumProgress} aria-label={`${collected.size} of 12 Ocean stickers collected`}><i style={{ width: `${collected.size / 12 * 100}%` }} /></div>
       <div className={styles.oceanAlbumScene} style={{ backgroundImage: `linear-gradient(rgba(4,34,73,.08),rgba(2,28,67,.2)),url("${oceanAlbum.backgroundImage}")` }}>
-        {!reducedMotion && <video className={styles.oceanAlbumSceneVideo} src="/ocean-album-bg-loop.mp4" autoPlay loop muted playsInline aria-hidden="true" />}
+        {!reducedMotion && <OceanAlbumSceneVideoLayers />}
         {oceanAlbum.stickers.map((slot) => {
           const isCollected = collected.has(slot.id);
           return <article className={styles.oceanAlbumSlot} data-collected={isCollected ? "true" : undefined} key={slot.id} style={{ left: `${slot.x}%`, top: `${slot.y}%`, transform: `translate(-50%,-50%) rotate(${slot.rotation}deg) scale(${slot.scale})` }} aria-label={`${OCEAN_STICKER_LABELS[slot.id]}: ${isCollected ? "collected" : "missing"}`}>
@@ -2623,16 +2623,35 @@ function TutorialLibrary({ maxLevel, onClose }: { maxLevel: number; onClose: () 
   </section></div>;
 }
 
+const OCEAN_SCENE_CLIP_MS = 1500;
+const OCEAN_SCENE_LAYER_COUNT = 3;
+
+function OceanAlbumSceneVideoLayers() {
+  const layerRefs = useRef<Array<HTMLVideoElement | null>>([]);
+  useEffect(() => {
+    const timers = Array.from({ length: OCEAN_SCENE_LAYER_COUNT }, (_, index) => window.setTimeout(() => {
+      layerRefs.current[index]?.play().catch(() => {});
+    }, (OCEAN_SCENE_CLIP_MS / OCEAN_SCENE_LAYER_COUNT) * index));
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
+  }, []);
+  return <>
+    {Array.from({ length: OCEAN_SCENE_LAYER_COUNT }, (_, index) => <video
+      key={index}
+      ref={(node) => { layerRefs.current[index] = node; }}
+      className={styles.oceanAlbumSceneVideo}
+      style={{ animationDelay: `-${(OCEAN_SCENE_CLIP_MS / OCEAN_SCENE_LAYER_COUNT) * index}ms` }}
+      src="/ocean-album-clip.mp4"
+      muted
+      loop
+      playsInline
+      aria-hidden="true"
+    />)}
+  </>;
+}
+
 function AlbumTransition({ state, reducedMotion }: { state: AlbumTransitionState; reducedMotion: boolean }) {
   return <div className={styles.albumTransition} data-kind={reducedMotion ? "fade" : state.kind} aria-hidden="true">
-    {state.kind === "bubbles" && !reducedMotion && Array.from({ length: 30 }, (_, index) => {
-      const left = (index * 41 + 7) % 100;
-      const size = 6 + ((index * 13) % 22);
-      const duration = 1.3 + ((index * 7) % 20) / 20;
-      const delay = ((index * 173) % 38) / 20;
-      const drift = (index % 2 === 0 ? 1 : -1) * (8 + (index * 5) % 16);
-      return <i key={index} style={{ "--left": `${left}%`, "--size": `${size}px`, "--duration": `${duration}s`, "--delay": `${delay}s`, "--drift": `${drift}px` } as CSSProperties} />;
-    })}
+    {state.kind === "bubbles" && !reducedMotion && <video className={styles.albumTransitionVideo} src="/ocean-album-clip.mp4" autoPlay muted playsInline />}
     {state.kind === "vines" && !reducedMotion && <><b /><b /><span>🍃</span><span>✦</span><span>🍃</span></>}
   </div>;
 }

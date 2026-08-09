@@ -1254,34 +1254,23 @@
 
 .albumTransition { position:fixed; z-index:9999; inset:0; overflow:hidden; pointer-events:none; background:rgba(17,97,153,.2); animation:albumTransitionFade .9s ease both; }
 .albumTransition[data-kind="bubbles"] {
-  animation:albumTransitionFadeLong 2.25s ease both;
+  animation:albumTransitionFadeLong 1.5s ease both;
   background:
     radial-gradient(ellipse 140% 55% at 50% -12%, rgba(190,244,255,.4), transparent 62%),
     linear-gradient(180deg,#1c72ab 0%,#0e4d80 45%,#062f57 78%,#031b35 100%);
 }
-.albumTransition[data-kind="bubbles"] i {
+.albumTransitionVideo {
   position:absolute;
-  left:var(--left);
-  bottom:-48px;
-  width:var(--size);
-  height:var(--size);
-  border:1.5px solid rgba(227,251,255,.85);
-  border-radius:50%;
-  background:radial-gradient(circle at 30% 26%, rgba(255,255,255,.9), rgba(255,255,255,.08) 55%, transparent 72%);
-  box-shadow:inset 1px 1px 3px rgba(255,255,255,.55), 0 0 10px rgba(132,235,255,.5);
-  animation:albumBubbleRise var(--duration) var(--delay) cubic-bezier(.3,.6,.7,1) both;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 .albumTransition[data-kind="vines"] b { position:absolute; bottom:-5%; width:48%; height:75%; border:8px solid #3d8a3c; border-top:0; border-radius:0 0 55% 55%; transform-origin:bottom; animation:albumVine .7s ease-out both; }.albumTransition[data-kind="vines"] b:first-of-type { left:-7%; transform:rotate(-17deg); }.albumTransition[data-kind="vines"] b:nth-of-type(2) { right:-7%; transform:rotate(17deg); }
 .albumTransition[data-kind="vines"] span { position:absolute; top:30%; font-size:30px; animation:albumLeaf .8s .25s ease both; }.albumTransition[data-kind="vines"] span:nth-of-type(1){left:24%}.albumTransition[data-kind="vines"] span:nth-of-type(2){left:49%}.albumTransition[data-kind="vines"] span:nth-of-type(3){right:23%}
 .albumTransition[data-kind="fade"] { animation-duration:.22s; }
 @keyframes albumTransitionFade { 0%{opacity:0} 45%{opacity:1;background:rgba(15,107,169,.72)} 100%{opacity:0} }
 @keyframes albumTransitionFadeLong { 0%{opacity:0} 8%{opacity:1} 90%{opacity:1} 100%{opacity:0} }
-@keyframes albumBubbleRise {
-  0% { transform:translate(0,0) scale(.5); opacity:0; }
-  10% { opacity:.95; }
-  55% { transform:translate(calc(var(--drift) * .55),-55vh) scale(1); }
-  100% { transform:translate(var(--drift),-118vh) scale(1.1); opacity:0; }
-}
 @keyframes albumBubble { to { transform:translateY(-105vh) scale(1.25); opacity:0; } }
 @keyframes albumVine { from { scale:.05 } to { scale:1 } }
 @keyframes albumLeaf { from { opacity:0; transform:translateY(25px) scale(.5) } to { opacity:1; transform:none } }
@@ -2145,7 +2134,14 @@
 .oceanAlbumProgress i { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg,#27b8d1,#ffdf52); transition:width .35s ease; }
 .oceanAlbumScene { position:relative; min-height:0; overflow:hidden; border:2px solid #fff; border-radius:17px; background-position:center; background-size:cover; box-shadow:0 3px 0 rgba(133,80,31,.4); }
 .oceanAlbumScene::after { content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg,rgba(4,39,83,.02),rgba(3,32,69,.22)); }
-.oceanAlbumSceneVideo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; }
+.oceanAlbumSceneVideo {
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;
+  animation: oceanSceneCrossfade 1.5s ease-in-out infinite;
+}
+@keyframes oceanSceneCrossfade { 0%,100% { opacity:1; } 50% { opacity:.2; } }
+@media (prefers-reduced-motion: reduce) {
+  .oceanAlbumSceneVideo { animation: none; }
+}
 .oceanAlbumSlot { position:absolute; z-index:1; display:grid; justify-items:center; width:72px; filter:drop-shadow(0 5px 4px rgba(0,24,53,.32)); }
 .oceanAlbumSlot .oceanStickerVisual,.oceanAlbumSlot>[data-artwork] { width:58px; height:54px; }
 .oceanAlbumSlot b { max-width:76px; margin-top:-2px; border:1.5px solid #f0dcae; border-radius:99px; padding:2px 5px; overflow:hidden; color:#183e73; background:#fff4c7; box-shadow:0 1px 0 rgba(117,66,29,.4); font-family:var(--game-display); font-size:6px; text-overflow:ellipsis; white-space:nowrap; }
