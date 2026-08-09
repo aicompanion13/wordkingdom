@@ -25,6 +25,8 @@ import {
   GOLDEN_LEVEL_1,
 } from "@/game/v3/board-session-factory";
 import { EconomyManagerV3, ENERGY_CAP, ENERGY_REGEN_MS } from "@/game/v3/economy-manager";
+import { FeedbackOverlay } from "@/game/v3/feedback/FeedbackOverlay";
+import { useLongPress } from "@/game/v3/feedback/useLongPress";
 import { JuiceAnimationSystem } from "@/game/v3/juice-animation-system";
 import type { FxPoint, JuiceEffect } from "@/game/v3/juice-animation-system";
 import { ObjectiveManager } from "@/game/v3/objective-manager";
@@ -203,6 +205,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const [selectedNode, setSelectedNode] = useState<TrackNode | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [debugOpen, setDebugOpen] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [board, setBoard] = useState<BoardSnapshot | null>(null);
   const [activeWords, setActiveWords] = useState<SessionActiveWord[]>([]);
@@ -274,6 +277,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const levelOneAutoStarted = useRef(false);
   const dragStart = useRef<Position | null>(null);
   const dragging = useRef(false);
+  const boardCardRef = useRef<HTMLDivElement | null>(null);
   const cloudReady = useRef(false);
   const cloudSaveTimer = useRef<number | null>(null);
   const cloudSaveInFlight = useRef<Promise<void> | null>(null);
@@ -504,7 +508,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     () => new Set([...(obstacles?.tileIds ?? []), ...Object.keys(generatedObstacleTypes)]),
     [obstacles, generatedObstacleTypes],
   );
-  const boardLocked = animating || Boolean(levelOneCoach?.messageOpen) || pvpOverlay !== null || packReveal !== null || settingsOpen || Boolean(boardSession.current && !boardSession.current.canAcceptInput());
+  const boardLocked = animating || Boolean(levelOneCoach?.messageOpen) || pvpOverlay !== null || packReveal !== null || settingsOpen || feedbackOpen || Boolean(boardSession.current && !boardSession.current.canAcceptInput());
   const comboDrain = score.comboMultiplier === INITIAL_COMBO ? 0 : scorer.current?.snapshot(clock).idleRemainingRatio ?? score.idleRemainingRatio;
   const runStepTarget = generatedRun?.totalWords ?? 5;
   const isQaRun = generatedRun?.qa ?? false;
@@ -1060,7 +1064,17 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       return;
     }
     if (kind === "attack") setPvpOverlay({ kind: "attack", target, result: null, tutorial });
-    if (kind === "shield") setPvpOverlay({ kind: "shield", protectedCardId: null, result: null, tutorial });
+    if (kind === "shield") {
+      // Disabled for now: the "choose a card to protect" window could strand
+      // players who own no cards yet with nothing to click and no way to close it.
+      if (tutorial) {
+        persistPvp(pvp.current.completeTutorial("shield"));
+        markTutorialComplete("level-6-shield");
+        updateFtueProgress((current) => ({ ...current, pendingTutorialAction: null }));
+        window.setTimeout(() => launchNextMeta(), 180);
+      }
+      return;
+    }
   };
 
   const launchNextMeta = (level = completedMetaLevel.current) => {
@@ -1599,6 +1613,14 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     setSelectedIds([]);
   };
 
+  const boardLongPress = useLongPress(() => {
+    dragging.current = false;
+    dragStart.current = null;
+    selection.current = [];
+    setSelectedIds([]);
+    setFeedbackOpen(true);
+  }, boardLocked);
+
   const onKeyboardTile = (tile: Tile) => {
     if (boardLocked) return;
     if (selection.current.length === 0 || selection.current.length > 1) { updateSelection([tile]); return; }
@@ -2074,7 +2096,15 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       <section className={styles.objectiveBar} data-complete={objectiveProgress.complete}><span>🔤</span><div><small>LEVEL OBJECTIVE</small><b>{node.objective.label}</b></div><em>{objectiveProgress.current}/{objectiveProgress.target}</em></section>
     </>}
     <section className={base.boardLayout}>
-      <div className={`${base.boardCard} ${shake ? base.shake : ""}`}>
+      <div
+        className={`${base.boardCard} ${shake ? base.shake : ""}`}
+        ref={boardCardRef}
+        onPointerDown={boardLongPress.onPointerDown}
+        onPointerMove={boardLongPress.onPointerMove}
+        onPointerUp={boardLongPress.onPointerUp}
+        onPointerCancel={boardLongPress.onPointerCancel}
+        onContextMenu={(event) => event.preventDefault()}
+      >
         <div className={base.boardMessage} role="status" aria-live="polite">{message}</div>
         <div className={`${base.letterGrid} ${styles.boardLetterGrid}`} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerCancel}>
           {isGoldenRun && ftueActive && goldenTutorial.phase === "FIRST_WORD" && <div className={styles.shoreGuideLine} aria-hidden="true"><i /><span>➜</span></div>}
@@ -2142,6 +2172,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       </div>}
     </section>
     <JuiceFxLayer effects={juiceEffects} />
+    <FeedbackOverlay open={feedbackOpen} targetRef={boardCardRef} level={node.level} onClose={() => setFeedbackOpen(false)} />
     {levelOneCoach?.kind === "welcome" && <ConceptCard
       title="Welcome to Word Kingdom!"
       message="Find hidden words, collect royal cards, raid rival kingdoms, and gather gold as you build your realm."
