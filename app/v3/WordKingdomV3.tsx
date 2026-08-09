@@ -24,7 +24,7 @@ import {
   GENERATED_LEVELS,
   GOLDEN_LEVEL_1,
 } from "@/game/v3/board-session-factory";
-import { EconomyManagerV3, ENERGY_CAP, ENERGY_REGEN_MS } from "@/game/v3/economy-manager";
+import { EconomyManagerV3, ENERGY_CAP, ENERGY_REGEN_MS, HINT_POOL_CAP } from "@/game/v3/economy-manager";
 import { JuiceAnimationSystem } from "@/game/v3/juice-animation-system";
 import type { FxPoint, JuiceEffect } from "@/game/v3/juice-animation-system";
 import { ObjectiveManager } from "@/game/v3/objective-manager";
@@ -149,6 +149,11 @@ const RAID_FIRST_LEVEL = 3;
 const RAID_GUARANTEED_INTERVAL = 4;
 const isScheduledRaidTopUp = (level: number) =>
   level > RAID_FIRST_LEVEL && (level - RAID_FIRST_LEVEL) % RAID_GUARANTEED_INTERVAL === 0;
+const HINT_POOL_INTRO_LEVEL = 4;
+const HINT_POOL_REFILL_INTERVAL = 4;
+const HINT_POOL_REFILL_AMOUNT = 2;
+const isScheduledHintRefill = (level: number) =>
+  level > HINT_POOL_INTRO_LEVEL && (level - HINT_POOL_INTRO_LEVEL) % HINT_POOL_REFILL_INTERVAL === 0;
 
 type Screen = "hub" | "board" | "summary";
 type Tab = "shop" | "teams" | "home" | "events" | "albums";
@@ -166,6 +171,7 @@ type LevelOneCoachState =
   | { kind: "first-word"; messageOpen: boolean }
   | { kind: "level-2-rules"; messageOpen: boolean }
   | { kind: "level-3-raid"; messageOpen: boolean }
+  | { kind: "level-4-hint-economy"; messageOpen: boolean }
   | { kind: "transformation"; messageOpen: boolean }
   | null;
 
@@ -776,6 +782,8 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       ? { kind: "level-2-rules", messageOpen: true }
       : node.level === 3 && ftueGuidanceEnabled(ftueProgressRef.current) && !ftueProgressRef.current.completedVisualSteps.includes("level-3-raid-guidance")
       ? { kind: "level-3-raid", messageOpen: true }
+      : node.level === HINT_POOL_INTRO_LEVEL && ftueGuidanceEnabled(ftueProgressRef.current) && !ftueProgressRef.current.completedVisualSteps.includes("level-4-hint-economy-guidance")
+      ? { kind: "level-4-hint-economy", messageOpen: true }
       : null);
     ftueLastUsefulAt.current = activatedAt;
     ftueFirstChangeAt.current = 0;
@@ -985,6 +993,11 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     setLevelOneCoach(null);
   };
 
+  const dismissHintEconomyCoach = () => {
+    markFtueVisualStep("level-4-hint-economy-guidance");
+    setLevelOneCoach(null);
+  };
+
   const dismissHintCoach = () => {
     markTutorialComplete("level-3-hint");
     setContextualPrompt(false);
@@ -1149,6 +1162,10 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     if (isScheduledRaidTopUp(level) && pvp.current.snapshot().readyActions.raid < 1) {
       pvp.current.addReadyAction("raid");
       persistPvp();
+    }
+    if (isScheduledHintRefill(level) && economy.current) {
+      persist(economy.current.grantHints(HINT_POOL_REFILL_AMOUNT));
+      setToast(`+${HINT_POOL_REFILL_AMOUNT} 💡 Hints earned!`);
     }
     const tutorial = pvp.current.pendingTutorial(level);
     if (tutorial && tutorial !== "album") {
@@ -1706,11 +1723,19 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       setMessage("No hints left this level");
       return;
     }
+    const currentLevel = runNode.current?.level ?? player.currentLevel;
+    if (!isGoldenRun && currentLevel >= HINT_POOL_INTRO_LEVEL) {
+      if (!economy.current?.spendHint()) {
+        setMessage("No hints left — earn more as you keep playing");
+        return;
+      }
+      persist(economy.current.snapshot());
+    }
     hintsUsedRef.current += 1;
     setHintsUsed(hintsUsedRef.current);
     setHintedId(word.tileIds[0]);
     if (isGoldenRun) noteUsefulFtueInteraction();
-    if ((runNode.current?.level ?? player.currentLevel) === 3 && !ftueProgressRef.current.completedTutorials.includes("level-3-hint")) {
+    if (currentLevel === 3 && !ftueProgressRef.current.completedTutorials.includes("level-3-hint")) {
       markTutorialComplete("level-3-hint");
       setContextualPrompt(false);
     }
@@ -2217,7 +2242,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
           <b>{`x${score.comboMultiplier.toFixed(1)}`}</b>
         </div>}
         <div className={base.boardActions} data-ftue-actions={isGoldenRun ? "true" : undefined}>
-          {!isGoldenRun && standardHintVisible && <button ref={hintButtonRef} onClick={useHint} disabled={boardLocked}>💡 Hint <small>resets combo</small></button>}
+          {!isGoldenRun && standardHintVisible && <button ref={hintButtonRef} onClick={useHint} disabled={boardLocked || (currentRunLevel >= HINT_POOL_INTRO_LEVEL && player.hints < 1)}>💡 Hint <small>{currentRunLevel >= HINT_POOL_INTRO_LEVEL ? `${player.hints}/${HINT_POOL_CAP} left` : "resets combo"}</small></button>}
           {isGoldenRun && (ftueStall === "HINT" || !ftueActive) && <button onClick={useHint} disabled={boardLocked || hintsUsed >= FTUE_HINT_LIMIT}>💡 {ftueActive ? "Need a clue?" : "Hint"}<small>{Math.max(0, FTUE_HINT_LIMIT - hintsUsed)} left</small></button>}
           <span>{boardLocked ? generatedRun ? "Tiles are changing in place" : "Board paused for royal action" : isGoldenRun ? "Drag in a straight line · no timer" : "Drag or tap two endpoints"}</span>
           {isGoldenRun && ftueActive && <button className={styles.skipTipsButton} onClick={skipFtueTips} disabled={boardLocked}>Skip tips</button>}
@@ -2275,6 +2300,14 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       messageOpen={levelOneCoach.messageOpen}
       onDismiss={dismissLevelThreeRaidCoach}
       testId="level-3-raid-guide"
+    />}
+    {levelOneCoach?.kind === "level-4-hint-economy" && <ConceptCard
+      title="Hints Are Limited"
+      message={`You start with ${player.hints} 💡 Hints. Use them wisely — you'll earn more as you keep playing.`}
+      cta="Got it"
+      messageOpen={levelOneCoach.messageOpen}
+      onDismiss={dismissHintEconomyCoach}
+      testId="level-4-hint-economy-guide"
     />}
     {levelOneCoach?.kind === "first-word" && <FtueCoachmark
       icon={<span className={styles.wordSelectionVisual}>{[..."SHORE"].map((letter) => <i key={letter}>{letter}</i>)}</span>}

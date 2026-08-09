@@ -82,6 +82,7 @@ export type V3PlayerState = {
   shields: number;
   vaultStars: number;
   currentLevel: number;
+  hints: number;
   unlockedChapterIds: string[];
   completedLevels: number[];
   claimedSetRewards: string[];

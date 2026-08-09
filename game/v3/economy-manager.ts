@@ -3,6 +3,7 @@ import type { PackResult, TrackNode, V3PlayerState } from "./types";
 
 export const ENERGY_CAP = 50;
 export const ENERGY_REGEN_MS = 20 * 60 * 1000;
+export const HINT_POOL_CAP = 6;
 
 export class EconomyManagerV3 {
   private player: V3PlayerState;
@@ -30,6 +31,17 @@ export class EconomyManagerV3 {
     if (this.player.energy < amount) return false;
     this.player.energy -= amount;
     return true;
+  }
+
+  spendHint(): boolean {
+    if (this.player.hints < 1) return false;
+    this.player.hints -= 1;
+    return true;
+  }
+
+  grantHints(amount: number): V3PlayerState {
+    this.player.hints = Math.min(HINT_POOL_CAP, this.player.hints + Math.max(0, amount));
+    return this.snapshot();
   }
 
   completeNode(node: TrackNode, runCoins: number, stars: number, unlockGateway = true): V3PlayerState {

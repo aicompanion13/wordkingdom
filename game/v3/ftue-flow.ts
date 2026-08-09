@@ -95,6 +95,7 @@ export type FtueVisualStep =
   | "first-word-guidance"
   | "level-2-rules-guidance"
   | "level-3-raid-guidance"
+  | "level-4-hint-economy-guidance"
   | "first-transformation"
   | "level-2-ready-guidance"
   | "level-2-pack-opened"
