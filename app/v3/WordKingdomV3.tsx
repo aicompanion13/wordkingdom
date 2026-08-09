@@ -1207,6 +1207,12 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     setPvpOverlay({ ...pvpOverlay, result, target: result.target });
   };
 
+  const deferAttack = () => {
+    if (pvpOverlay?.kind !== "attack" || pvpOverlay.result) return;
+    setPvpOverlay(null);
+    setToast("Attack saved. That rival has no unshielded cards left right now.");
+  };
+
   const performSteal = () => {
     if (pvpOverlay?.kind !== "steal" || pvpOverlay.session.status === "resolved" || pvpOverlay.busy || !pvp.current || stealResolutionLock.current) return;
     stealResolutionLock.current = true;
@@ -1239,6 +1245,12 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     persistPvp();
     setPvpOverlay(null);
     setToast("Steal saved. You can use it after a later level.");
+  };
+
+  const deferShield = () => {
+    if (pvpOverlay?.kind !== "shield" || pvpOverlay.protectedCardId) return;
+    setPvpOverlay(null);
+    setToast("Shield saved. You can use it once you own a card.");
   };
 
   const chooseShieldCard = (cardId: string) => {
@@ -2055,7 +2067,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       {tutorialLibraryOpen && <TutorialLibrary maxLevel={Math.min(10, Math.max(player.currentLevel, ...player.completedLevels, 1))} onClose={() => setTutorialLibraryOpen(false)} />}
       {albumTransition && <AlbumTransition state={albumTransition} reducedMotion={prefersReducedMotion} />}
       {packReveal && <PackModal result={packReveal} onClose={closePackReveal} />}
-      {pvpOverlay && <PvpEventOverlay state={pvpOverlay} ownedCards={ownedCards()} onAttack={chooseAttackCard} onSteal={performSteal} onUseLater={deferSteal} onShield={chooseShieldCard} onPick={pickRaidChest} onClose={closePvpOverlay} />}
+      {pvpOverlay && <PvpEventOverlay state={pvpOverlay} ownedCards={ownedCards()} onAttack={chooseAttackCard} onAttackSkip={deferAttack} onSteal={performSteal} onUseLater={deferSteal} onShield={chooseShieldCard} onShieldSkip={deferShield} onPick={pickRaidChest} onClose={closePvpOverlay} />}
       {pvpOverlay?.tutorial && <PowerTutorialPrompt kind={pvpOverlay.kind} />}
       {toast && <div className={base.toast} role="status">{toast}</div>}
       {loginIntroOpen && <LoginIntro onClose={() => { setLoginIntroOpen(false); updateFtueProgress(markIntroVideoSeen); }} />}
@@ -2151,7 +2163,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
         </div>}
       </KingdomPopup>
       {packReveal && <PackModal result={packReveal} onClose={closePackReveal} />}
-      {pvpOverlay && <PvpEventOverlay state={pvpOverlay} ownedCards={ownedCards()} onAttack={chooseAttackCard} onSteal={performSteal} onUseLater={deferSteal} onShield={chooseShieldCard} onPick={pickRaidChest} onClose={closePvpOverlay} />}
+      {pvpOverlay && <PvpEventOverlay state={pvpOverlay} ownedCards={ownedCards()} onAttack={chooseAttackCard} onAttackSkip={deferAttack} onSteal={performSteal} onUseLater={deferSteal} onShield={chooseShieldCard} onShieldSkip={deferShield} onPick={pickRaidChest} onClose={closePvpOverlay} />}
       {pvpOverlay?.tutorial && <PowerTutorialPrompt kind={pvpOverlay.kind} />}
       {settingsOpen && <SettingsModal account={account} signOutUrl={signOutUrl} player={player} onToggle={updateSetting} onRestart={restartProgress} onHowToPlay={() => { setSettingsOpen(false); setTutorialLibraryOpen(true); }} onClose={() => setSettingsOpen(false)} />}
       {tutorialLibraryOpen && <TutorialLibrary maxLevel={Math.min(10, Math.max(player.currentLevel, ...player.completedLevels, 1))} onClose={() => setTutorialLibraryOpen(false)} />}
@@ -2341,7 +2353,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       reducedMotion={prefersReducedMotion}
       testId="level-1-transformation-message"
     />}
-    {pvpOverlay && <PvpEventOverlay state={pvpOverlay} ownedCards={ownedCards()} onAttack={chooseAttackCard} onSteal={performSteal} onUseLater={deferSteal} onShield={chooseShieldCard} onPick={pickRaidChest} onClose={closePvpOverlay} />}
+    {pvpOverlay && <PvpEventOverlay state={pvpOverlay} ownedCards={ownedCards()} onAttack={chooseAttackCard} onAttackSkip={deferAttack} onSteal={performSteal} onUseLater={deferSteal} onShield={chooseShieldCard} onShieldSkip={deferShield} onPick={pickRaidChest} onClose={closePvpOverlay} />}
     {pvpOverlay?.tutorial && <PowerTutorialPrompt kind={pvpOverlay.kind} />}
     {packReveal && <PackModal result={packReveal} onClose={closePackReveal} />}
     {settingsOpen && <SettingsModal account={account} signOutUrl={signOutUrl} player={player} onToggle={updateSetting} onRestart={restartProgress} onHowToPlay={() => { setSettingsOpen(false); setTutorialLibraryOpen(true); }} onClose={() => setSettingsOpen(false)} />}
@@ -2664,18 +2676,21 @@ function LoginIntro({ onClose }: { onClose: () => void }) {
   </section>;
 }
 
-function PvpEventOverlay({ state, ownedCards, onAttack, onSteal, onUseLater, onShield, onPick, onClose }: { state: PvpOverlayState; ownedCards: CardDefinition[]; onAttack: (cardId: string) => void; onSteal: () => void; onUseLater: () => void; onShield: (cardId: string) => void; onPick: (chestId: string, source?: FxPoint) => void; onClose: () => void }) {
+function PvpEventOverlay({ state, ownedCards, onAttack, onAttackSkip, onSteal, onUseLater, onShield, onShieldSkip, onPick, onClose }: { state: PvpOverlayState; ownedCards: CardDefinition[]; onAttack: (cardId: string) => void; onAttackSkip: () => void; onSteal: () => void; onUseLater: () => void; onShield: (cardId: string) => void; onShieldSkip: () => void; onPick: (chestId: string, source?: FxPoint) => void; onClose: () => void }) {
   if (state.kind === "raid") {
     return <div className={`${base.eventOverlay} ${styles.pvpOverlay}`} role="dialog" aria-modal="true"><section className={`${base.eventCard} ${styles.pvpEventCard}`} data-event="raid"><div className={base.eventIcon}>💰</div><span className={base.kicker}>{state.tutorial ? "OPEN THREE BOXES." : "COIN RAID"}</span><h2>Raid {state.session.target.displayName}</h2><p>The jackpot was locked in before your first pick. Choose exactly three of nine boxes.</p><div className={styles.raidStatus}><span>{state.session.picksRemaining} PICKS LEFT</span><b>🪙 {formatNumber(state.session.coinsWon)}</b></div><div className={`${styles.vaultGrid} ${styles.nineVaultGrid}`}>{state.session.chests.map((chest, index) => { const revealed = state.session.pickedIds.includes(chest.id); const guideFirstPick = state.tutorial && state.session.pickedIds.length === 0 && index === 0; return <button key={chest.id} className={guideFirstPick ? styles.guidedVaultBox : undefined} disabled={revealed || state.session.complete} data-revealed={revealed} data-tier={revealed ? chest.tier : undefined} onClick={(event) => { const rect = event.currentTarget.getBoundingClientRect(); onPick(chest.id, { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }); }}><img src={RAID_BOX_ART[revealed ? chest.tier : "locked"]} alt="" />{revealed && <b>{formatNumber(chest.coins)}</b>}{revealed && <small>{chest.tier.toUpperCase()}</small>}</button>; })}</div>{state.session.complete && <div className={styles.pvpResultBanner}><small>RAID COMPLETE</small><b>+{formatNumber(state.session.coinsWon)} Coins</b><span>Coins go straight to your persistent balance.</span></div>}<button className={styles.pvpContinue} disabled={!state.session.complete} onClick={onClose}>{state.session.complete ? "COLLECT COINS" : "CHOOSE 3 BOXES"}</button></section></div>;
   }
   if (state.kind === "attack") {
-    return <div className={`${base.eventOverlay} ${styles.pvpOverlay}`} role="dialog" aria-modal="true"><section className={`${base.eventCard} ${styles.pvpEventCard}`} data-event="attack"><div className={base.eventIcon}>⚔️</div><span className={base.kicker}>{state.tutorial ? "CHOOSE ONE CARD TO ATTACK." : "CARD ATTACK"}</span><h2>{state.target.displayName}</h2>{!state.result ? <div className={styles.metaCardChoice}>{state.target.cards.filter((card) => !card.stolen).map((card) => <button key={card.cardId} onClick={() => onAttack(card.cardId)}><span>{card.icon}</span><b>{card.name}</b><small>{card.shielded ? "Shield status hidden" : "Visible rival card"}</small></button>)}</div> : <div className={styles.pvpResultBanner}><small>{state.result.blocked ? "SHIELD BROKE" : "DIRECT HIT"}</small><b>{state.result.card.name}</b><span>{state.result.blocked ? "The card was protected and remains safe." : "The card is Damaged, not deleted."}</span></div>}<button className={styles.pvpContinue} disabled={!state.result} onClick={onClose}>{state.result ? "CONTINUE" : "CHOOSE A CARD"}</button></section></div>;
+    const attackableCards = state.target.cards.filter((card) => !card.stolen);
+    const noCardsToAttack = !state.result && attackableCards.length === 0;
+    return <div className={`${base.eventOverlay} ${styles.pvpOverlay}`} role="dialog" aria-modal="true"><section className={`${base.eventCard} ${styles.pvpEventCard}`} data-event="attack"><div className={base.eventIcon}>⚔️</div><span className={base.kicker}>{state.tutorial ? "CHOOSE ONE CARD TO ATTACK." : "CARD ATTACK"}</span><h2>{state.target.displayName}</h2>{noCardsToAttack ? <p>Every card {state.target.displayName} owns has already been claimed. This Attack stays ready for another rival.</p> : !state.result ? <div className={styles.metaCardChoice}>{attackableCards.map((card) => <button key={card.cardId} onClick={() => onAttack(card.cardId)}><span>{card.icon}</span><b>{card.name}</b><small>{card.shielded ? "Shield status hidden" : "Visible rival card"}</small></button>)}</div> : <div className={styles.pvpResultBanner}><small>{state.result.blocked ? "SHIELD BROKE" : "DIRECT HIT"}</small><b>{state.result.card.name}</b><span>{state.result.blocked ? "The card was protected and remains safe." : "The card is Damaged, not deleted."}</span></div>}<button className={styles.pvpContinue} disabled={!state.result && !noCardsToAttack} onClick={noCardsToAttack ? onAttackSkip : onClose}>{state.result ? "CONTINUE" : noCardsToAttack ? "OK, GOT IT" : "CHOOSE A CARD"}</button></section></div>;
   }
   if (state.kind === "steal") {
     const result = state.session.result;
     return <div className={`${base.eventOverlay} ${styles.pvpOverlay}`} role="dialog" aria-modal="true"><section className={`${base.eventCard} ${styles.pvpEventCard}`} data-event="steal" data-steal-status={state.session.status}><div className={base.eventIcon}>🃏</div><span className={base.kicker}>{state.tutorial ? "STEAL ONE ELIGIBLE CARD." : "CARD STEAL"}</span><h2>{state.target.displayName}</h2><p>The eligible card is selected randomly. Tutorial cards and completed collections stay safe.</p>{result && <div className={styles.pvpResultBanner}><small>{result.blocked ? "STEAL BLOCKED" : "CARD STOLEN"}</small><b>{result.blocked ? "Steal Blocked." : result.card?.name ?? "Royal Card"}</b><span>{result.blocked ? "The card's Shield was consumed and the card stayed safe." : "The card was added to your Album."}</span></div>}{result ? <button className={styles.pvpContinue} onClick={onClose}>CONTINUE</button> : <div className={styles.stealActions}><button className={styles.pvpContinue} disabled={state.busy} onClick={onSteal}>{state.busy ? "CHOOSING…" : "STEAL A CARD"}</button><button className={styles.briefingSecondary} disabled={state.busy} onClick={onUseLater}>USE LATER</button></div>}</section></div>;
   }
-  return <div className={`${base.eventOverlay} ${styles.pvpOverlay}`} role="dialog" aria-modal="true"><section className={`${base.eventCard} ${styles.pvpEventCard}`} data-event="shield"><div className={base.eventIcon}>🛡️</div><span className={base.kicker}>{state.tutorial ? "PROTECT ONE OF YOUR CARDS." : "CARD SHIELD"}</span><h2>{state.result?.blocked ? "Shield blocked the Attack!" : state.protectedCardId ? "Card protected" : "Choose a card"}</h2>{!state.protectedCardId ? <div className={styles.metaCardChoice}>{ownedCards.map((card) => <button key={card.cardId} onClick={() => onShield(card.cardId)}><span>{card.icon}</span><b>{card.name}</b><small>Protect from one Attack or Steal</small></button>)}</div> : <div className={styles.pvpResultBanner}><small>{state.result?.blocked ? "SCRIPTED ATTACK BLOCKED" : "SHIELD EQUIPPED"}</small><b>{ownedCards.find((card) => card.cardId === state.protectedCardId)?.name ?? "Royal Card"}</b><span>{state.result?.blocked ? "The Shield was consumed exactly once." : "Protection is now visible in your Album."}</span></div>}<button className={styles.pvpContinue} disabled={!state.protectedCardId} onClick={onClose}>{state.protectedCardId ? "CONTINUE" : "CHOOSE A CARD"}</button></section></div>;
+  const noCardsToProtect = ownedCards.length === 0 && !state.protectedCardId;
+  return <div className={`${base.eventOverlay} ${styles.pvpOverlay}`} role="dialog" aria-modal="true"><section className={`${base.eventCard} ${styles.pvpEventCard}`} data-event="shield"><div className={base.eventIcon}>🛡️</div><span className={base.kicker}>{state.tutorial ? "PROTECT ONE OF YOUR CARDS." : "CARD SHIELD"}</span><h2>{state.result?.blocked ? "Shield blocked the Attack!" : state.protectedCardId ? "Card protected" : noCardsToProtect ? "No cards yet" : "Choose a card"}</h2>{noCardsToProtect ? <p>You don't have any Royal Cards yet. This Shield stays ready — come back once you've collected one.</p> : !state.protectedCardId ? <div className={styles.metaCardChoice}>{ownedCards.map((card) => <button key={card.cardId} onClick={() => onShield(card.cardId)}><span>{card.icon}</span><b>{card.name}</b><small>Protect from one Attack or Steal</small></button>)}</div> : <div className={styles.pvpResultBanner}><small>{state.result?.blocked ? "SCRIPTED ATTACK BLOCKED" : "SHIELD EQUIPPED"}</small><b>{ownedCards.find((card) => card.cardId === state.protectedCardId)?.name ?? "Royal Card"}</b><span>{state.result?.blocked ? "The Shield was consumed exactly once." : "Protection is now visible in your Album."}</span></div>}<button className={styles.pvpContinue} disabled={!state.protectedCardId && !noCardsToProtect} onClick={noCardsToProtect ? onShieldSkip : onClose}>{state.protectedCardId ? "CONTINUE" : noCardsToProtect ? "OK, GOT IT" : "CHOOSE A CARD"}</button></section></div>;
 }
 
 function LegacyPvpEventOverlay({ state, onPick, onClose }: { state: any; onPick: (chestId: string, source?: FxPoint) => void; onClose: () => void }) {
