@@ -1299,8 +1299,8 @@
   left: 50%;
   top: 8px;
   transform: translateX(-50%);
-  width: min(340px,88vw);
-  max-height: 190px;
+  width: min(250px,66vw);
+  max-height: 140px;
   display: flex;
   align-items: center;
   justify-content: center;
