@@ -2302,6 +2302,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       title="Welcome to Word Kingdom!"
       message="Find hidden words, collect royal cards, raid rival kingdoms, and gather gold as you build your realm."
       cta="Let's go"
+      icon="👑"
       messageOpen={levelOneCoach.messageOpen}
       onDismiss={dismissWelcomeCoach}
       testId="level-1-welcome-guide"
@@ -2310,6 +2311,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       title="Words Can Run Both Ways!"
       message="Swipe in any straight line — forward, backward, up, down, or diagonal. If the letters spell a word either direction, it counts."
       cta="Got it"
+      icon="🔤"
       messageOpen={levelOneCoach.messageOpen}
       onDismiss={dismissLevelTwoRulesCoach}
       testId="level-2-rules-guide"
@@ -2318,6 +2320,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       title="Coming Up: Raid!"
       message="Collect three 💰 Raid badges as you play to fill the tray. After the level, open the Vault Raid — pick 3 of 9 boxes for coins."
       cta="Let's go"
+      icon="💰"
       messageOpen={levelOneCoach.messageOpen}
       onDismiss={dismissLevelThreeRaidCoach}
       testId="level-3-raid-guide"
@@ -2326,6 +2329,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       title="Hints Are Limited"
       message={`You start with ${player.hints} 💡 Hints. Use them wisely — you'll earn more as you keep playing.`}
       cta="Got it"
+      icon="💡"
       messageOpen={levelOneCoach.messageOpen}
       onDismiss={dismissHintEconomyCoach}
       testId="level-4-hint-economy-guide"

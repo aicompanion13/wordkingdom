@@ -3,6 +3,7 @@
 import { useLayoutEffect, useState } from "react";
 import type { CSSProperties, ReactNode, RefObject } from "react";
 import styles from "./FtueCoachmarks.module.css";
+import { KingdomPopup } from "./KingdomPopup";
 
 export type DiscoveryArtworkKind = "coral-castle" | "pearl" | "sea-turtle" | "album";
 
@@ -100,6 +101,7 @@ export function ConceptCard({
   title,
   message,
   cta,
+  icon = "👑",
   messageOpen = true,
   onDismiss,
   testId,
@@ -107,18 +109,16 @@ export function ConceptCard({
   title: string;
   message: string;
   cta: string;
+  icon?: ReactNode;
   messageOpen?: boolean;
   onDismiss: () => void;
   testId?: string;
 }) {
   if (!messageOpen) return null;
-  return <div className={styles.conceptRoot} data-testid={testId}>
-    <div className={styles.conceptScrim} aria-hidden="true" />
-    <div className={styles.conceptCard} role="dialog" aria-modal="true" aria-labelledby={testId ? `${testId}-title` : undefined}>
-      <b id={testId ? `${testId}-title` : undefined}>{title}</b>
-      <p>{message}</p>
-      <button type="button" className={styles.conceptCta} onClick={onDismiss}>{cta}</button>
-    </div>
+  return <div data-testid={testId}>
+    <KingdomPopup title={title} icon={icon} ctaText={cta} onCta={onDismiss} onClose={onDismiss} celebrate={false}>
+      {message}
+    </KingdomPopup>
   </div>;
 }
 
