@@ -133,8 +133,8 @@ export function ConceptCard({
     <section className={tutorialStyles.card} role="dialog" aria-modal="true" aria-labelledby="tutorial-card-title">
       <img className={tutorialStyles.frame} src="/tutorial/word-kingdom-tutorial-card-frame.webp" alt="" />
       <button className={tutorialStyles.close} type="button" onClick={onDismiss} aria-label="Close">×</button>
-      <div className={tutorialStyles.illustration} aria-hidden="true"><span>{icon}</span></div>
       <div className={tutorialStyles.copy}>
+        <span className={tutorialStyles.topicIcon} aria-hidden="true">{icon}</span>
         <h2 id="tutorial-card-title" className={tutorialStyles.title}>{title}</h2>
         <p className={tutorialStyles.body}>{message}</p>
       </div>
