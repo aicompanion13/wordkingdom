@@ -1124,6 +1124,9 @@
   background: #fff8ea;
   box-shadow: 0 2px 0 rgba(216,192,143,.53);
 }
+.powerProgress:has(.powerProgressGrid[data-count="1"]) {
+  padding: 5px 6px 6px;
+}
 .powerProgressHeading { display: flex; justify-content: space-between; align-items: center; margin: -14px 3px 7px; color: #17386f; }
 .powerProgressHeading span { border: 2px solid #fff; border-radius: 10px; padding: 5px 10px; color: #fff5c7; background: linear-gradient(180deg,#3b92cc,#1c579e 55%,#113674); font-family: var(--game-display); font-size: 8px; letter-spacing: .05em; box-shadow:0 2px 0 rgba(0,0,0,.35); }
 .powerProgressHeading small { color: #7b5d39; font-size: 6px; font-weight: 900; }
@@ -1155,8 +1158,8 @@
   min-height: 0!important;
   display: flex!important;
   align-items: center!important;
-  gap: 10px!important;
-  padding: 8px 18px!important;
+  gap: 6px!important;
+  padding: 4px 14px 4px 4px!important;
   border-radius: 999px!important;
   border: 2px solid #f2c34d!important;
   background: linear-gradient(180deg,#fffaea 0%,#fbe4a4 100%)!important;
@@ -1165,17 +1168,24 @@
 .powerProgressGrid[data-count="1"] article > div {
   display: flex!important;
   align-items: center!important;
-  gap: 8px!important;
+  gap: 6px!important;
   flex: none!important;
   min-width: 0!important;
 }
 .powerProgressGrid[data-count="1"] article > div > b {
   grid-row: auto!important;
-  width: 44px!important;
-  height: 44px!important;
+  width: 60px!important;
+  height: 60px!important;
   font-size: 19px!important;
   flex: none!important;
+  border: none!important;
+  background: transparent!important;
+  box-shadow: none!important;
   animation: powerIconPulse 1.8s ease-in-out infinite;
+}
+.powerProgressGrid[data-count="1"] article > div > b img {
+  width: 98%!important;
+  height: 98%!important;
 }
 .powerProgressGrid[data-count="1"] article > div > span {
   align-self: auto!important;
