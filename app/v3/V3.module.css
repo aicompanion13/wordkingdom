@@ -1150,6 +1150,47 @@
 .powerProgressGrid[data-count="2"] { grid-template-columns: repeat(2,minmax(0,1fr)); }
 .powerProgressGrid[data-count="3"] { grid-template-columns: repeat(3,minmax(0,1fr)); }
 
+/* Compact single-power layout: a big square card looks oversized when it's the only one shown (e.g. levels 3-5, raid only). */
+.powerProgressGrid[data-count="1"] article {
+  min-height: 0!important;
+  display: flex!important;
+  align-items: center!important;
+  gap: 8px!important;
+  padding: 6px 10px!important;
+}
+.powerProgressGrid[data-count="1"] article > div {
+  display: flex!important;
+  align-items: center!important;
+  gap: 6px!important;
+  flex: 1 1 auto!important;
+  min-width: 0!important;
+}
+.powerProgressGrid[data-count="1"] article > div > b {
+  grid-row: auto!important;
+  width: 26px!important;
+  height: 26px!important;
+  font-size: 15px!important;
+  flex: none!important;
+}
+.powerProgressGrid[data-count="1"] article > div > span {
+  align-self: auto!important;
+  font-size: 8px!important;
+}
+.powerProgressGrid[data-count="1"] article > div > strong {
+  grid-column: auto!important;
+  align-self: auto!important;
+  font-size: 7px!important;
+  margin-left: 2px;
+}
+.powerProgressGrid[data-count="1"] article > div > em {
+  position: static!important;
+  margin-left: auto;
+}
+.powerProgressGrid[data-count="1"] article > p {
+  flex: none!important;
+  margin: 0!important;
+}
+
 .contextualFtuePrompt {
   position: relative;
   z-index: 4;

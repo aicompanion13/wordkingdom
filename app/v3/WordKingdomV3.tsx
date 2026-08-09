@@ -165,6 +165,7 @@ type LevelOneCoachState =
   | { kind: "welcome"; messageOpen: boolean }
   | { kind: "first-word"; messageOpen: boolean }
   | { kind: "level-2-rules"; messageOpen: boolean }
+  | { kind: "level-3-raid"; messageOpen: boolean }
   | { kind: "transformation"; messageOpen: boolean }
   | null;
 
@@ -772,6 +773,8 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       ? { kind: "first-word", messageOpen: true }
       : node.level === 2 && ftueGuidanceEnabled(ftueProgressRef.current) && !ftueProgressRef.current.completedVisualSteps.includes("level-2-rules-guidance")
       ? { kind: "level-2-rules", messageOpen: true }
+      : node.level === 3 && ftueGuidanceEnabled(ftueProgressRef.current) && !ftueProgressRef.current.completedVisualSteps.includes("level-3-raid-guidance")
+      ? { kind: "level-3-raid", messageOpen: true }
       : null);
     ftueLastUsefulAt.current = activatedAt;
     ftueFirstChangeAt.current = 0;
@@ -973,6 +976,11 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
 
   const dismissLevelTwoRulesCoach = () => {
     markFtueVisualStep("level-2-rules-guidance");
+    setLevelOneCoach(null);
+  };
+
+  const dismissLevelThreeRaidCoach = () => {
+    markFtueVisualStep("level-3-raid-guidance");
     setLevelOneCoach(null);
   };
 
@@ -2242,6 +2250,14 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       messageOpen={levelOneCoach.messageOpen}
       onDismiss={dismissLevelTwoRulesCoach}
       testId="level-2-rules-guide"
+    />}
+    {levelOneCoach?.kind === "level-3-raid" && <ConceptCard
+      title="Coming Up: Raid!"
+      message="Collect three 💰 Raid badges as you play to fill the tray. After the level, open the Vault Raid — pick 3 of 9 boxes for coins."
+      cta="Let's go"
+      messageOpen={levelOneCoach.messageOpen}
+      onDismiss={dismissLevelThreeRaidCoach}
+      testId="level-3-raid-guide"
     />}
     {levelOneCoach?.kind === "first-word" && <FtueCoachmark
       icon={<span className={styles.wordSelectionVisual}>{[..."SHORE"].map((letter) => <i key={letter}>{letter}</i>)}</span>}

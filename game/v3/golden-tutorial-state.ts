@@ -178,6 +178,7 @@ const FTUE_VISUAL_STEPS: readonly FtueVisualStep[] = [
   "welcome-guidance",
   "first-word-guidance",
   "level-2-rules-guidance",
+  "level-3-raid-guidance",
   "first-transformation",
   "level-2-ready-guidance",
   "level-2-pack-opened",
