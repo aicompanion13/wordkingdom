@@ -138,7 +138,8 @@ const GREAT_WORD_MIN_LENGTH = 7;
 const ROYAL_COMBO_THRESHOLD = scoringConfig.comboLadder[3];
 const ON_FIRE_THRESHOLD = scoringConfig.comboLadder[scoringConfig.comboLadder.length - 1];
 const KEEP_GOING_MIN_BROKEN_COMBO = scoringConfig.comboLadder[1];
-const CELEBRATION_DISPLAY_MS = 1300;
+const CELEBRATION_HOLD_MS = 1900;
+const CELEBRATION_FADE_MS = 220;
 const BADGES: Record<BadgeType, { icon: string; label: string }> = {
   attack: { icon: "⚔️", label: "Attack" }, steal: { icon: "🃏", label: "Steal" }, raid: { icon: "💰", label: "Raid" }, shield: { icon: "🛡️", label: "Shield" },
 };
@@ -266,6 +267,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const [canonicalDebug, setCanonicalDebug] = useState<CanonicalBoardSnapshot | null>(null);
   const [levelOneCoach, setLevelOneCoach] = useState<LevelOneCoachState>(null);
   const [celebration, setCelebration] = useState<CelebrationBannerKind | null>(null);
+  const [celebrationLeaving, setCelebrationLeaving] = useState(false);
 
   const economy = useRef<EconomyManagerV3 | null>(null);
   const pvp = useRef<PvpManager | null>(null);
@@ -292,6 +294,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const dragStart = useRef<Position | null>(null);
   const dragging = useRef(false);
   const celebrationTimeout = useRef<number | undefined>(undefined);
+  const celebrationLeaveTimeout = useRef<number | undefined>(undefined);
   const celebrationShown = useRef({ royalCombo: false, onFire: false });
   const cloudReady = useRef(false);
   const cloudSaveTimer = useRef<number | null>(null);
@@ -581,8 +584,16 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
 
   const fireCelebration = (kind: CelebrationBannerKind) => {
     window.clearTimeout(celebrationTimeout.current);
+    window.clearTimeout(celebrationLeaveTimeout.current);
+    setCelebrationLeaving(false);
     setCelebration(kind);
-    celebrationTimeout.current = window.setTimeout(() => setCelebration(null), CELEBRATION_DISPLAY_MS);
+    celebrationTimeout.current = window.setTimeout(() => {
+      setCelebrationLeaving(true);
+      celebrationLeaveTimeout.current = window.setTimeout(() => {
+        setCelebration(null);
+        setCelebrationLeaving(false);
+      }, CELEBRATION_FADE_MS);
+    }, CELEBRATION_HOLD_MS);
   };
 
   const elementCenter = (element: Element): FxPoint => {
@@ -2135,7 +2146,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     <section className={base.boardLayout}>
       <div className={`${base.boardCard} ${shake ? base.shake : ""}`}>
         <div className={base.boardMessage} role="status" aria-live="polite">{message}</div>
-        {celebration && <div className={styles.celebrationBanner} role="status" aria-live="polite">
+        {celebration && <div className={styles.celebrationBanner} data-leaving={celebrationLeaving ? "true" : undefined} role="status" aria-live="polite">
           <img src={CELEBRATION_BANNERS[celebration].src} alt={CELEBRATION_BANNERS[celebration].alt} />
         </div>}
         <div className={`${base.letterGrid} ${styles.boardLetterGrid}`} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerCancel}>

@@ -1269,7 +1269,10 @@
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  animation: celebrationPop 260ms cubic-bezier(.2,.85,.3,1.3) both;
+  animation: celebrationPop 200ms cubic-bezier(.2,.85,.3,1.3) both;
+}
+.celebrationBanner[data-leaving="true"] {
+  animation: celebrationOut 220ms ease-in both;
 }
 .celebrationBanner img {
   width: 100%;
@@ -1281,9 +1284,15 @@
   from { opacity: 0; transform: translateX(-50%) scale(.85); }
   to { opacity: 1; transform: translateX(-50%) scale(1); }
 }
+@keyframes celebrationOut {
+  from { opacity: 1; transform: translateX(-50%) scale(1); }
+  to { opacity: 0; transform: translateX(-50%) scale(.92); }
+}
 @media (prefers-reduced-motion: reduce) {
-  .celebrationBanner { animation: celebrationFade 180ms linear both; }
+  .celebrationBanner { animation: celebrationFade 160ms linear both; }
+  .celebrationBanner[data-leaving="true"] { animation: celebrationFadeOut 160ms linear both; }
   @keyframes celebrationFade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes celebrationFadeOut { from { opacity: 1; } to { opacity: 0; } }
 }
 .boardLetterGrid {
   gap: 3px!important;
