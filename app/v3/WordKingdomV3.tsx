@@ -2500,6 +2500,7 @@ function AlbumPanel({ albums, pages, pageLevel, unlockedPages, ftueProgress, red
       <header><small>WORD KINGDOM COLLECTION</small><h1>{oceanAlbum.title}</h1><p>{collected.size}/12 stickers collected</p></header>
       <div className={styles.oceanAlbumProgress} aria-label={`${collected.size} of 12 Ocean stickers collected`}><i style={{ width: `${collected.size / 12 * 100}%` }} /></div>
       <div className={styles.oceanAlbumScene} style={{ backgroundImage: `linear-gradient(rgba(4,34,73,.08),rgba(2,28,67,.2)),url("${oceanAlbum.backgroundImage}")` }}>
+        {!reducedMotion && <video className={styles.oceanAlbumSceneVideo} src="/ocean-album-bg-loop.mp4" autoPlay loop muted playsInline aria-hidden="true" />}
         {oceanAlbum.stickers.map((slot) => {
           const isCollected = collected.has(slot.id);
           return <article className={styles.oceanAlbumSlot} data-collected={isCollected ? "true" : undefined} key={slot.id} style={{ left: `${slot.x}%`, top: `${slot.y}%`, transform: `translate(-50%,-50%) rotate(${slot.rotation}deg) scale(${slot.scale})` }} aria-label={`${OCEAN_STICKER_LABELS[slot.id]}: ${isCollected ? "collected" : "missing"}`}>
