@@ -145,6 +145,10 @@ const BADGES: Record<BadgeType, { icon: string; label: string }> = {
 };
 
 const POWER_ORDER: readonly BadgeType[] = ["shield", "attack", "steal", "raid"];
+const RAID_FIRST_LEVEL = 3;
+const RAID_GUARANTEED_INTERVAL = 4;
+const isScheduledRaidTopUp = (level: number) =>
+  level > RAID_FIRST_LEVEL && (level - RAID_FIRST_LEVEL) % RAID_GUARANTEED_INTERVAL === 0;
 
 type Screen = "hub" | "board" | "summary";
 type Tab = "shop" | "teams" | "home" | "events" | "albums";
@@ -1128,6 +1132,10 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const beginPostLevelMeta = (level: number) => {
     if (!pvp.current) return;
     completedMetaLevel.current = level;
+    if (isScheduledRaidTopUp(level) && pvp.current.snapshot().readyActions.raid < 1) {
+      pvp.current.addReadyAction("raid");
+      persistPvp();
+    }
     const tutorial = pvp.current.pendingTutorial(level);
     if (tutorial && tutorial !== "album") {
       const creditByPower: Partial<Record<PowerUpKind, FtueCreditId>> = {
