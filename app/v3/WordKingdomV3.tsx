@@ -2250,8 +2250,10 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
               } : {}),
             } : undefined;
             return <button key={tile.id} data-v3-tile-id={tile.id} data-accepted-word={acceptedIndex >= 0 ? "true" : undefined} data-accepted-kind={acceptedIndex >= 0 ? acceptedWordKind ?? undefined : undefined} data-replacement-pop={isReplacementPopping ? "true" : undefined} data-ftue-focus={ftueFocusIds.includes(tile.id) ? "true" : undefined} disabled={boardLocked} style={tileStyle} className={`${base.tile} ${styles.boldTile} ${acceptedIndex >= 0 ? styles.acceptedWordTile : ""} ${acceptedIndex >= 0 && acceptedWordKind === "bonus" ? styles.bonusWordTile : ""} ${isReplacementPopping ? styles.replacementLetterTile : ""} ${isTutorialTile ? styles.tutorialRecommendedTile : ""} ${selectedIds.includes(tile.id) ? base.selected : ""} ${transformationDiffIds.includes(tile.id) && !generatedRun ? base.clearing : ""} ${neutralShakeIds.includes(tile.id) ? styles.neutralWordTile : ""} ${hintedId === tile.id ? base.hinted : ""} ${badge ? base.badged : ""} ${badgePopIds.includes(tile.id) ? styles.badgeTilePop : ""} ${blocked ? styles.obstacleTile : ""}`} onPointerDown={(event) => onPointerDown(event, tile)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); onKeyboardTile(tile); } }}>
-              <span className={styles.tileFace} style={tileFaceStyle}><span className={styles.tileLetter}>{tile.letter}</span></span>
-              {badge && <i data-badge={badge} className={styles.tileBadgeIcon}><img src={BADGES[badge].icon} alt="" /></i>}
+              <span className={styles.tileFace} style={tileFaceStyle} data-badge={badge || undefined}>
+                {badge && <img className={styles.tileBadgeWatermark} src={BADGES[badge].icon} alt="" aria-hidden="true" />}
+                <span className={styles.tileLetter}>{tile.letter}</span>
+              </span>
               {blocked && <em title={generatedObstacle ? `${generatedObstacle} placeholder obstacle` : undefined}>{generatedObstacle ? generatedObstacle === "ICE" ? "◆" : "✦" : obstacles?.icon}</em>}
             </button>;
           })}

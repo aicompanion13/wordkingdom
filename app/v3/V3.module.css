@@ -1389,6 +1389,7 @@
   box-shadow: 0 3px 0 #07366e,0 5px 8px rgba(1,9,29,.38)!important;
 }
 .tileFace {
+  position: relative;
   width: 100%;
   height: 100%;
   display: grid!important;
@@ -1402,21 +1403,21 @@
   backface-visibility: hidden;
   will-change: transform,filter,opacity;
 }
-.tileLetter { display: block; line-height: 1; pointer-events: none; }
-.tileBadgeIcon {
-  background: none!important;
-  border: none!important;
-  box-shadow: none!important;
-  width: 24px!important;
-  height: 24px!important;
-  right: -6px!important;
-  top: -8px!important;
-}
-.tileBadgeIcon img {
-  width: 100%;
-  height: 100%;
+.tileLetter { position: relative; z-index: 1; display: block; line-height: 1; pointer-events: none; }
+.tileFace[data-badge] { border-width: 2.5px; }
+.tileFace[data-badge="attack"] { background: linear-gradient(145deg,#ffdcd6,#f0978a); border-color: #d64f3f; }
+.tileFace[data-badge="steal"] { background: linear-gradient(145deg,#ecdcfb,#c495ec); border-color: #8a4fc9; }
+.tileFace[data-badge="raid"] { background: linear-gradient(145deg,#fff0bf,#f0c458); border-color: #d69a1e; }
+.tileFace[data-badge="shield"] { background: linear-gradient(145deg,#d3ebff,#7fbdf5); border-color: #2f7fce; }
+.tileBadgeWatermark {
+  position: absolute;
+  inset: 6%;
+  width: 88%;
+  height: 88%;
   object-fit: contain;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,.45));
+  opacity: .68;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,.3));
 }
 .boldTile[class*="selected"] .tileFace { border-color: #fff0a0; color: #fff; background: linear-gradient(145deg,#ffd95e,#df7d17); box-shadow: inset 0 2px 0 #fff4b2,0 0 14px #ffc438; }
 .boldTile[class*="hinted"] .tileFace { outline: 2px solid #fff09a; }
