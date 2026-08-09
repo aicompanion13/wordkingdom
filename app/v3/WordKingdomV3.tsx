@@ -138,7 +138,7 @@ const GREAT_WORD_MIN_LENGTH = 7;
 const ROYAL_COMBO_THRESHOLD = scoringConfig.comboLadder[3];
 const ON_FIRE_THRESHOLD = scoringConfig.comboLadder[scoringConfig.comboLadder.length - 1];
 const KEEP_GOING_MIN_BROKEN_COMBO = scoringConfig.comboLadder[1];
-const CELEBRATION_HOLD_MS = 1900;
+const CELEBRATION_HOLD_MS = 1450;
 const CELEBRATION_FADE_MS = 220;
 const BADGES: Record<BadgeType, { icon: string; label: string }> = {
   attack: { icon: "⚔️", label: "Attack" }, steal: { icon: "🃏", label: "Steal" }, raid: { icon: "💰", label: "Raid" }, shield: { icon: "🛡️", label: "Shield" },
