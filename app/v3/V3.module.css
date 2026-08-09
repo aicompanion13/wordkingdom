@@ -1264,7 +1264,7 @@
 
 .albumTransition { position:fixed; z-index:9999; inset:0; overflow:hidden; pointer-events:none; background:rgba(17,97,153,.2); animation:albumTransitionFade .9s ease both; }
 .albumTransition[data-kind="bubbles"] {
-  animation:albumTransitionFadeLong 1.5s ease both;
+  animation:albumTransitionFadeLong 1.5s cubic-bezier(.4,0,.2,1) both;
   background:
     radial-gradient(ellipse 140% 55% at 50% -12%, rgba(190,244,255,.4), transparent 62%),
     linear-gradient(180deg,#1c72ab 0%,#0e4d80 45%,#062f57 78%,#031b35 100%);
@@ -1280,7 +1280,7 @@
 .albumTransition[data-kind="vines"] span { position:absolute; top:30%; font-size:30px; animation:albumLeaf .8s .25s ease both; }.albumTransition[data-kind="vines"] span:nth-of-type(1){left:24%}.albumTransition[data-kind="vines"] span:nth-of-type(2){left:49%}.albumTransition[data-kind="vines"] span:nth-of-type(3){right:23%}
 .albumTransition[data-kind="fade"] { animation-duration:.22s; }
 @keyframes albumTransitionFade { 0%{opacity:0} 45%{opacity:1;background:rgba(15,107,169,.72)} 100%{opacity:0} }
-@keyframes albumTransitionFadeLong { 0%{opacity:0} 8%{opacity:1} 90%{opacity:1} 100%{opacity:0} }
+@keyframes albumTransitionFadeLong { 0%{opacity:0} 32%{opacity:1} 68%{opacity:1} 100%{opacity:0} }
 @keyframes albumBubble { to { transform:translateY(-105vh) scale(1.25); opacity:0; } }
 @keyframes albumVine { from { scale:.05 } to { scale:1 } }
 @keyframes albumLeaf { from { opacity:0; transform:translateY(25px) scale(.5) } to { opacity:1; transform:none } }
