@@ -46,7 +46,7 @@ export function KingdomPopup({
         <span className={styles.crestMedal}><b>{icon}</b></span>
         <span className={styles.crestTile}>K</span>
       </div>
-      <h1 id="kingdom-popup-title" className={styles.title}>{title}</h1>
+      <h1 id="kingdom-popup-title" className={styles.title} data-text={title}>{title}</h1>
       {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
       {children && <div className={styles.body}>{children}</div>}
       {ctaText && <button className={styles.cta} onClick={onCta}>{ctaText}</button>}

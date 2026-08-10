@@ -135,7 +135,7 @@ export function ConceptCard({
       <button className={tutorialStyles.close} type="button" onClick={onDismiss} aria-label="Close">×</button>
       <div className={tutorialStyles.copy}>
         <span className={tutorialStyles.topicIcon} aria-hidden="true">{icon}</span>
-        <h2 id="tutorial-card-title" className={tutorialStyles.title}>{title}</h2>
+        <h2 id="tutorial-card-title" className={tutorialStyles.title} data-text={title}>{title}</h2>
         <p className={tutorialStyles.body}>{message}</p>
       </div>
       <div className={tutorialStyles.actions}>

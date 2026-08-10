@@ -100,14 +100,35 @@
 .crestMedal b { font-size: 26px; font-style: normal; filter: drop-shadow(0 2px 0 rgba(122,57,16,.3)); }
 
 .title {
+  position: relative;
   margin: 6px 0 2px;
-  color: #2456c9;
-  font-family: var(--game-display);
+  font-family: var(--game-headline)!important;
+  font-weight: 700;
   font-size: clamp(24px,7.5vw,32px);
-  line-height: 1.05;
-  letter-spacing: -.02em;
-  -webkit-text-stroke: 1px #eaf2ff;
-  text-shadow: 0 3px 0 #163a86,0 8px 16px rgba(10,30,70,.28);
+  line-height: 1.1;
+  letter-spacing: -.01em;
+  color: transparent;
+  background: linear-gradient(180deg,#fff8bd 0%,#ffd452 42%,#e5961d 70%,#b85d16 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-stroke: 1.25px rgba(90,54,14,.55);
+  text-shadow:
+    0 2.5px 0 rgba(90,54,14,.45),
+    0 6px 12px rgba(60,35,10,.25);
+}
+
+.title::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,rgba(255,255,255,.75) 0%,rgba(255,255,255,.2) 42%,rgba(255,255,255,0) 60%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+  mix-blend-mode: screen;
+  pointer-events: none;
 }
 
 .subtitle {
