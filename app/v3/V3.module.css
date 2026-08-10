@@ -9,6 +9,18 @@
 .loginIntroChrome button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.loginIntro video{display:none}.loginIntro{background:radial-gradient(circle at 50% 20%,#397ec0,#0b265e 65%,#051633)}}
 .hubContent{padding-bottom:95px}
+.royalTopBar{position:sticky;z-index:20;top:max(6px,env(safe-area-inset-top));width:min(430px,96vw);margin:0 auto 6px;aspect-ratio:1877/838;filter:drop-shadow(0 6px 14px rgba(4,12,34,.4))}
+.royalTopBarArt{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none}
+.royalTopBarEnergy,.royalTopBarStars,.royalTopBarCoins{position:absolute;top:44%;height:14%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#5c3a0e;font-family:var(--game-display);font-weight:700;font-size:clamp(11px,3.4vw,15px);line-height:1.05}
+.royalTopBarEnergy small,.royalTopBarStars small,.royalTopBarCoins small{color:#8a6335;font-size:clamp(6px,1.8vw,8px);font-weight:700;line-height:1}
+.royalTopBarEnergy{left:15%;width:15%}
+.royalTopBarStars{left:40%;width:10%}
+.royalTopBarCoins{left:61%;width:15%}
+.royalTopBarShop,.royalTopBarSettings{position:absolute;top:42%;height:17%;aspect-ratio:1;border:0;border-radius:50%;background:transparent;padding:0;cursor:pointer}
+.royalTopBarShop{left:75%}
+.royalTopBarSettings{left:82.5%}
+.royalTopBarShop:disabled,.royalTopBarSettings:disabled{cursor:not-allowed;opacity:.55}
+@media(prefers-reduced-motion:reduce){.royalTopBar{filter:none}}
 .largeTopBar{height:clamp(61px,16vw,68px);grid-template-columns:clamp(40px,11vw,46px) minmax(0,1.02fr) minmax(0,.76fr) minmax(0,1.02fr) clamp(40px,11vw,46px);gap:clamp(4px,1.35vw,7px);padding:clamp(6px,1.7vw,8px) clamp(5px,1.7vw,9px) clamp(9px,2.2vw,11px);font-family:"Trebuchet MS","Arial Rounded MT Bold",Arial,sans-serif}
 .largeTopIcon{height:clamp(43px,11.7vw,48px)!important;border-width:2px!important;border-radius:clamp(12px,3.3vw,15px)!important;font-size:clamp(21px,5.8vw,25px)!important;box-shadow:0 4px 0 #071c4e,inset 0 2px 0 rgba(255,255,255,.35)!important}
 .largeResource,.largeCoin{height:clamp(43px,11.7vw,48px)!important;border-width:2px!important;border-radius:clamp(12px,3.3vw,15px)!important;padding:4px clamp(5px,1.7vw,8px)!important;column-gap:clamp(4px,1.25vw,6px)!important;background:linear-gradient(180deg,#fffdf1 0%,#ffeaa5 55%,#e6be59 100%)!important;box-shadow:0 4px 0 #8b4c1d,inset 0 2px 0 #fff!important}

@@ -2468,11 +2468,13 @@ function OceanRewardExperience({ level, phase, summary, revealCount, collectedCo
 }
 
 function TopBar({ player, timer, locked = false, onShop, onSettings }: { player: V3PlayerState; timer: string; locked?: boolean; onShop: () => void; onSettings: () => void }) {
-  return <header className={`${base.hubTopBar} ${styles.largeTopBar} ${styles.mobileResourceBar}`}>
-    <Resource icon="⚡" value={`${player.energy}/${ENERGY_CAP}`} sub={timer} />
-    <Resource icon="⭐" value={String(player.stars)} />
-    <button disabled={locked} data-coin-counter className={`${base.coinResource} ${styles.largeCoin} ${styles.hubCoin}`} onClick={onShop} aria-label={`Coins: ${formatNumber(player.coins)}. Open shop`}><span>🪙</span><b>{formatResourceNumber(player.coins)}</b><small>COINS</small><i>+</i></button>
-    <button disabled={locked} className={`${base.settingsButton} ${styles.largeTopIcon} ${styles.hubSettings}`} onClick={onSettings} aria-label="Settings">⚙</button>
+  return <header className={styles.royalTopBar} aria-label="Resources">
+    <img className={styles.royalTopBarArt} src="/topbar/word-kingdom-topbar.webp" alt="" />
+    <span className={styles.royalTopBarEnergy}>{player.energy}/{ENERGY_CAP}{timer && <small>{timer}</small>}</span>
+    <span className={styles.royalTopBarStars}>{player.stars}</span>
+    <span className={styles.royalTopBarCoins}>{formatResourceNumber(player.coins)}</span>
+    <button disabled={locked} data-coin-counter className={styles.royalTopBarShop} onClick={onShop} aria-label={`Coins: ${formatNumber(player.coins)}. Open shop`} />
+    <button disabled={locked} className={styles.royalTopBarSettings} onClick={onSettings} aria-label="Settings" />
   </header>;
 }
 
