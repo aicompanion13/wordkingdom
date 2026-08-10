@@ -3122,6 +3122,16 @@
   filter: brightness(1.25) saturate(.8);
 }
 
+.worldMapArtboard {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 50%;
+  height: 100%;
+  aspect-ratio: var(--world-map-width) / var(--world-map-height);
+  transform: translateX(-50%);
+}
+
 .worldMapBackground {
   position: absolute;
   z-index: 0;
@@ -3129,35 +3139,15 @@
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: cover;
-  object-position: center top;
+  object-fit: fill;
   pointer-events: none;
   user-select: none;
 }
 
-.worldMapTitle {
-  position: absolute;
-  z-index: 3;
-  left: 50%;
-  top: 88.2%;
-  width: 67%;
-  margin: 0;
-  transform: translate(-50%,-50%);
-  color: #124f9f;
-  font-family: var(--game-display);
-  font-size: clamp(24px,7.7vw,33px);
-  font-weight: 700;
-  line-height: .9;
-  letter-spacing: -.02em;
-  text-align: center;
-  text-shadow: 0 2px 0 #fff4b3,0 4px 0 rgba(87,48,15,.42),0 7px 12px rgba(64,37,12,.28);
-}
-
-.worldMap[data-world="forest"] .worldMapTitle { color:#2f6c32; }
-
 .worldLevelButton {
   position: absolute;
   z-index: 7;
+  isolation: isolate;
   width: clamp(64px,16.5vw,71px);
   height: clamp(64px,16.5vw,71px);
   display: grid;
@@ -3216,8 +3206,7 @@
   z-index: 9;
   border-color: #fff2a0;
   background: radial-gradient(circle at 45% 35%,#fffdea 0 24%,#ffd95b 70%,#ee9c1e 100%);
-  box-shadow: inset 0 0 0 2px #fff6bd,0 4px 0 #8b4c18,0 0 0 7px rgba(255,227,86,.38),0 0 24px 10px rgba(255,219,60,.65);
-  animation: worldLevelPulse 1.8s ease-in-out infinite;
+  box-shadow: inset 0 0 0 2px #fff6bd,0 4px 0 #8b4c18;
 }
 
 .worldLevelButton[data-complete="true"] {
@@ -3229,6 +3218,37 @@
   filter: grayscale(.72) brightness(.78);
   opacity: .82;
 }
+
+.worldNodeLight {
+  position: absolute;
+  z-index: -1;
+  inset: -15px;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(.82);
+  background: radial-gradient(circle,rgba(255,250,202,.98) 0 20%,rgba(255,221,71,.72) 42%,rgba(96,205,255,.32) 62%,transparent 74%);
+  filter: blur(1px);
+  transition: opacity 180ms ease,transform 180ms ease,filter 180ms ease;
+  pointer-events: none;
+}
+.worldLevelButton[data-current="true"] .worldNodeLight {
+  opacity: 1;
+  transform: scale(1);
+  animation: worldNodeLightBreathe 2.2s ease-in-out infinite;
+}
+.worldLevelButton[data-complete="true"] .worldNodeLight {
+  opacity: .42;
+  transform: scale(.9);
+  background: radial-gradient(circle,rgba(239,251,255,.9) 0 22%,rgba(91,203,246,.48) 47%,rgba(255,215,69,.2) 65%,transparent 75%);
+}
+.worldLevelButton:not([data-locked="true"]):hover .worldNodeLight,
+.worldLevelButton:not([data-locked="true"]):focus-visible .worldNodeLight {
+  opacity: .88;
+  transform: scale(1.02);
+  filter: brightness(1.12);
+}
+.worldLevelButton:not([data-locked="true"]):active .worldNodeLight { opacity: 1; transform: scale(.94); }
+.worldLevelButton[data-locked="true"] .worldNodeLight { opacity: 0; }
 
 .worldLevelButton[data-milestone="raid"]:after {
   content:"RAID";
@@ -3248,8 +3268,8 @@
 .worldAlbumButton {
   position:absolute;
   z-index:6;
-  width:clamp(66px,19vw,82px);
-  height:clamp(66px,19vw,82px);
+  width:clamp(56px,16vw,70px);
+  height:clamp(56px,16vw,70px);
   display:grid;
   grid-template-rows:1fr auto;
   place-items:center;
@@ -3278,7 +3298,7 @@
 .worldRaidChest {
   position:absolute;
   z-index:5;
-  width:clamp(45px,13vw,56px);
+  width:clamp(39px,11vw,48px);
   transform:translate(-50%,-50%);
   filter:drop-shadow(0 5px 4px rgba(30,18,7,.42));
   pointer-events:none;
@@ -3287,8 +3307,8 @@
 .worldGateButton {
   position:absolute;
   z-index:6;
-  width:clamp(130px,39vw,168px);
-  height:clamp(76px,22vw,96px);
+  width:clamp(111px,33vw,143px);
+  height:clamp(65px,19vw,82px);
   display:grid;
   place-items:end center;
   transform:translate(-50%,-50%);
@@ -3321,7 +3341,7 @@
 .worldAlbumButton[data-shake="true"],
 .worldGateButton[data-shake="true"] { animation:worldTargetShake .38s ease both; }
 
-@keyframes worldLevelPulse { 50% { filter:brightness(1.08); transform:translate(-50%,-50%) scale(1.045); } }
+@keyframes worldNodeLightBreathe { 0%,100% { opacity:.72; filter:brightness(.98); } 50% { opacity:1; filter:brightness(1.15); } }
 @keyframes worldTargetShake { 20% { translate:-6px 0; } 40% { translate:6px 0; } 60% { translate:-4px 0; } 80% { translate:4px 0; } }
 
 @media(max-width:699px) {
@@ -3340,6 +3360,7 @@
 }
 
 @media(prefers-reduced-motion:reduce) {
-  .worldMap,.worldLevelButton,.worldAlbumButton,.worldGateButton { animation:none!important; transition:none!important; }
+  .worldMap,.worldLevelButton,.worldAlbumButton,.worldGateButton,.worldNodeLight { animation:none!important; transition:none!important; }
   .worldLevelButton[data-current="true"] { outline:4px solid #fff09a; outline-offset:4px; }
+  .worldLevelButton[data-current="true"] .worldNodeLight { opacity:.88; }
 }

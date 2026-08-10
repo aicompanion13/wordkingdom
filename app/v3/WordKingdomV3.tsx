@@ -35,6 +35,7 @@ import { PackResolver } from "@/game/v3/pack-resolver";
 import { PvpManager } from "@/game/v3/pvp-manager";
 import { TrackManager } from "@/game/v3/track-manager";
 import { chapterThemeForLevel } from "@/game/v3/chapter-theme";
+import { CLEAN_WORLD_MAP_LAYOUTS } from "@/game/v3/clean-world-map-layouts";
 import {
   createBonusWordAnimationPlan,
   createObjectiveWordAnimationPlan,
@@ -166,7 +167,9 @@ type WorldMapDefinition = {
   title: string;
   levels: readonly number[];
   background: string;
-  levelHotspots: Record<number, { x: number; y: number; milestone?: "raid" | "album" }>;
+  intrinsicWidth: number;
+  intrinsicHeight: number;
+  levelHotspots: Readonly<Record<number, { x: number; y: number; milestone?: "raid" | "album" }>>;
   album: { x: number; y: number };
   raidChest: { x: number; y: number };
   gate: { x: number; y: number };
@@ -177,35 +180,27 @@ const WORLD_MAPS: Record<WorldMapId, WorldMapDefinition> = {
     id: "ocean",
     chapterId: "chapter_ocean",
     title: "OCEAN KINGDOM",
-    levels: [1, 2, 3, 4, 5],
-    background: "/world-maps/ocean-kingdom-map.webp",
-    levelHotspots: {
-      1: { x: 29.5, y: 76.8 },
-      2: { x: 45, y: 66.7 },
-      3: { x: 48.3, y: 54.4, milestone: "raid" },
-      4: { x: 47.8, y: 39.5 },
-      5: { x: 72, y: 29.2, milestone: "album" },
-    },
-    album: { x: 80, y: 22.5 },
-    raidChest: { x: 66.5, y: 55.5 },
-    gate: { x: 50, y: 16.8 },
+    levels: CLEAN_WORLD_MAP_LAYOUTS.ocean.levels,
+    background: CLEAN_WORLD_MAP_LAYOUTS.ocean.asset,
+    intrinsicWidth: CLEAN_WORLD_MAP_LAYOUTS.ocean.intrinsicWidth,
+    intrinsicHeight: CLEAN_WORLD_MAP_LAYOUTS.ocean.intrinsicHeight,
+    levelHotspots: CLEAN_WORLD_MAP_LAYOUTS.ocean.levelHotspots,
+    album: CLEAN_WORLD_MAP_LAYOUTS.ocean.album,
+    raidChest: CLEAN_WORLD_MAP_LAYOUTS.ocean.raidChest,
+    gate: CLEAN_WORLD_MAP_LAYOUTS.ocean.gate,
   },
   forest: {
     id: "forest",
     chapterId: "chapter_forest",
     title: "FOREST KINGDOM",
-    levels: [6, 7, 8, 9, 10],
-    background: "/world-maps/forest-kingdom-map.webp",
-    levelHotspots: {
-      6: { x: 46.5, y: 77.8 },
-      7: { x: 46, y: 65.3, milestone: "raid" },
-      8: { x: 40.5, y: 52.1 },
-      9: { x: 48.5, y: 40.5 },
-      10: { x: 76, y: 27, milestone: "album" },
-    },
-    album: { x: 80, y: 22.5 },
-    raidChest: { x: 66, y: 65 },
-    gate: { x: 50, y: 16.5 },
+    levels: CLEAN_WORLD_MAP_LAYOUTS.forest.levels,
+    background: CLEAN_WORLD_MAP_LAYOUTS.forest.asset,
+    intrinsicWidth: CLEAN_WORLD_MAP_LAYOUTS.forest.intrinsicWidth,
+    intrinsicHeight: CLEAN_WORLD_MAP_LAYOUTS.forest.intrinsicHeight,
+    levelHotspots: CLEAN_WORLD_MAP_LAYOUTS.forest.levelHotspots,
+    album: CLEAN_WORLD_MAP_LAYOUTS.forest.album,
+    raidChest: CLEAN_WORLD_MAP_LAYOUTS.forest.raidChest,
+    gate: CLEAN_WORLD_MAP_LAYOUTS.forest.gate,
   },
 };
 
@@ -1006,7 +1001,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     setGoldenReplayPlan([]);
     setGoldenTutorial(createGoldenTutorialState(ftueProgress));
     setLevelOneCoach(isGoldenFtueLevel && ftueGuidanceEnabled(ftueProgressRef.current) && !ftueProgressRef.current.completedVisualSteps.includes("first-word-guidance")
-      ? { kind: "first-word", messageOpen: true }
+      ? { kind: "first-word", messageOpen: false }
       : null);
     ftueLastUsefulAt.current = activatedAt;
     ftueFirstChangeAt.current = 0;
@@ -1144,7 +1139,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     setGoldenReplayPlan(replayPlan);
     setGoldenTutorial(createGoldenTutorialState(ftueProgress));
     setLevelOneCoach(ftueGuidanceEnabled(ftueProgressRef.current) && !ftueProgressRef.current.completedVisualSteps.includes("first-word-guidance")
-      ? { kind: "first-word", messageOpen: true }
+      ? { kind: "first-word", messageOpen: false }
       : null);
     ftueLastUsefulAt.current = activatedAt;
     ftueFirstChangeAt.current = 0;
@@ -2103,7 +2098,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     ftueFirstChangeAt.current = 0;
     setFtueStall("NONE");
     setFtueFocusIds([]);
-    setLevelOneCoach(canRestartGuidanceHere ? { kind: "first-word", messageOpen: true } : null);
+    setLevelOneCoach(canRestartGuidanceHere ? { kind: "first-word", messageOpen: false } : null);
     if (canRestartGuidanceHere) setMessage("Swipe across the letters to find SHORE.");
     setToast("FTUE guidance reset safely");
   };
@@ -2371,9 +2366,19 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       {pvpOverlay?.tutorial && acknowledgedPowerIntro !== pvpOverlay.kind && <PowerTutorialPrompt kind={pvpOverlay.kind} onContinue={acknowledgePowerTutorialIntro} />}
       {toast && <div className={base.toast} role="status">{toast}</div>}
       {loginIntroOpen && <LoginIntro onClose={() => { setLoginIntroOpen(false); updateFtueProgress(markIntroVideoSeen); }} />}
-      {worldMapMessage === "welcome" && <ConceptCard title="Welcome to Word Kingdom" message="Follow the path, solve word levels and fill each kingdom's album." cta="LET'S GO!" icon={<img className={styles.tutorialSceneArtwork} src="/kingdom-hero.png" alt="" />} onDismiss={continueWorldMapMessage} testId="world-map-welcome" />}
+      {worldMapMessage === "welcome" && <ConceptCard title="Welcome to Word Kingdom" message="Follow the path and begin your first word adventure." cta="LET'S GO!" icon={null} onDismiss={continueWorldMapMessage} testId="world-map-welcome" />}
       {worldMapMessage === "album" && <ConceptCard title="Your Album Is Open" message="Your stickers reveal each kingdom. Tap the album to see what you collected." cta="SHOW ME" icon={<DiscoveryArtwork kind="album" />} onDismiss={continueWorldMapMessage} testId="world-map-album" />}
-      {worldMapMessage === "forest" && <ConceptCard title="Forest Kingdom" message="A new album and five new levels are waiting." cta="LET'S GO!" icon={<img className={styles.tutorialSceneArtwork} src="/world-maps/forest-kingdom-map.webp" alt="" />} onDismiss={continueWorldMapMessage} testId="world-map-forest" />}
+      {worldMapMessage === "forest" && <ConceptCard title="Forest Kingdom" message="A new album and five new levels are waiting." cta="LET'S GO!" icon={<img className={styles.tutorialSceneArtwork} src="/world-maps/forest-kingdom-map-clean.webp" alt="" />} onDismiss={continueWorldMapMessage} testId="world-map-forest" />}
+      {worldMapFocus === "level" && world.id === "ocean" && player.currentLevel === 1 && !worldMapMessage && <FtueCoachmark
+        icon={null}
+        title="Play Level 1"
+        message="Tap Level 1 to begin."
+        targetRef={levelPlayButtonRef}
+        gesture="tap"
+        messageOpen={false}
+        reducedMotion={prefersReducedMotion}
+        testId="level-1-map-gesture"
+      />}
     </main>;
   }
 
@@ -2619,17 +2624,6 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     </section>
     <JuiceFxLayer effects={juiceEffects} />
     <FeedbackOverlay open={feedbackOpen} targetRef={boardCardRef} level={node.level} onClose={() => setFeedbackOpen(false)} />
-    {levelOneCoach?.kind === "first-word" && levelOneCoach.messageOpen && <ConceptCard
-      title="Swipe to Spell"
-      message="Drag in a straight line across the letters. Words can be forwards or backwards."
-      cta="LET'S GO!"
-      icon={<span className={styles.wordSelectionVisual}>{[..."WORD"].map((letter) => <i key={letter}>{letter}</i>)}</span>}
-      onDismiss={() => {
-        ftueLastUsefulAt.current = Date.now();
-        setLevelOneCoach({ kind: "first-word", messageOpen: false });
-      }}
-      testId="level-1-first-word-guide"
-    />}
     {levelOneCoach?.kind === "first-word" && !levelOneCoach.messageOpen && <FtueCoachmark
       icon={<span className={styles.wordSelectionVisual}>{[..."SHORE"].map((letter) => <i key={letter}>{letter}</i>)}</span>}
       title="Swipe to Spell"
@@ -2795,10 +2789,14 @@ function WorldMapMenu({
   onGate: () => void;
 }) {
   const gateOpen = world.id === "ocean" && forestUnlocked;
+  const artboardStyle = {
+    "--world-map-width": world.intrinsicWidth,
+    "--world-map-height": world.intrinsicHeight,
+  } as CSSProperties;
   return <section className={styles.worldMap} data-world={world.id} data-transitioning={transitioning ? "true" : undefined} aria-label={`${world.title} level journey`}>
-    <img className={styles.worldMapBackground} src={world.background} alt="" aria-hidden="true" draggable={false} />
-    <h1 className={styles.worldMapTitle}>{world.title}</h1>
-    {world.levels.map((level) => {
+    <div className={styles.worldMapArtboard} style={artboardStyle}>
+      <img className={styles.worldMapBackground} src={world.background} alt="" aria-hidden="true" draggable={false} />
+      {world.levels.map((level) => {
       const hotspot = world.levelHotspots[level];
       const complete = player.completedLevels.includes(level);
       const current = player.currentLevel === level;
@@ -2820,6 +2818,7 @@ function WorldMapMenu({
         aria-label={locked ? `Level ${level}, locked` : complete ? `Replay Level ${level}` : `Play Level ${level}`}
         onClick={() => onLevel(level)}
       >
+        <i className={styles.worldNodeLight} aria-hidden="true" />
         <b>{level}</b>
         <span aria-hidden="true">{locked ? "🔒" : complete ? "★" : hotspot.milestone === "raid" ? "♦" : ""}</span>
         <small>{locked ? "LOCKED" : complete ? "REPLAY" : "PLAY"}</small>
@@ -2858,6 +2857,7 @@ function WorldMapMenu({
       aria-label={gateOpen ? "Enter Forest Kingdom" : world.id === "forest" ? "Next kingdom is coming soon" : "Complete Level 5 and the Ocean album to open the Forest gate"}
       onClick={onGate}
     >{gateOpen ? <span>FOREST OPEN</span> : <span>🔒</span>}</button>
+    </div>
   </section>;
 }
 

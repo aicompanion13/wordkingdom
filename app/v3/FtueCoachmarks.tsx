@@ -131,9 +131,9 @@ export function ConceptCard({
       ctaRef.current?.focus();
     }}
   >
-    <section className={tutorialStyles.card} role="dialog" aria-modal="true" aria-labelledby="tutorial-card-title">
+    <section className={tutorialStyles.card} data-has-illustration={icon ? "true" : "false"} role="dialog" aria-modal="true" aria-labelledby="tutorial-card-title">
       <img className={tutorialStyles.frame} src="/tutorial/progression-card-frame.png" alt="" />
-      <div className={tutorialStyles.illustration}><span className={tutorialStyles.topicIcon} aria-hidden="true">{icon}</span></div>
+      {icon && <div className={tutorialStyles.illustration}><span className={tutorialStyles.topicIcon} aria-hidden="true">{icon}</span></div>}
       <div className={tutorialStyles.copy}>
         <h2 id="tutorial-card-title" className={tutorialStyles.title} data-text={title} aria-label={title}>{title}</h2>
         <p className={tutorialStyles.body}>{message}</p>

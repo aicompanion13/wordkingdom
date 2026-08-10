@@ -47,6 +47,7 @@
 }
 
 /* One objective centres at its natural size instead of stretching across both slots. */
+.rail[data-count="1"] { justify-content: flex-start; }
 .rail[data-count="1"] .objective { flex: 0 0 45%; }
 
 /*

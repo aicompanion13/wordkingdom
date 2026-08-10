@@ -52,6 +52,13 @@
   text-align: center;
 }
 
+.card[data-has-illustration="false"] .copy {
+  top: 15%;
+  left: 13%;
+  width: 74%;
+  min-height: 48%;
+}
+
 .topicIcon {
   display: block;
   max-width: 100%;
