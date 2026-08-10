@@ -124,26 +124,31 @@
 
 .cta {
   width: 100%;
-  max-width: 320px;
-  aspect-ratio: 703 / 172;
-  height: auto;
   min-height: 42px;
+  height: 100%;
   display: grid;
   place-items: center;
-  padding: 0 14% 0 8%;
+  padding: 8px 14px;
   border: 0;
-  background: url('/objective-tray/word-tile-completed.webp') center / 100% 100% no-repeat;
-  filter: drop-shadow(0 4px 0 rgba(122,74,12,.35)) drop-shadow(0 7px 10px rgba(87,51,12,.22));
-  color: #6b431f;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: none;
+  filter: none;
+  color: #23466f;
   font: 700 clamp(14px,4.6vw,18px)/1 var(--game-display,ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif);
   letter-spacing: .01em;
-  text-shadow: 0 1px 0 rgba(255,255,255,.55);
+  text-shadow: 0 1px 0 rgba(255,255,255,.7);
   cursor: pointer;
 }
 
 .cta:active {
   transform: translateY(2px);
-  filter: brightness(.96);
+  color: #132f55;
+}
+
+.cta:focus-visible {
+  outline: 3px solid #286ea7;
+  outline-offset: -3px;
 }
 
 @keyframes tutorialCardFade { from { opacity: 0; } to { opacity: 1; } }

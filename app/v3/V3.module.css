@@ -5,7 +5,8 @@
 .loginIntro video{width:100%;height:100%;object-fit:cover;background:#06183d}
 .loginIntroChrome{position:absolute;z-index:2;inset:auto max(16px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));display:flex;align-items:center;justify-content:center;gap:12px;pointer-events:none}
 .loginIntroChrome>span{padding:6px 10px;border:2px solid rgba(255,255,255,.7);border-radius:999px;color:#fff0ac;background:rgba(5,30,79,.8);font-family:var(--game-display);font-size:clamp(12px,3.6vw,17px);letter-spacing:.08em;text-shadow:0 2px 0 #41260e}
-.loginIntroChrome button{pointer-events:auto;min-height:48px;border:3px solid #fff;border-radius:14px;padding:10px 16px;color:#fff8d9;background:linear-gradient(180deg,#5bd45a,#1f9b3f);font-family:var(--game-display);font-size:clamp(14px,4vw,18px);letter-spacing:.035em;text-shadow:0 2px 0 #1f9b3f;box-shadow:0 4px 0 #1f9b3f,0 10px 16px -4px rgba(0,0,0,.4);cursor:pointer}
+.loginIntroChrome button{pointer-events:auto;min-width:min(68vw,280px);min-height:50px;border:3px solid #9b6414;border-radius:999px;padding:10px 22px;color:#23466f;background:linear-gradient(180deg,#fff3bd 0%,#ffe08a 48%,#d79a22 100%);font-family:var(--game-display);font-size:clamp(14px,4vw,18px);font-weight:700;letter-spacing:.035em;text-shadow:0 1px 0 rgba(255,255,255,.75);box-shadow:inset 0 2px 0 rgba(255,255,255,.65),inset 0 -3px 0 rgba(122,74,12,.2),0 5px 0 #8b5915,0 12px 18px -4px rgba(0,0,0,.45);cursor:pointer}
+.loginIntroChrome button:active{transform:translateY(2px);box-shadow:inset 0 2px 0 rgba(255,255,255,.55),inset 0 -2px 0 rgba(122,74,12,.18),0 3px 0 #8b5915,0 8px 14px -4px rgba(0,0,0,.4)}
 .loginIntroChrome button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.loginIntro video{display:none}.loginIntro{background:radial-gradient(circle at 50% 20%,#397ec0,#0b265e 65%,#051633)}}
 .hubContent{position:relative;z-index:1;padding-bottom:95px}
