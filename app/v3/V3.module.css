@@ -1311,7 +1311,17 @@
 .tutorialLibrary article { margin:10px 0; border:2px solid #f0dcae; border-radius:16px; padding:14px; background:rgba(255,255,255,.62); }.tutorialLibrary article>span { font-size:42px; }.tutorialLibrary article h3 { margin:4px; }.tutorialLibrary article p { margin:6px 0; font-weight:800; }.replaySafety { font-size:10px; font-weight:800; }
 .howToPlayButton { width:100%; min-height:42px; margin:8px 0 2px; border:2px solid #fff; border-radius:12px; color:#fff; background:linear-gradient(#3387ca,#174d95); box-shadow:0 2px 0 rgba(0,0,0,.35); font-family:var(--game-display); }
 .guidedVaultBox { animation:guidedVaultPulse 1s ease-in-out infinite; }
-.powerTutorialPrompt { position:fixed; z-index:10020; top:max(12px,env(safe-area-inset-top)); left:50%; width:min(88vw,420px); transform:translateX(-50%); border:2px solid #fff; border-radius:14px; padding:9px 12px; color:#fff8d1; background:linear-gradient(#277fbe,#143f82); box-shadow:0 4px 12px rgba(0,0,0,.35); font-family:var(--game-ui); font-size:clamp(12px,3.3vw,15px); font-weight:1000; text-align:center; pointer-events:none; }
+.tutorialSceneArtwork {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  border: 2px solid rgba(255,244,190,.9);
+  border-radius: 18px;
+  object-fit: cover !important;
+  object-position: center 42%;
+  box-shadow: 0 4px 10px rgba(34,26,14,.25);
+}
 @keyframes guidedVaultPulse { 50% { transform:translateY(-3px) scale(1.04); filter:brightness(1.12); } }
 
 @media (max-width:430px) {
@@ -2113,7 +2123,7 @@
   align-self:center;
   width:min(calc(100% - 18px),460px)!important;
   min-height:0!important;
-  max-height:calc(100dvh - 20px)!important;
+  max-height:calc(100dvh - clamp(54px,16.5vw,71px) - 20px)!important;
   margin:auto!important;
 }
 .ftueResultGrid { grid-template-columns:repeat(2,minmax(0,1fr))!important; }
@@ -2187,7 +2197,7 @@
 .oceanAlbumCover button,.oceanAlbumPage>.albumPageContinue { width:100%; min-height:48px; border:3px solid #fff; border-radius:14px; color:#fff; background:linear-gradient(#328fd7,#14529b); box-shadow:0 4px 0 rgba(0,0,0,.35); font:1000 13px var(--game-display); }
 
 @media(max-width:430px) {
-  .ftueSummaryCard { max-height:calc(100dvh - 12px)!important; padding:14px 10px!important; }
+  .ftueSummaryCard { max-height:calc(100dvh - clamp(54px,16.5vw,71px) - 12px)!important; padding:14px 10px!important; }
   .ftueResultGrid>div { min-height:54px; }
   .oceanRewardCard .levelOneStickerRow article { min-height:112px; }
   .oceanRewardCard .levelOneStickerRow article>[data-artwork],.oceanRewardCard .oceanStickerVisual { width:62px; height:58px; }

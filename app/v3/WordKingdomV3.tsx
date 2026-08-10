@@ -344,6 +344,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const [worldMapFocus, setWorldMapFocus] = useState<"level" | "album" | "gate" | null>(null);
   const [worldMapTransition, setWorldMapTransition] = useState(false);
   const [shakingMapTarget, setShakingMapTarget] = useState<string | null>(null);
+  const [acknowledgedPowerIntro, setAcknowledgedPowerIntro] = useState<PowerUpKind | null>(null);
 
   const { playSfx, playTileSelect, setMusic } = useWordKingdomAudio({
     sfxEnabled: player.settings.sfx,
@@ -1119,6 +1120,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const dismissHintCoach = () => {
     markTutorialComplete("level-3-hint");
     setContextualPrompt(false);
+    window.setTimeout(() => hintButtonRef.current?.focus(), 0);
   };
 
   const refreshPowerState = () => {
@@ -1298,6 +1300,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
 
   const launchPowerUp = (kind: PowerUpKind, tutorial = false) => {
     if (!pvp.current) return;
+    if (tutorial) setAcknowledgedPowerIntro(null);
     const target = pvp.current.firstOpponent();
     if (kind === "raid") {
       const session = pvp.current.createRaid();
@@ -1455,6 +1458,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       if (pvpOverlay.tutorial) markTutorialComplete("level-8-steal");
       if (pvpOverlay.tutorial) updateFtueProgress((current) => ({ ...current, pendingTutorialAction: null }));
       setPvpOverlay(null);
+      setAcknowledgedPowerIntro(null);
       window.setTimeout(() => launchNextMeta(), 180);
       return;
     }
@@ -1486,7 +1490,16 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       }
     }
     setPvpOverlay(null);
+    setAcknowledgedPowerIntro(null);
     window.setTimeout(() => launchNextMeta(), 180);
+  };
+
+  const acknowledgePowerTutorialIntro = () => {
+    if (!pvpOverlay?.tutorial) return;
+    setAcknowledgedPowerIntro(pvpOverlay.kind);
+    window.setTimeout(() => {
+      document.querySelector<HTMLButtonElement>("[data-pvp-primary-action]")?.focus();
+    }, 0);
   };
 
   useEffect(() => {
@@ -2276,12 +2289,12 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       {albumTransition && <AlbumTransition state={albumTransition} reducedMotion={prefersReducedMotion} />}
       {packReveal && <PackModal result={packReveal} onClose={closePackReveal} />}
       {pvpOverlay && <PvpEventOverlay state={pvpOverlay} ownedCards={ownedCards()} onAttack={chooseAttackCard} onAttackSkip={deferAttack} onSteal={performSteal} onUseLater={deferSteal} onShield={chooseShieldCard} onShieldSkip={deferShield} onPick={pickRaidChest} onClose={closePvpOverlay} />}
-      {pvpOverlay?.tutorial && <PowerTutorialPrompt kind={pvpOverlay.kind} />}
+      {pvpOverlay?.tutorial && acknowledgedPowerIntro !== pvpOverlay.kind && <PowerTutorialPrompt kind={pvpOverlay.kind} onContinue={acknowledgePowerTutorialIntro} />}
       {toast && <div className={base.toast} role="status">{toast}</div>}
       {loginIntroOpen && <LoginIntro onClose={() => { setLoginIntroOpen(false); updateFtueProgress(markIntroVideoSeen); }} />}
-      {worldMapMessage === "welcome" && <ConceptCard title="Welcome to Word Kingdom" message="Follow the path, solve word levels and fill each kingdom's album." cta="LET'S GO!" icon="👑" onDismiss={continueWorldMapMessage} testId="world-map-welcome" />}
+      {worldMapMessage === "welcome" && <ConceptCard title="Welcome to Word Kingdom" message="Follow the path, solve word levels and fill each kingdom's album." cta="LET'S GO!" icon={<img className={styles.tutorialSceneArtwork} src="/kingdom-hero.png" alt="" />} onDismiss={continueWorldMapMessage} testId="world-map-welcome" />}
       {worldMapMessage === "album" && <ConceptCard title="Your Album Is Open" message="Your stickers reveal each kingdom. Tap the album to see what you collected." cta="SHOW ME" icon={<DiscoveryArtwork kind="album" />} onDismiss={continueWorldMapMessage} testId="world-map-album" />}
-      {worldMapMessage === "forest" && <ConceptCard title="Forest Kingdom" message="A new album and five new levels are waiting." cta="LET'S GO!" icon="🌿" onDismiss={continueWorldMapMessage} testId="world-map-forest" />}
+      {worldMapMessage === "forest" && <ConceptCard title="Forest Kingdom" message="A new album and five new levels are waiting." cta="LET'S GO!" icon={<img className={styles.tutorialSceneArtwork} src="/world-maps/forest-kingdom-map.webp" alt="" />} onDismiss={continueWorldMapMessage} testId="world-map-forest" />}
     </main>;
   }
 
@@ -2296,6 +2309,8 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     } as CSSProperties;
     if (summary.objectiveComplete && summary.node.level === 1 && ftueProgress.level1CompletionResult) {
       return <main data-chapter-theme={summaryTheme.id} className={`${base.shell} ${base.summaryShell} ${styles.summaryShell} ${styles.levelOneCompletionShell}`} style={summaryStyle} onClickCapture={playUiTap}>
+        <TopBar player={player} onShop={() => { setSummary(null); returnHome(); setTab("shop"); }} onSettings={() => setSettingsOpen(true)} />
+        <div className={styles.gameTopBarSpacer} aria-hidden="true" />
         <LevelOneResults
           summary={summary}
           onContinue={() => {
@@ -2304,6 +2319,8 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
             returnHome();
           }}
         />
+        {settingsOpen && <SettingsModal account={account} signOutUrl={signOutUrl} player={player} onToggle={updateSetting} onRestart={restartProgress} onHowToPlay={() => { setSettingsOpen(false); setTutorialLibraryOpen(true); }} onClose={() => setSettingsOpen(false)} />}
+        {tutorialLibraryOpen && <TutorialLibrary maxLevel={Math.min(10, Math.max(player.currentLevel, ...player.completedLevels, 1))} onClose={() => setTutorialLibraryOpen(false)} />}
       </main>;
     }
     const oceanCompletionActive = summary.objectiveComplete
@@ -2315,6 +2332,8 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       && ftueProgress.oceanRewardPhase !== "ALBUM_REVEAL";
     if (oceanCompletionActive) {
       return <main data-chapter-theme={summaryTheme.id} className={`${base.shell} ${base.summaryShell} ${styles.summaryShell} ${styles.levelOneCompletionShell}`} style={summaryStyle} onClickCapture={playUiTap}>
+        <TopBar player={player} onShop={() => { setSummary(null); returnHome(); setTab("shop"); }} onSettings={() => setSettingsOpen(true)} />
+        <div className={styles.gameTopBarSpacer} aria-hidden="true" />
         <OceanRewardExperience
           level={summary.node.level}
           phase={ftueProgress.oceanRewardPhase!}
@@ -2349,6 +2368,8 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
             }
           }}
         />
+        {settingsOpen && <SettingsModal account={account} signOutUrl={signOutUrl} player={player} onToggle={updateSetting} onRestart={restartProgress} onHowToPlay={() => { setSettingsOpen(false); setTutorialLibraryOpen(true); }} onClose={() => setSettingsOpen(false)} />}
+        {tutorialLibraryOpen && <TutorialLibrary maxLevel={Math.min(10, Math.max(player.currentLevel, ...player.completedLevels, 1))} onClose={() => setTutorialLibraryOpen(false)} />}
       </main>;
     }
     return <main data-chapter-theme={summaryTheme.id} className={`${base.shell} ${base.summaryShell} ${styles.summaryShell}`} style={summaryStyle} onClickCapture={playUiTap}>
@@ -2386,7 +2407,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       </KingdomPopup>
       {packReveal && <PackModal result={packReveal} onClose={closePackReveal} />}
       {pvpOverlay && <PvpEventOverlay state={pvpOverlay} ownedCards={ownedCards()} onAttack={chooseAttackCard} onAttackSkip={deferAttack} onSteal={performSteal} onUseLater={deferSteal} onShield={chooseShieldCard} onShieldSkip={deferShield} onPick={pickRaidChest} onClose={closePvpOverlay} />}
-      {pvpOverlay?.tutorial && <PowerTutorialPrompt kind={pvpOverlay.kind} />}
+      {pvpOverlay?.tutorial && acknowledgedPowerIntro !== pvpOverlay.kind && <PowerTutorialPrompt kind={pvpOverlay.kind} onContinue={acknowledgePowerTutorialIntro} />}
       {settingsOpen && <SettingsModal account={account} signOutUrl={signOutUrl} player={player} onToggle={updateSetting} onRestart={restartProgress} onHowToPlay={() => { setSettingsOpen(false); setTutorialLibraryOpen(true); }} onClose={() => setSettingsOpen(false)} />}
       {tutorialLibraryOpen && <TutorialLibrary maxLevel={Math.min(10, Math.max(player.currentLevel, ...player.completedLevels, 1))} onClose={() => setTutorialLibraryOpen(false)} />}
       {albumTransition && <AlbumTransition state={albumTransition} reducedMotion={prefersReducedMotion} />}
@@ -2482,7 +2503,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
         </div>}
         <div className={base.boardActions} data-ftue-actions={isGoldenRun ? "true" : undefined}>
           {!isGoldenRun && standardHintVisible && <button ref={hintButtonRef} onClick={useHint} disabled={boardLocked || (currentRunLevel >= HINT_POOL_INTRO_LEVEL && player.hints < 1)}>💡 Hint <small>{currentRunLevel >= HINT_POOL_INTRO_LEVEL ? `${player.hints}/${HINT_POOL_CAP} left` : "resets combo"}</small></button>}
-          {isGoldenRun && (ftueStall === "HINT" || !ftueActive) && <button onClick={useHint} disabled={boardLocked || hintsUsed >= FTUE_HINT_LIMIT}>💡 {ftueActive ? "Need a clue?" : "Hint"}<small>{Math.max(0, FTUE_HINT_LIMIT - hintsUsed)} left</small></button>}
+          {isGoldenRun && (ftueStall === "HINT" || !ftueActive) && <button ref={hintButtonRef} onClick={useHint} disabled={boardLocked || hintsUsed >= FTUE_HINT_LIMIT}>💡 {ftueActive ? "Need a clue?" : "Hint"}<small>{Math.max(0, FTUE_HINT_LIMIT - hintsUsed)} left</small></button>}
           <span>{boardLocked ? generatedRun ? "Tiles are changing in place" : "Board paused for royal action" : isGoldenRun ? "Drag in a straight line · no timer" : "Drag or tap two endpoints"}</span>
           {isGoldenRun && ftueActive && <button className={styles.skipTipsButton} onClick={skipFtueTips} disabled={boardLocked}>Skip tips</button>}
         </div>
@@ -2538,23 +2559,21 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       reducedMotion={prefersReducedMotion}
       testId="level-1-first-word-gesture"
     />}
-    {levelOneCoach?.kind === "transformation" && <FtueCoachmark
+    {levelOneCoach?.kind === "transformation" && <ConceptCard
       icon={<span className={styles.transformedTileVisual}><i>A</i><b>R</b></span>}
       title="The board is alive!"
       message="Finding words changes letters and reveals new possibilities."
-      messageOpen={levelOneCoach.messageOpen}
+      cta="CONTINUE"
       onDismiss={() => {
         const resume = tutorialResume.current;
         tutorialResume.current = null;
         resume?.();
       }}
-      reducedMotion={prefersReducedMotion}
       testId="level-1-transformation-message"
     />}
     {pvpOverlay && <PvpEventOverlay state={pvpOverlay} ownedCards={ownedCards()} onAttack={chooseAttackCard} onAttackSkip={deferAttack} onSteal={performSteal} onUseLater={deferSteal} onShield={chooseShieldCard} onShieldSkip={deferShield} onPick={pickRaidChest} onClose={closePvpOverlay} />}
     {contextualPrompt && <ConceptCard title="Need a Hint?" message="Tap Hint to reveal part of a word. Hints are optional." cta="GOT IT" icon="💡" onDismiss={dismissHintCoach} testId="hint-available-guide" />}
-    {pvpOverlay?.tutorial && pvpOverlay.kind === "raid" && !ftueProgress.completedTutorials.includes("level-3-raid") && <ConceptCard title="Raid the Royal Vault" message="Choose 3 chests. Every chest can hide coins for your next sticker pack." cta="START RAID" icon={<img src={BADGES.raid.icon} alt="" />} onDismiss={() => markTutorialComplete("level-3-raid")} testId="raid-intro-guide" />}
-    {pvpOverlay?.tutorial && pvpOverlay.kind !== "raid" && <PowerTutorialPrompt kind={pvpOverlay.kind} />}
+    {pvpOverlay?.tutorial && acknowledgedPowerIntro !== pvpOverlay.kind && <PowerTutorialPrompt kind={pvpOverlay.kind} onContinue={acknowledgePowerTutorialIntro} />}
     {packReveal && <PackModal result={packReveal} onClose={closePackReveal} />}
     {settingsOpen && <SettingsModal account={account} signOutUrl={signOutUrl} player={player} onToggle={updateSetting} onRestart={restartProgress} onHowToPlay={() => { setSettingsOpen(false); setTutorialLibraryOpen(true); }} onClose={() => setSettingsOpen(false)} />}
     {tutorialLibraryOpen && <TutorialLibrary maxLevel={Math.min(10, Math.max(player.currentLevel, ...player.completedLevels, 1))} onClose={() => setTutorialLibraryOpen(false)} />}
@@ -2942,14 +2961,42 @@ function PackModal({ result, onClose }: { result: PackResult; onClose: () => voi
   return <div className={base.modalOverlay} role="dialog" aria-modal="true"><section className={styles.packModal} data-tier={result.tier}><small>{result.tier} PACK</small><h2>Royal cards revealed!</h2><div>{result.cards.map((card, index) => <article key={`${card.cardId}-${index}`} data-rarity={card.rarity}><span>{card.icon}</span><b>{card.name}</b><small>{"★".repeat(card.rarity)}</small><em>{card.isNew ? "NEW!" : `DUPLICATE +${[0,1,2,4,8,15][card.rarity]} ⭐`}</em></article>)}</div>{result.vaultStarsEarned > 0 && <p>+{result.vaultStarsEarned} Vault Stars</p>}<button onClick={onClose}>COLLECT</button></section></div>;
 }
 
-function PowerTutorialPrompt({ kind }: { kind: PowerUpKind }) {
-  const copy: Record<PowerUpKind, string> = {
-    shield: "Shield protects one of your collectibles.",
-    attack: "Attack breaks an opponent's Shield.",
-    steal: "Steal takes an unprotected collectible.",
-    raid: "Choose boxes to reveal coins and collectible rewards.",
+function PowerTutorialPrompt({ kind, onContinue }: { kind: PowerUpKind; onContinue: () => void }) {
+  const copy: Record<PowerUpKind, { title: string; body: string; cta: string; testId: string }> = {
+    raid: {
+      title: "Raid the Royal Vault",
+      body: "Choose 3 chests. Every chest can hide coins for your next sticker pack.",
+      cta: "START RAID",
+      testId: "raid-intro-guide",
+    },
+    shield: {
+      title: "Shield Your Collection",
+      body: "Shield protects one of your collectibles from the next Attack or Steal.",
+      cta: "CHOOSE A CARD",
+      testId: "shield-intro-guide",
+    },
+    attack: {
+      title: "Launch an Attack",
+      body: "Attack damages an opponent's card. A Shield can block the hit.",
+      cta: "CHOOSE A CARD",
+      testId: "attack-intro-guide",
+    },
+    steal: {
+      title: "Steal a Royal Card",
+      body: "Steal takes one eligible unprotected card and adds it to your Album.",
+      cta: "STEAL A CARD",
+      testId: "steal-intro-guide",
+    },
   };
-  return <div className={styles.powerTutorialPrompt} role="status">{copy[kind]}</div>;
+  const message = copy[kind];
+  return <ConceptCard
+    title={message.title}
+    message={message.body}
+    cta={message.cta}
+    icon={<img src={BADGES[kind].icon} alt="" />}
+    onDismiss={onContinue}
+    testId={message.testId}
+  />;
 }
 
 function Result({ label, value }: { label: string; value: string }) { return <div className={base.result}><span>{label}</span><b>{value}</b></div>; }
@@ -2979,19 +3026,19 @@ function LoginIntro({ onClose }: { onClose: () => void }) {
 
 function PvpEventOverlay({ state, ownedCards, onAttack, onAttackSkip, onSteal, onUseLater, onShield, onShieldSkip, onPick, onClose }: { state: PvpOverlayState; ownedCards: CardDefinition[]; onAttack: (cardId: string) => void; onAttackSkip: () => void; onSteal: () => void; onUseLater: () => void; onShield: (cardId: string) => void; onShieldSkip: () => void; onPick: (chestId: string, source?: FxPoint) => void; onClose: () => void }) {
   if (state.kind === "raid") {
-    return <div className={`${base.eventOverlay} ${styles.pvpOverlay}`} role="dialog" aria-modal="true"><section className={`${base.eventCard} ${styles.pvpEventCard}`} data-event="raid"><div className={base.eventIcon}><img src={BADGES.raid.icon} alt="" /></div><span className={base.kicker}>{state.tutorial ? "OPEN THREE BOXES." : "COIN RAID"}</span><h2>Raid {state.session.target.displayName}</h2><p>The jackpot was locked in before your first pick. Choose exactly three of nine boxes.</p><div className={styles.raidStatus}><span>{state.session.picksRemaining} PICKS LEFT</span><b>🪙 {formatNumber(state.session.coinsWon)}</b></div><div className={`${styles.vaultGrid} ${styles.nineVaultGrid}`}>{state.session.chests.map((chest, index) => { const revealed = state.session.pickedIds.includes(chest.id); const guideFirstPick = state.tutorial && state.session.pickedIds.length === 0 && index === 0; return <button key={chest.id} className={guideFirstPick ? styles.guidedVaultBox : undefined} disabled={revealed || state.session.complete} data-revealed={revealed} data-tier={revealed ? chest.tier : undefined} onClick={(event) => { const rect = event.currentTarget.getBoundingClientRect(); onPick(chest.id, { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }); }}><img src={RAID_BOX_ART[revealed ? chest.tier : "locked"]} alt="" />{revealed && <b>{formatNumber(chest.coins)}</b>}{revealed && <small>{chest.tier.toUpperCase()}</small>}</button>; })}</div>{state.session.complete && <div className={styles.pvpResultBanner}><small>RAID COMPLETE</small><b>+{formatNumber(state.session.coinsWon)} Coins</b><span>Coins go straight to your persistent balance.</span></div>}<button className={styles.pvpContinue} disabled={!state.session.complete} onClick={onClose}>{state.session.complete ? "COLLECT COINS" : "CHOOSE 3 BOXES"}</button></section></div>;
+    return <div className={`${base.eventOverlay} ${styles.pvpOverlay}`} role="dialog" aria-modal="true"><section className={`${base.eventCard} ${styles.pvpEventCard}`} data-event="raid"><div className={base.eventIcon}><img src={BADGES.raid.icon} alt="" /></div><span className={base.kicker}>{state.tutorial ? "OPEN THREE BOXES." : "COIN RAID"}</span><h2>Raid {state.session.target.displayName}</h2><p>The jackpot was locked in before your first pick. Choose exactly three of nine boxes.</p><div className={styles.raidStatus}><span>{state.session.picksRemaining} PICKS LEFT</span><b>🪙 {formatNumber(state.session.coinsWon)}</b></div><div className={`${styles.vaultGrid} ${styles.nineVaultGrid}`}>{state.session.chests.map((chest, index) => { const revealed = state.session.pickedIds.includes(chest.id); const guideFirstPick = state.tutorial && state.session.pickedIds.length === 0 && index === 0; return <button key={chest.id} className={guideFirstPick ? styles.guidedVaultBox : undefined} disabled={revealed || state.session.complete} data-pvp-primary-action={guideFirstPick ? "true" : undefined} data-revealed={revealed} data-tier={revealed ? chest.tier : undefined} onClick={(event) => { const rect = event.currentTarget.getBoundingClientRect(); onPick(chest.id, { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }); }}><img src={RAID_BOX_ART[revealed ? chest.tier : "locked"]} alt="" />{revealed && <b>{formatNumber(chest.coins)}</b>}{revealed && <small>{chest.tier.toUpperCase()}</small>}</button>; })}</div>{state.session.complete && <div className={styles.pvpResultBanner}><small>RAID COMPLETE</small><b>+{formatNumber(state.session.coinsWon)} Coins</b><span>Coins go straight to your persistent balance.</span></div>}<button className={styles.pvpContinue} disabled={!state.session.complete} onClick={onClose}>{state.session.complete ? "COLLECT COINS" : "CHOOSE 3 BOXES"}</button></section></div>;
   }
   if (state.kind === "attack") {
     const attackableCards = state.target.cards.filter((card) => !card.stolen);
     const noCardsToAttack = !state.result && attackableCards.length === 0;
-    return <div className={`${base.eventOverlay} ${styles.pvpOverlay}`} role="dialog" aria-modal="true"><section className={`${base.eventCard} ${styles.pvpEventCard}`} data-event="attack"><div className={base.eventIcon}>⚔️</div><span className={base.kicker}>{state.tutorial ? "CHOOSE ONE CARD TO ATTACK." : "CARD ATTACK"}</span><h2>{state.target.displayName}</h2>{noCardsToAttack ? <p>Every card {state.target.displayName} owns has already been claimed. This Attack stays ready for another rival.</p> : !state.result ? <div className={styles.metaCardChoice}>{attackableCards.map((card) => <button key={card.cardId} onClick={() => onAttack(card.cardId)}><span>{card.icon}</span><b>{card.name}</b><small>{card.shielded ? "Shield status hidden" : "Visible rival card"}</small></button>)}</div> : <div className={styles.pvpResultBanner}><small>{state.result.blocked ? "SHIELD BROKE" : "DIRECT HIT"}</small><b>{state.result.card.name}</b><span>{state.result.blocked ? "The card was protected and remains safe." : "The card is Damaged, not deleted."}</span></div>}<button className={styles.pvpContinue} disabled={!state.result && !noCardsToAttack} onClick={noCardsToAttack ? onAttackSkip : onClose}>{state.result ? "CONTINUE" : noCardsToAttack ? "OK, GOT IT" : "CHOOSE A CARD"}</button></section></div>;
+    return <div className={`${base.eventOverlay} ${styles.pvpOverlay}`} role="dialog" aria-modal="true"><section className={`${base.eventCard} ${styles.pvpEventCard}`} data-event="attack"><div className={base.eventIcon}><img src={BADGES.attack.icon} alt="" /></div><span className={base.kicker}>{state.tutorial ? "CHOOSE ONE CARD TO ATTACK." : "CARD ATTACK"}</span><h2>{state.target.displayName}</h2>{noCardsToAttack ? <p>Every card {state.target.displayName} owns has already been claimed. This Attack stays ready for another rival.</p> : !state.result ? <div className={styles.metaCardChoice}>{attackableCards.map((card, index) => <button key={card.cardId} data-pvp-primary-action={index === 0 ? "true" : undefined} onClick={() => onAttack(card.cardId)}><span>{card.icon}</span><b>{card.name}</b><small>{card.shielded ? "Shield status hidden" : "Visible rival card"}</small></button>)}</div> : <div className={styles.pvpResultBanner}><small>{state.result.blocked ? "SHIELD BROKE" : "DIRECT HIT"}</small><b>{state.result.card.name}</b><span>{state.result.blocked ? "The card was protected and remains safe." : "The card is Damaged, not deleted."}</span></div>}<button className={styles.pvpContinue} data-pvp-primary-action={noCardsToAttack ? "true" : undefined} disabled={!state.result && !noCardsToAttack} onClick={noCardsToAttack ? onAttackSkip : onClose}>{state.result ? "CONTINUE" : noCardsToAttack ? "OK, GOT IT" : "CHOOSE A CARD"}</button></section></div>;
   }
   if (state.kind === "steal") {
     const result = state.session.result;
-    return <div className={`${base.eventOverlay} ${styles.pvpOverlay}`} role="dialog" aria-modal="true"><section className={`${base.eventCard} ${styles.pvpEventCard}`} data-event="steal" data-steal-status={state.session.status}><div className={base.eventIcon}>🃏</div><span className={base.kicker}>{state.tutorial ? "STEAL ONE ELIGIBLE CARD." : "CARD STEAL"}</span><h2>{state.target.displayName}</h2><p>The eligible card is selected randomly. Tutorial cards and completed collections stay safe.</p>{result && <div className={styles.pvpResultBanner}><small>{result.blocked ? "STEAL BLOCKED" : "CARD STOLEN"}</small><b>{result.blocked ? "Steal Blocked." : result.card?.name ?? "Royal Card"}</b><span>{result.blocked ? "The card's Shield was consumed and the card stayed safe." : "The card was added to your Album."}</span></div>}{result ? <button className={styles.pvpContinue} onClick={onClose}>CONTINUE</button> : <div className={styles.stealActions}><button className={styles.pvpContinue} disabled={state.busy} onClick={onSteal}>{state.busy ? "CHOOSING…" : "STEAL A CARD"}</button><button className={styles.briefingSecondary} disabled={state.busy} onClick={onUseLater}>USE LATER</button></div>}</section></div>;
+    return <div className={`${base.eventOverlay} ${styles.pvpOverlay}`} role="dialog" aria-modal="true"><section className={`${base.eventCard} ${styles.pvpEventCard}`} data-event="steal" data-steal-status={state.session.status}><div className={base.eventIcon}><img src={BADGES.steal.icon} alt="" /></div><span className={base.kicker}>{state.tutorial ? "STEAL ONE ELIGIBLE CARD." : "CARD STEAL"}</span><h2>{state.target.displayName}</h2><p>The eligible card is selected randomly. Tutorial cards and completed collections stay safe.</p>{result && <div className={styles.pvpResultBanner}><small>{result.blocked ? "STEAL BLOCKED" : "CARD STOLEN"}</small><b>{result.blocked ? "Steal Blocked." : result.card?.name ?? "Royal Card"}</b><span>{result.blocked ? "The card's Shield was consumed and the card stayed safe." : "The card was added to your Album."}</span></div>}{result ? <button className={styles.pvpContinue} onClick={onClose}>CONTINUE</button> : <div className={styles.stealActions}><button className={styles.pvpContinue} data-pvp-primary-action="true" disabled={state.busy} onClick={onSteal}>{state.busy ? "CHOOSING…" : "STEAL A CARD"}</button><button className={styles.briefingSecondary} disabled={state.busy} onClick={onUseLater}>USE LATER</button></div>}</section></div>;
   }
   const noCardsToProtect = ownedCards.length === 0 && !state.protectedCardId;
-  return <div className={`${base.eventOverlay} ${styles.pvpOverlay}`} role="dialog" aria-modal="true"><section className={`${base.eventCard} ${styles.pvpEventCard}`} data-event="shield"><div className={base.eventIcon}>🛡️</div><span className={base.kicker}>{state.tutorial ? "PROTECT ONE OF YOUR CARDS." : "CARD SHIELD"}</span><h2>{state.result?.blocked ? "Shield blocked the Attack!" : state.protectedCardId ? "Card protected" : noCardsToProtect ? "No cards yet" : "Choose a card"}</h2>{noCardsToProtect ? <p>You don't have any Royal Cards yet. This Shield stays ready — come back once you've collected one.</p> : !state.protectedCardId ? <div className={styles.metaCardChoice}>{ownedCards.map((card) => <button key={card.cardId} onClick={() => onShield(card.cardId)}><span>{card.icon}</span><b>{card.name}</b><small>Protect from one Attack or Steal</small></button>)}</div> : <div className={styles.pvpResultBanner}><small>{state.result?.blocked ? "SCRIPTED ATTACK BLOCKED" : "SHIELD EQUIPPED"}</small><b>{ownedCards.find((card) => card.cardId === state.protectedCardId)?.name ?? "Royal Card"}</b><span>{state.result?.blocked ? "The Shield was consumed exactly once." : "Protection is now visible in your Album."}</span></div>}<button className={styles.pvpContinue} disabled={!state.protectedCardId && !noCardsToProtect} onClick={noCardsToProtect ? onShieldSkip : onClose}>{state.protectedCardId ? "CONTINUE" : noCardsToProtect ? "OK, GOT IT" : "CHOOSE A CARD"}</button></section></div>;
+  return <div className={`${base.eventOverlay} ${styles.pvpOverlay}`} role="dialog" aria-modal="true"><section className={`${base.eventCard} ${styles.pvpEventCard}`} data-event="shield"><div className={base.eventIcon}><img src={BADGES.shield.icon} alt="" /></div><span className={base.kicker}>{state.tutorial ? "PROTECT ONE OF YOUR CARDS." : "CARD SHIELD"}</span><h2>{state.result?.blocked ? "Shield blocked the Attack!" : state.protectedCardId ? "Card protected" : noCardsToProtect ? "No cards yet" : "Choose a card"}</h2>{noCardsToProtect ? <p>You don't have any Royal Cards yet. This Shield stays ready — come back once you've collected one.</p> : !state.protectedCardId ? <div className={styles.metaCardChoice}>{ownedCards.map((card, index) => <button key={card.cardId} data-pvp-primary-action={index === 0 ? "true" : undefined} onClick={() => onShield(card.cardId)}><span>{card.icon}</span><b>{card.name}</b><small>Protect from one Attack or Steal</small></button>)}</div> : <div className={styles.pvpResultBanner}><small>{state.result?.blocked ? "SCRIPTED ATTACK BLOCKED" : "SHIELD EQUIPPED"}</small><b>{ownedCards.find((card) => card.cardId === state.protectedCardId)?.name ?? "Royal Card"}</b><span>{state.result?.blocked ? "The Shield was consumed exactly once." : "Protection is now visible in your Album."}</span></div>}<button className={styles.pvpContinue} data-pvp-primary-action={noCardsToProtect ? "true" : undefined} disabled={!state.protectedCardId && !noCardsToProtect} onClick={noCardsToProtect ? onShieldSkip : onClose}>{state.protectedCardId ? "CONTINUE" : noCardsToProtect ? "OK, GOT IT" : "CHOOSE A CARD"}</button></section></div>;
 }
 
 function LegacyPvpEventOverlay({ state, onPick, onClose }: { state: any; onPick: (chestId: string, source?: FxPoint) => void; onClose: () => void }) {

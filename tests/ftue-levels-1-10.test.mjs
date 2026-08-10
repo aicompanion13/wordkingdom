@@ -152,6 +152,28 @@ test("coach messages are dismissible and block click-through", () => {
   assert.doesNotMatch(source, /setTimeout/);
 });
 
+test("Level 1-10 concept announcements use the reusable illustrated card and live CTAs", () => {
+  const source = fs.readFileSync(path.resolve("app/v3/WordKingdomV3.tsx"), "utf8");
+  for (const copy of [
+    "Welcome to Word Kingdom",
+    "Swipe to Spell",
+    "Need a Hint?",
+    "Your Album Is Open",
+    "Raid the Royal Vault",
+    "Shield Your Collection",
+    "Launch an Attack",
+    "Steal a Royal Card",
+    "Forest Kingdom",
+  ]) assert.match(source, new RegExp(copy.replace(/[?]/g, "\\?")), copy);
+  for (const cta of ["LET'S GO!", "GOT IT", "SHOW ME", "START RAID", "CHOOSE A CARD", "STEAL A CARD", "CONTINUE"]) {
+    assert.match(source, new RegExp(cta.replace(/[!?]/g, "\\$&")), cta);
+  }
+  const powerPrompt = source.slice(source.indexOf("function PowerTutorialPrompt"), source.indexOf("function Result"));
+  assert.match(powerPrompt, /return <ConceptCard/);
+  assert.doesNotMatch(powerPrompt, /role="status"/);
+  assert.match(source, /data-pvp-primary-action/);
+});
+
 test("Level 1 completion contains no Pack, Album, currency, or kingdom completion UI and returns to the map", () => {
   const source = fs.readFileSync(path.resolve("app/v3/WordKingdomV3.tsx"), "utf8");
   const block = source.slice(source.indexOf("function LevelOneResults"), source.indexOf("function ConquestCompletePanel"));
