@@ -28,6 +28,7 @@ export type PendingFtueStep =
 export type OceanRewardPhase =
   | "RESULTS"
   | "PACK_READY"
+  | "STICKER_READY"
   | "STICKER_REVEAL"
   | "ALBUM_ACTIVATED"
   | "ALBUM_GUIDE"

@@ -46,6 +46,7 @@ import {
   acknowledgeLevelOneResults,
   beginLevelTwoAlbumGuide,
   beginLevelTwoAlbumReveal,
+  beginOceanStickerReveal,
   beginGoldenTutorialDrag,
   completeFtue,
   completeFtueTutorial,
@@ -1211,12 +1212,13 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       : current);
     setAlbumTransition({ level, kind: theme.albumTransition });
     const transitionMs = prefersReducedMotion ? 220 : theme.albumTransition === "bubbles" ? 1500 : 900;
+    const destinationSwitchMs = prefersReducedMotion ? 0 : theme.albumTransition === "bubbles" ? 780 : 420;
     window.setTimeout(() => {
       setScreen("hub");
       setTab("albums");
       setAlbumPageLevel(level);
-      setAlbumTransition(null);
-    }, transitionMs);
+      window.setTimeout(() => setAlbumTransition(null), Math.max(0, transitionMs - destinationSwitchMs));
+    }, destinationSwitchMs);
   };
 
   const openLatestAlbumPage = () => {
@@ -1259,7 +1261,8 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     if (worldMapMessage === "album") {
       markFtueVisualStep("level-2-album-card");
       setWorldMapMessage(null);
-      focusWorldMapTarget("album");
+      setWorldMapFocus(null);
+      window.setTimeout(() => albumButtonRef.current?.focus(), 80);
       return;
     }
     if (worldMapMessage === "forest") {
@@ -2328,7 +2331,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
         {tab === "teams" && <SimplePanel eyebrow="SOCIAL KINGDOM" title="Teams" copy="Trade duplicates, request energy, and conquer together." items={[["🦁", "Royal Wordsmiths", "42 Members"], ["⚡", "Energy Requests", "3 waiting"], ["🃏", "Card Trades", "7 offers"]]} onAction={() => setToast("Request sent to the Royal Wordsmiths.")} />}
         {tab === "events" && <SimplePanel eyebrow="LIVE NOW" title="Events" copy="Timed races now award themed packs and Vault Stars." items={[["⚔️", "Raid Tournament", "Ends in 2h"], ["⭐", "Star Race", "8 stars to lead"], ["🃏", "Album Sprint", "2 days left"]]} onAction={() => setToast("Event pinned to your home rail.")} />}
       </section>
-      <BottomNav active={tab} albumButtonRef={albumButtonRef} albumUnlocked={ftueProgress.albumUnlocked} albumNotifications={albumUnseenCount} guideAlbum={false} tutorialLock={false} onChange={(nextTab) => {
+      <BottomNav active={tab} albumButtonRef={albumButtonRef} albumUnlocked={ftueProgress.albumUnlocked} albumNotifications={albumUnseenCount} guideAlbum={ftueProgress.pendingMandatoryStep === "OPEN_LEVEL_2_ALBUM" && !worldMapMessage} tutorialLock={ftueProgress.pendingMandatoryStep === "OPEN_LEVEL_2_ALBUM" && !worldMapMessage} onChange={(nextTab) => {
         if (nextTab === "albums") openLatestAlbumPage();
         else setTab(nextTab);
       }} />
@@ -2378,6 +2381,16 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
         messageOpen={false}
         reducedMotion={prefersReducedMotion}
         testId="level-1-map-gesture"
+      />}
+      {ftueProgress.pendingMandatoryStep === "OPEN_LEVEL_2_ALBUM" && !worldMapMessage && <FtueCoachmark
+        icon={null}
+        title="Open your Album"
+        message="Tap Albums to place your new stickers."
+        targetRef={albumButtonRef}
+        gesture="tap"
+        messageOpen={false}
+        reducedMotion={prefersReducedMotion}
+        testId="level-2-album-gesture"
       />}
     </main>;
   }
@@ -2432,6 +2445,10 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
           onOpenPack={() => {
             playSfx("pack_open", { duckMs: 1250 });
             updateFtueProgress((current) => openOceanDiscoveryPack(dismissOceanPackMessage(current)));
+          }}
+          onStartStickerReveal={() => {
+            playSfx("ui_tap");
+            updateFtueProgress(beginOceanStickerReveal);
           }}
           onOpenAlbum={() => {
             updateFtueProgress((current) => beginLevelTwoAlbumGuide(dismissOceanAlbumMessage(current)));
@@ -2705,7 +2722,7 @@ function OceanStickerVisual({ sticker, missing = false }: { sticker: OceanDiscov
   return <span className={styles.oceanStickerVisual} data-missing={missing ? "true" : undefined} aria-hidden="true">{OCEAN_STICKER_SYMBOLS[sticker]}</span>;
 }
 
-function OceanRewardExperience({ level, phase, summary, revealCount, collectedCount, reducedMotion, onContinueResults, onOpenPack, onOpenAlbum, onFinish }: {
+function OceanRewardExperience({ level, phase, summary, revealCount, collectedCount, reducedMotion, onContinueResults, onOpenPack, onStartStickerReveal, onOpenAlbum, onFinish }: {
   level: number;
   phase: Exclude<OceanRewardPhase, null>;
   summary: V3RunSummary;
@@ -2714,20 +2731,23 @@ function OceanRewardExperience({ level, phase, summary, revealCount, collectedCo
   reducedMotion: boolean;
   onContinueResults: () => void;
   onOpenPack: () => void;
+  onStartStickerReveal: () => void;
   onOpenAlbum: () => void;
   onFinish: () => void;
 }) {
   const stickers = oceanStickersForLevel(level);
   const showingResults = phase === "RESULTS";
   const showingPack = phase === "PACK_READY";
+  const showingStickerAnnouncement = phase === "STICKER_READY";
   const showingStickers = phase === "STICKER_REVEAL" || phase === "ALBUM_ACTIVATED";
   const safeRevealCount = Math.max(0, Math.min(3, revealCount));
   if (showingResults) return <ConquestCompletePanel summary={summary} title={`LEVEL ${level} COMPLETE!`} cta="CONTINUE TO OCEAN PACK" onContinue={onContinueResults} />;
+  if (showingStickerAnnouncement) return <ConceptCard title="New Ocean Stickers!" message="Three new treasures are ready for your Ocean Album." cta="REVEAL THEM" onDismiss={onStartStickerReveal} testId="ocean-stickers-announcement" />;
   return <section className={`${base.summaryCard} ${styles.summaryCard} ${styles.ftueSummaryCard} ${styles.oceanRewardCard}`} role="dialog" aria-modal="true" aria-labelledby="ocean-reward-title" data-phase={phase} data-reduced-motion={reducedMotion ? "true" : undefined}>
     <div className={styles.summaryRays} aria-hidden="true" />
     <span className={`${base.kicker} ${styles.summaryKicker}`}>OCEAN KINGDOM · LEVEL {level}</span>
     <h1 id="ocean-reward-title">{phase === "KINGDOM_COMPLETE" ? "OCEAN ALBUM COMPLETE!" : showingPack ? "OCEAN PACK EARNED!" : "NEW OCEAN STICKERS"}</h1>
-    {showingPack && <div className={styles.levelOnePackSection}><p>Tap the pack when you are ready.</p><button onClick={onOpenPack} aria-label="Open Ocean sticker pack"><span className={styles.levelOnePackArtwork}><DiscoveryArtwork kind="album" /><i>OCEAN</i><b>STICKER PACK</b></span></button></div>}
+    {showingPack && <div className={styles.levelOnePackSection}><p>Tap the pack when you are ready.</p><button onClick={onOpenPack} aria-label="Open Ocean sticker pack"><img className={styles.oceanDiscoveryPack} src="/tutorial/ocean-discovery-pack-v2.png" alt="" /></button></div>}
     {showingStickers && <div className={styles.levelOneStickerReveal} aria-live="polite"><div className={styles.levelOneAlbumTray}><DiscoveryArtwork kind="album" /><span>{Math.min(12, collectedCount + safeRevealCount)}/12 OCEAN STICKERS</span></div><div className={styles.levelOneStickerRow}>{stickers.map((sticker, index) => { const revealed = index < safeRevealCount; return <article key={sticker} data-revealed={revealed ? "true" : undefined}>{revealed ? <OceanStickerVisual sticker={sticker} /> : <OceanStickerVisual sticker={sticker} missing />}<b>{revealed ? OCEAN_STICKER_LABELS[sticker] : "Mystery"}</b></article>; })}</div>{phase === "ALBUM_ACTIVATED" && <div className={styles.levelOneAlbumActivated}><h2>Your Ocean Album is ready</h2><p>Visit the real Album area to place your first stickers.</p><button onClick={onOpenAlbum}><DiscoveryArtwork kind="album" /><span>GO TO ALBUM</span></button></div>}</div>}
     {phase === "PACK_COMPLETE" && <div className={styles.oceanPackComplete}><div className={styles.levelOneStickerRow}>{stickers.map((sticker) => <article data-revealed="true" key={sticker}><OceanStickerVisual sticker={sticker} /><b>{OCEAN_STICKER_LABELS[sticker]}</b></article>)}</div><p>{collectedCount}/12 Ocean stickers collected.</p><button className={`${base.primaryCta} ${styles.summaryPrimaryCta}`} onClick={onFinish}><span>CONTINUE</span></button></div>}
     {phase === "KINGDOM_COMPLETE" && <div className={styles.oceanKingdomComplete}><div className={styles.levelOneStickerRow}>{stickers.map((sticker) => <article data-revealed="true" key={sticker}><OceanStickerVisual sticker={sticker} /><b>{OCEAN_STICKER_LABELS[sticker]}</b></article>)}</div><p>You discovered the Ocean Kingdom. The Forest gate is now open.</p><button className={`${base.primaryCta} ${styles.summaryPrimaryCta}`} onClick={onFinish}><span>SEE THE GATE</span></button></div>}

@@ -193,6 +193,7 @@ const FTUE_VISUAL_STEPS: readonly FtueVisualStep[] = [
 const OCEAN_REWARD_PHASES: readonly Exclude<OceanRewardPhase, null>[] = [
   "RESULTS",
   "PACK_READY",
+  "STICKER_READY",
   "STICKER_REVEAL",
   "ALBUM_ACTIVATED",
   "ALBUM_GUIDE",
@@ -419,8 +420,13 @@ export function openOceanDiscoveryPack(progress: FtueProgress): FtueProgress {
   if (!progress.oceanRewardLevel || progress.oceanRewardPhase !== "PACK_READY" || !progress.oceanPackMessageDismissed) return progress;
   return {
     ...(progress.oceanRewardLevel === 2 ? completeFtueVisualStep(progress, "level-2-pack-opened") : progress),
-    oceanRewardPhase: "STICKER_REVEAL",
+    oceanRewardPhase: "STICKER_READY",
   };
+}
+
+export function beginOceanStickerReveal(progress: FtueProgress): FtueProgress {
+  if (!progress.oceanRewardLevel || progress.oceanRewardPhase !== "STICKER_READY") return progress;
+  return { ...progress, oceanRewardPhase: "STICKER_REVEAL" };
 }
 
 export function dismissOceanAlbumMessage(progress: FtueProgress): FtueProgress {

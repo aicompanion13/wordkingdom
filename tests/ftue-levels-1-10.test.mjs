@@ -6,6 +6,7 @@ import {
   acknowledgeLevelOneResults,
   beginLevelTwoAlbumGuide,
   beginLevelTwoAlbumReveal,
+  beginOceanStickerReveal,
   completeFtueVisualStep,
   completeOceanStickerPack,
   continueToOceanPack,
@@ -30,7 +31,7 @@ const result = { score: 1200, combo: 1.5, correct: 8, attempts: 9, hints: 0, lon
 function openAndRevealPack(state) {
   let next = continueToOceanPack(state);
   next = dismissOceanPackMessage(next);
-  next = openOceanDiscoveryPack(next);
+  next = beginOceanStickerReveal(openOceanDiscoveryPack(next));
   for (let index = 0; index < 3; index += 1) next = revealNextOceanSticker(next);
   return completeOceanStickerPack(next);
 }
@@ -75,7 +76,9 @@ test("Levels 2–5 packs are deterministic, unique, and one-time", () => {
 test("Level 2 pack cannot open before its persistent message is dismissed", () => {
   const ready = continueToOceanPack(recordOceanLevelCompletion(createFtueProgress(), 2, result));
   assert.equal(openOceanDiscoveryPack(ready).oceanRewardPhase, "PACK_READY");
-  assert.equal(openOceanDiscoveryPack(dismissOceanPackMessage(ready)).oceanRewardPhase, "STICKER_REVEAL");
+  const opened = openOceanDiscoveryPack(dismissOceanPackMessage(ready));
+  assert.equal(opened.oceanRewardPhase, "STICKER_READY");
+  assert.equal(beginOceanStickerReveal(opened).oceanRewardPhase, "STICKER_REVEAL");
 });
 
 test("Level 2 Album guide waits for the real Album action", () => {
@@ -107,7 +110,7 @@ test("Ocean Kingdom remains incomplete through Level 4 and completes at Level 5"
 });
 
 test("reload preserves an interrupted deterministic sticker reveal", () => {
-  let state = openOceanDiscoveryPack(dismissOceanPackMessage(continueToOceanPack(recordOceanLevelCompletion(createFtueProgress(), 3, result))));
+  let state = beginOceanStickerReveal(openOceanDiscoveryPack(dismissOceanPackMessage(continueToOceanPack(recordOceanLevelCompletion(createFtueProgress(), 3, result)))));
   state = revealNextOceanSticker(revealNextOceanSticker(state));
   const restored = parseFtueProgress(serializeFtueProgress(state));
   assert.equal(restored.oceanRewardLevel, 3);
@@ -205,4 +208,18 @@ test("active FTUE sources contain no mojibake replacement sequences", () => {
     const source = fs.readFileSync(path.resolve(file), "utf8");
     assert.doesNotMatch(source, /Ã|â|ð|�/, file);
   }
+});
+
+
+test("Ocean reward visuals use the transparent pack, scroll announcement, real Album finger, and staged transition", () => {
+  const source = fs.readFileSync(path.resolve("app/v3/WordKingdomV3.tsx"), "utf8");
+  const styles = fs.readFileSync(path.resolve("app/v3/V3.module.css"), "utf8");
+  assert.match(source, /ocean-discovery-pack-v2\.png/);
+  assert.doesNotMatch(source, /<i>OCEAN<\/i><b>STICKER PACK<\/b>/);
+  assert.match(source, /title="New Ocean Stickers!"/);
+  assert.match(source, /testId="level-2-album-gesture"/);
+  assert.match(source, /targetRef=\{albumButtonRef\}/);
+  assert.match(source, /destinationSwitchMs/);
+  assert.match(source, /setAlbumPageLevel\(level\)[\s\S]*setAlbumTransition\(null\)/);
+  assert.match(styles, /\.oceanDiscoveryPack/);
 });
