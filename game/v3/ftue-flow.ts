@@ -101,7 +101,9 @@ export type FtueVisualStep =
   | "level-2-pack-opened"
   | "level-2-album-activated"
   | "level-2-album-guidance"
-  | "level-2-album-view";
+  | "level-2-album-view"
+  | "level-2-album-card"
+  | "forest-welcome-guidance";
 
 export type FtueLevelDefinition = {
   level: number;

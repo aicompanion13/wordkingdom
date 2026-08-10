@@ -140,12 +140,13 @@ test("tutorials unlock in order once and reset clears all meta progress", async 
   const defaultPvp = await json("../game/v3/data/pvp_state.json");
   const manager = new PvpManager(defaultPvp, 2);
   assert.equal(manager.pendingTutorial(1), null);
+  assert.equal(manager.pendingTutorial(3), "raid");
   assert.equal(manager.pendingTutorial(5), null);
   assert.equal(manager.pendingTutorial(6), "shield");
   assert.equal(manager.pendingTutorial(7), "attack");
   assert.equal(manager.pendingTutorial(8), "steal");
   assert.equal(manager.pendingTutorial(9), null);
-  assert.equal(manager.pendingTutorial(10), "raid");
+  assert.equal(manager.pendingTutorial(10), null);
   defaultPvp.badgeProgress = { attack: 2, steal: 1, shield: 2, raid: 2 };
   defaultPvp.readyActions = { attack: 3, steal: 2, shield: 1, raid: 4 };
   defaultPvp.protectedCardIds = ["ocean_01"];
@@ -190,7 +191,7 @@ test("legacy level briefing data reveals no hidden word information", async () =
 test("Objective rail does not render badge icons or reveal reward-bearing words", async () => {
   const source = await readFile(resolve(process.cwd(), "app/v3/WordKingdomV3.tsx"), "utf8");
   const railStart = source.indexOf("<section className={styles.themeObjectiveRail}");
-  const railEnd = source.indexOf("{contextualPrompt &&", railStart);
+  const railEnd = source.indexOf("{!isGoldenRun && visiblePowers", railStart);
   const rail = source.slice(railStart, railEnd);
   assert.ok(rail.length > 0);
   assert.doesNotMatch(rail, /word\.badges|data-badge|BADGES\[/);

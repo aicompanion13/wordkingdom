@@ -119,23 +119,23 @@ export function ConceptCard({
   useEffect(() => {
     if (!messageOpen) return;
     ctaRef.current?.focus();
-    const onKeyDown = (event: KeyboardEvent) => { if (event.key === "Escape") onDismiss(); };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
   }, [messageOpen, onDismiss]);
 
   if (!messageOpen) return null;
   return <div
     className={tutorialStyles.overlay}
     data-testid={testId}
-    onClick={(event) => { if (event.target === event.currentTarget) onDismiss(); }}
+    onKeyDown={(event) => {
+      if (event.key !== "Tab") return;
+      event.preventDefault();
+      ctaRef.current?.focus();
+    }}
   >
     <section className={tutorialStyles.card} role="dialog" aria-modal="true" aria-labelledby="tutorial-card-title">
-      <img className={tutorialStyles.frame} src="/tutorial/word-kingdom-tutorial-card-frame.webp" alt="" />
-      <button className={tutorialStyles.close} type="button" onClick={onDismiss} aria-label="Close">×</button>
+      <img className={tutorialStyles.frame} src="/tutorial/progression-card-frame.png" alt="" />
+      <div className={tutorialStyles.illustration}><span className={tutorialStyles.topicIcon} aria-hidden="true">{icon}</span></div>
       <div className={tutorialStyles.copy}>
-        <span className={tutorialStyles.topicIcon} aria-hidden="true">{icon}</span>
-        <h2 id="tutorial-card-title" className={tutorialStyles.title} data-text={title}>{title}</h2>
+        <h2 id="tutorial-card-title" className={tutorialStyles.title} data-text={title} aria-label={title}>{title}</h2>
         <p className={tutorialStyles.body}>{message}</p>
       </div>
       <div className={tutorialStyles.actions}>

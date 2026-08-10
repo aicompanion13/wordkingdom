@@ -56,6 +56,7 @@ import {
   createGoldenTutorialState,
   FTUE_CAUSE_EXPLANATION_MS,
   FTUE_DRAG_NUDGE_MS,
+  FTUE_HINT_OFFER_MS,
   FTUE_HINT_LIMIT,
   ftueGuidanceEnabled,
   ftueStallStage,
@@ -65,6 +66,8 @@ import {
   markFtueBeat,
   markIntroVideoSeen,
   migrateFtueProgress,
+  dismissOceanAlbumMessage,
+  dismissOceanPackMessage,
   finishOceanReward,
   openOceanDiscoveryPack,
   parseFtueProgress,
@@ -154,6 +157,57 @@ const RAID_BOX_ART: Record<"locked" | "jackpot" | "medium" | "small" | "empty", 
   empty: "/raid-boxes/box-empty.webp",
 };
 
+type WorldMapId = "ocean" | "forest";
+type WorldMapMessageId = "welcome" | "album" | "forest" | null;
+type WorldMapDefinition = {
+  id: WorldMapId;
+  chapterId: string;
+  title: string;
+  levels: readonly number[];
+  background: string;
+  levelHotspots: Record<number, { x: number; y: number; milestone?: "raid" | "album" }>;
+  album: { x: number; y: number };
+  raidChest: { x: number; y: number };
+  gate: { x: number; y: number };
+};
+
+const WORLD_MAPS: Record<WorldMapId, WorldMapDefinition> = {
+  ocean: {
+    id: "ocean",
+    chapterId: "chapter_ocean",
+    title: "OCEAN KINGDOM",
+    levels: [1, 2, 3, 4, 5],
+    background: "/world-maps/ocean-kingdom-map.webp",
+    levelHotspots: {
+      1: { x: 29.5, y: 76.8 },
+      2: { x: 45, y: 66.7 },
+      3: { x: 48.3, y: 54.4, milestone: "raid" },
+      4: { x: 47.8, y: 39.5 },
+      5: { x: 72, y: 29.2, milestone: "album" },
+    },
+    album: { x: 80, y: 22.5 },
+    raidChest: { x: 66.5, y: 55.5 },
+    gate: { x: 50, y: 16.8 },
+  },
+  forest: {
+    id: "forest",
+    chapterId: "chapter_forest",
+    title: "FOREST KINGDOM",
+    levels: [6, 7, 8, 9, 10],
+    background: "/world-maps/forest-kingdom-map.webp",
+    levelHotspots: {
+      6: { x: 46.5, y: 77.8 },
+      7: { x: 46, y: 65.3, milestone: "raid" },
+      8: { x: 40.5, y: 52.1 },
+      9: { x: 48.5, y: 40.5 },
+      10: { x: 76, y: 27, milestone: "album" },
+    },
+    album: { x: 80, y: 22.5 },
+    raidChest: { x: 66, y: 65 },
+    gate: { x: 50, y: 16.5 },
+  },
+};
+
 const POWER_ORDER: readonly BadgeType[] = ["shield", "attack", "steal", "raid"];
 const RAID_FIRST_LEVEL = 3;
 const RAID_GUARANTEED_INTERVAL = 4;
@@ -177,11 +231,7 @@ type PvpOverlayState =
   | { kind: "shield"; protectedCardId: string | null; result: IncomingCardActionResult | null; tutorial: boolean };
 type AlbumTransitionState = { level: number; kind: "bubbles" | "vines" | "fade" };
 type LevelOneCoachState =
-  | { kind: "welcome"; messageOpen: boolean }
   | { kind: "first-word"; messageOpen: boolean }
-  | { kind: "level-2-rules"; messageOpen: boolean }
-  | { kind: "level-3-raid"; messageOpen: boolean }
-  | { kind: "level-4-hint-economy"; messageOpen: boolean }
   | { kind: "transformation"; messageOpen: boolean }
   | null;
 
@@ -290,6 +340,10 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const [levelOneCoach, setLevelOneCoach] = useState<LevelOneCoachState>(null);
   const [celebration, setCelebration] = useState<CelebrationBannerKind | null>(null);
   const [celebrationLeaving, setCelebrationLeaving] = useState(false);
+  const [worldMapMessage, setWorldMapMessage] = useState<WorldMapMessageId>(null);
+  const [worldMapFocus, setWorldMapFocus] = useState<"level" | "album" | "gate" | null>(null);
+  const [worldMapTransition, setWorldMapTransition] = useState(false);
+  const [shakingMapTarget, setShakingMapTarget] = useState<string | null>(null);
 
   const { playSfx, playTileSelect, setMusic } = useWordKingdomAudio({
     sfxEnabled: player.settings.sfx,
@@ -317,7 +371,6 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const hintsUsedRef = useRef(0);
   const selection = useRef<string[]>([]);
   const tutorialResume = useRef<(() => void) | null>(null);
-  const levelOneAutoStarted = useRef(false);
   const dragStart = useRef<Position | null>(null);
   const dragging = useRef(false);
   const celebrationTimeout = useRef<number | undefined>(undefined);
@@ -335,6 +388,8 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const ftueRecoveryAttempted = useRef(false);
   const albumButtonRef = useRef<HTMLButtonElement>(null);
   const levelPlayButtonRef = useRef<HTMLButtonElement>(null);
+  const mapAlbumButtonRef = useRef<HTMLButtonElement>(null);
+  const mapGateButtonRef = useRef<HTMLButtonElement>(null);
   const hintButtonRef = useRef<HTMLButtonElement>(null);
   const audibleDialogRef = useRef<string | null>(null);
 
@@ -480,6 +535,21 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     const timer = window.setInterval(() => setClock(Date.now()), 1000);
     return () => window.clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    if (screen !== "hub" || tab !== "home" || loginIntroOpen || !hydrated || !ftueReady || worldMapMessage) return;
+    if (player.currentLevel === 1 && !player.completedLevels.includes(1) && !ftueProgress.completedVisualSteps.includes("welcome-guidance")) {
+      setWorldMapMessage("welcome");
+      return;
+    }
+    if (ftueProgress.pendingMandatoryStep === "OPEN_LEVEL_2_ALBUM" && !ftueProgress.completedVisualSteps.includes("level-2-album-card")) {
+      setWorldMapMessage("album");
+      return;
+    }
+    if (viewChapterId === "chapter_forest" && !ftueProgress.completedVisualSteps.includes("forest-welcome-guidance")) {
+      setWorldMapMessage("forest");
+    }
+  }, [ftueProgress.completedVisualSteps, ftueProgress.pendingMandatoryStep, ftueReady, hydrated, loginIntroOpen, player.completedLevels, player.currentLevel, screen, tab, viewChapterId, worldMapMessage]);
 
   useEffect(() => () => scoreIdleUnsubscribe.current?.(), []);
 
@@ -645,9 +715,9 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
 
   useEffect(() => {
     const hintTutorialComplete = ftueProgress.completedTutorials.includes("level-3-hint");
-    if (screen !== "board" || currentRunLevel !== 3 || hintTutorialComplete || boardLocked) return;
+    if (screen !== "board" || currentRunLevel < 1 || currentRunLevel > 3 || hintTutorialComplete || boardLocked) return;
     const idleMs = Math.max(0, clock - ftueLastUsefulAt.current);
-    if (idleMs >= 8_000) setContextualPrompt(true);
+    if (idleMs >= FTUE_HINT_OFFER_MS) setContextualPrompt(true);
   }, [boardLocked, clock, currentRunLevel, ftueProgress.completedTutorials, screen]);
 
   const scheduleJuice = (callback: () => void, delayMs: number) => {
@@ -858,16 +928,8 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     setGoldenRun(isGoldenFtueLevel);
     setGoldenReplayPlan([]);
     setGoldenTutorial(createGoldenTutorialState(ftueProgress));
-    setLevelOneCoach(isGoldenFtueLevel && ftueGuidanceEnabled(ftueProgressRef.current) && !ftueProgressRef.current.completedVisualSteps.includes("welcome-guidance")
-      ? { kind: "welcome", messageOpen: true }
-      : isGoldenFtueLevel && ftueGuidanceEnabled(ftueProgressRef.current) && !ftueProgressRef.current.completedVisualSteps.includes("first-word-guidance")
+    setLevelOneCoach(isGoldenFtueLevel && ftueGuidanceEnabled(ftueProgressRef.current) && !ftueProgressRef.current.completedVisualSteps.includes("first-word-guidance")
       ? { kind: "first-word", messageOpen: true }
-      : node.level === 2 && ftueGuidanceEnabled(ftueProgressRef.current) && !ftueProgressRef.current.completedVisualSteps.includes("level-2-rules-guidance")
-      ? { kind: "level-2-rules", messageOpen: true }
-      : node.level === 3 && ftueGuidanceEnabled(ftueProgressRef.current) && !ftueProgressRef.current.completedVisualSteps.includes("level-3-raid-guidance")
-      ? { kind: "level-3-raid", messageOpen: true }
-      : node.level === HINT_POOL_INTRO_LEVEL && ftueGuidanceEnabled(ftueProgressRef.current) && !ftueProgressRef.current.completedVisualSteps.includes("level-4-hint-economy-guidance")
-      ? { kind: "level-4-hint-economy", messageOpen: true }
       : null);
     ftueLastUsefulAt.current = activatedAt;
     ftueFirstChangeAt.current = 0;
@@ -908,12 +970,6 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     setSelectedNode(null);
     startRun(node);
   };
-
-  useEffect(() => {
-    if (loginIntroOpen || !hydrated || !ftueReady || levelOneAutoStarted.current || screen !== "hub" || player.currentLevel !== 1 || player.completedLevels.includes(1) || ftueProgress.level1CompletionResult) return;
-    levelOneAutoStarted.current = true;
-    startRun(track.node(1));
-  }, [ftueReady, hydrated, loginIntroOpen, player.completedLevels, player.currentLevel, screen]);
 
   const startGeneratedLevel = (seed: number) => {
     const level = GENERATED_LEVELS.find((candidate) => candidate.seed === seed);
@@ -1060,28 +1116,6 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     updateFtueProgress((current) => completeFtueVisualStep(current, step));
   };
 
-  const dismissWelcomeCoach = () => {
-    markFtueVisualStep("welcome-guidance");
-    setLevelOneCoach(ftueGuidanceEnabled(ftueProgressRef.current) && !ftueProgressRef.current.completedVisualSteps.includes("first-word-guidance")
-      ? { kind: "first-word", messageOpen: true }
-      : null);
-  };
-
-  const dismissLevelTwoRulesCoach = () => {
-    markFtueVisualStep("level-2-rules-guidance");
-    setLevelOneCoach(null);
-  };
-
-  const dismissLevelThreeRaidCoach = () => {
-    markFtueVisualStep("level-3-raid-guidance");
-    setLevelOneCoach(null);
-  };
-
-  const dismissHintEconomyCoach = () => {
-    markFtueVisualStep("level-4-hint-economy-guidance");
-    setLevelOneCoach(null);
-  };
-
   const dismissHintCoach = () => {
     markTutorialComplete("level-3-hint");
     setContextualPrompt(false);
@@ -1132,6 +1166,64 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     setAlbumPageLevel(null);
     setTab("home");
     setToast(viewedLevel >= 2 && viewedLevel <= 5 ? "Ocean Album saved." : `Level ${viewedLevel} Album page viewed.`);
+  };
+
+  const focusWorldMapTarget = (target: "level" | "album" | "gate") => {
+    setWorldMapFocus(target);
+    window.setTimeout(() => {
+      const ref = target === "level" ? levelPlayButtonRef : target === "album" ? mapAlbumButtonRef : mapGateButtonRef;
+      ref.current?.focus();
+    }, 80);
+  };
+
+  const continueWorldMapMessage = () => {
+    if (worldMapMessage === "welcome") {
+      markFtueVisualStep("welcome-guidance");
+      setWorldMapMessage(null);
+      focusWorldMapTarget("level");
+      return;
+    }
+    if (worldMapMessage === "album") {
+      markFtueVisualStep("level-2-album-card");
+      setWorldMapMessage(null);
+      focusWorldMapTarget("album");
+      return;
+    }
+    if (worldMapMessage === "forest") {
+      markFtueVisualStep("forest-welcome-guidance");
+      setWorldMapMessage(null);
+      focusWorldMapTarget("level");
+    }
+  };
+
+  const shakeWorldMapTarget = (target: string) => {
+    setShakingMapTarget(target);
+    window.setTimeout(() => setShakingMapTarget((current) => current === target ? null : current), 420);
+  };
+
+  const selectWorldMapLevel = (level: number) => {
+    const complete = player.completedLevels.includes(level);
+    const unlocked = level === player.currentLevel || complete;
+    if (!unlocked) {
+      shakeWorldMapTarget(`level-${level}`);
+      return;
+    }
+    setWorldMapFocus(null);
+    requestLevelStart(track.node(level));
+  };
+
+  const enterForestMap = () => {
+    const forestUnlocked = player.completedLevels.includes(5) && ftueProgressRef.current.oceanCollectedStickers.length === 12;
+    if (!forestUnlocked) {
+      shakeWorldMapTarget("gate");
+      return;
+    }
+    setWorldMapFocus(null);
+    setWorldMapTransition(true);
+    window.setTimeout(() => {
+      setViewChapterId("chapter_forest");
+      setWorldMapTransition(false);
+    }, prefersReducedMotion ? 220 : 600);
   };
 
   const finishRun = () => {
@@ -1922,7 +2014,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     ftueFirstChangeAt.current = 0;
     setFtueStall("NONE");
     setFtueFocusIds([]);
-    setLevelOneCoach(canRestartGuidanceHere ? { kind: "welcome", messageOpen: true } : null);
+    setLevelOneCoach(canRestartGuidanceHere ? { kind: "first-word", messageOpen: true } : null);
     if (canRestartGuidanceHere) setMessage("Swipe across the letters to find SHORE.");
     setToast("FTUE guidance reset safely");
   };
@@ -2118,31 +2210,41 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   };
 
   if (screen === "hub") {
-    const albumGuided = ftueProgress.pendingMandatoryStep === "OPEN_LEVEL_2_ALBUM";
+    const worldId: WorldMapId = viewChapterId === "chapter_forest" ? "forest" : "ocean";
+    const world = WORLD_MAPS[worldId];
+    const forestUnlocked = player.completedLevels.includes(5) && ftueProgress.oceanCollectedStickers.length === 12;
     return <main className={`${base.shell} ${base.hubShell} ${styles.v3Shell}`} style={{ "--chapter-accent": viewedChapter.accent } as CSSProperties} onClickCapture={playUiTap}>
-      <TopBar player={player} locked={albumGuided} onShop={() => setTab("shop")} onSettings={() => setSettingsOpen(true)} />
-      <section className={`${base.hubContent} ${styles.hubContent}`}>
-        {tab === "home" && <HomeMenu player={player} hydrated={hydrated && ftueReady && !albumGuided} playRef={levelPlayButtonRef} guideLevelTwo={false} onPlay={() => requestLevelStart(track.node(player.currentLevel))} />}
+      <TopBar player={player} locked={Boolean(worldMapMessage)} onShop={() => setTab("shop")} onSettings={() => setSettingsOpen(true)} />
+      <section className={`${base.hubContent} ${styles.hubContent} ${tab === "home" ? styles.worldMapHubContent : styles.panelHubContent}`}>
+        {tab === "home" && <WorldMapMenu
+          world={world}
+          player={player}
+          hydrated={hydrated && ftueReady}
+          albumUnlocked={ftueProgress.albumUnlocked}
+          forestUnlocked={forestUnlocked}
+          currentLevelRef={levelPlayButtonRef}
+          albumRef={mapAlbumButtonRef}
+          gateRef={mapGateButtonRef}
+          focusTarget={worldMapFocus}
+          shakingTarget={shakingMapTarget}
+          transitioning={worldMapTransition}
+          onLevel={selectWorldMapLevel}
+          onAlbum={() => {
+            if (!ftueProgress.albumUnlocked) { shakeWorldMapTarget("album"); return; }
+            setWorldMapFocus(null);
+            openLatestAlbumPage();
+          }}
+          onGate={() => worldId === "ocean" ? enterForestMap() : shakeWorldMapTarget("gate")}
+        />}
         {tab === "albums" && <AlbumPanel albums={albums} pages={albumPages} pageLevel={albumPageLevel} player={player} pvp={pvpState} activeChapter={activeChapter} ftueProgress={ftueProgress} reducedMotion={prefersReducedMotion} onContinuePage={continueFromAlbumPage} onOpenPage={openAlbumPage} unlockedPages={ftueProgress.unlockedAlbumPages} onClaim={claimSet} onVault={redeemVault} onClaimAlbum={claimAlbum} onRepair={repairCard} />}
         {tab === "shop" && <PackShop player={player} onBuy={buyPack} />}
         {tab === "teams" && <SimplePanel eyebrow="SOCIAL KINGDOM" title="Teams" copy="Trade duplicates, request energy, and conquer together." items={[["🦁", "Royal Wordsmiths", "42 Members"], ["⚡", "Energy Requests", "3 waiting"], ["🃏", "Card Trades", "7 offers"]]} onAction={() => setToast("Request sent to the Royal Wordsmiths.")} />}
         {tab === "events" && <SimplePanel eyebrow="LIVE NOW" title="Events" copy="Timed races now award themed packs and Vault Stars." items={[["⚔️", "Raid Tournament", "Ends in 2h"], ["⭐", "Star Race", "8 stars to lead"], ["🃏", "Album Sprint", "2 days left"]]} onAction={() => setToast("Event pinned to your home rail.")} />}
       </section>
-      <BottomNav active={tab} albumButtonRef={albumButtonRef} albumUnlocked={ftueProgress.albumUnlocked} albumNotifications={albumUnseenCount} guideAlbum={albumGuided} tutorialLock={albumGuided} onChange={(nextTab) => {
+      <BottomNav active={tab} albumButtonRef={albumButtonRef} albumUnlocked={ftueProgress.albumUnlocked} albumNotifications={albumUnseenCount} guideAlbum={false} tutorialLock={false} onChange={(nextTab) => {
         if (nextTab === "albums") openLatestAlbumPage();
         else setTab(nextTab);
       }} />
-      {ftueProgress.pendingMandatoryStep === "OPEN_LEVEL_2_ALBUM" && <FtueCoachmark
-        icon={<DiscoveryArtwork kind="album" />}
-        title="Your Ocean Album is ready"
-        message="Tap Album to see the three stickers you discovered."
-        targetRef={albumButtonRef}
-        gesture="tap"
-        dim
-        reducedMotion={prefersReducedMotion}
-        messageOpen={false}
-        testId="level-2-album-guide"
-      />}
       {tab === "home" && <button className={base.hubDebugToggle} onClick={() => setDebugOpen((open) => !open)}>⚙ Royal QA</button>}
       {debugOpen && tab === "home" && <div className={`${base.hubDebugDock} ${styles.debugDock}`}>
         <b>LOCAL QA TOOLS</b>
@@ -2177,6 +2279,9 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       {pvpOverlay?.tutorial && <PowerTutorialPrompt kind={pvpOverlay.kind} />}
       {toast && <div className={base.toast} role="status">{toast}</div>}
       {loginIntroOpen && <LoginIntro onClose={() => { setLoginIntroOpen(false); updateFtueProgress(markIntroVideoSeen); }} />}
+      {worldMapMessage === "welcome" && <ConceptCard title="Welcome to Word Kingdom" message="Follow the path, solve word levels and fill each kingdom's album." cta="LET'S GO!" icon="👑" onDismiss={continueWorldMapMessage} testId="world-map-welcome" />}
+      {worldMapMessage === "album" && <ConceptCard title="Your Album Is Open" message="Your stickers reveal each kingdom. Tap the album to see what you collected." cta="SHOW ME" icon={<DiscoveryArtwork kind="album" />} onDismiss={continueWorldMapMessage} testId="world-map-album" />}
+      {worldMapMessage === "forest" && <ConceptCard title="Forest Kingdom" message="A new album and five new levels are waiting." cta="LET'S GO!" icon="🌿" onDismiss={continueWorldMapMessage} testId="world-map-forest" />}
     </main>;
   }
 
@@ -2196,7 +2301,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
           onContinue={() => {
             updateFtueProgress(acknowledgeLevelOneResults);
             setSummary(null);
-            requestLevelStart(track.node(2));
+            returnHome();
           }}
         />
       </main>;
@@ -2223,21 +2328,25 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
           }}
           onOpenPack={() => {
             playSfx("pack_open", { duckMs: 1250 });
-            updateFtueProgress(openOceanDiscoveryPack);
+            updateFtueProgress((current) => openOceanDiscoveryPack(dismissOceanPackMessage(current)));
           }}
           onOpenAlbum={() => {
-            updateFtueProgress(beginLevelTwoAlbumGuide);
+            updateFtueProgress((current) => beginLevelTwoAlbumGuide(dismissOceanAlbumMessage(current)));
             setSummary(null);
             returnHome();
           }}
           onFinish={() => {
             if (summary.node.level === 5 && economy.current) {
               persist(economy.current.unlockChapter("chapter_forest"));
-              setToast("Ocean Kingdom discovered! Forest Kingdom unlocked.");
+              setToast("Ocean Album complete. The Forest gate is open.");
             }
             updateFtueProgress(finishOceanReward);
             setSummary(null);
             returnHome();
+            if (summary.node.level === 5) {
+              setViewChapterId("chapter_ocean");
+              focusWorldMapTarget("gate");
+            }
           }}
         />
       </main>;
@@ -2247,7 +2356,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       <div className={styles.summaryAtmosphere} aria-hidden="true"><i /><i /><i /><i /><i /><span>🪙</span><span>🪙</span></div>
       {summary.objectiveComplete && <CelebrationBurst />}
       <KingdomPopup
-        title={summary.objectiveComplete ? "Conquest Complete!" : "Objective Not Met"}
+        title={summary.objectiveComplete ? summary.node.level === 10 ? "Forest Album Complete!" : "Conquest Complete!" : "Objective Not Met"}
         subtitle={`LEVEL ${summary.node.level} · ${summary.node.title}`}
         icon={summary.objectiveComplete ? "👑" : "🛡️"}
         tone={summary.objectiveComplete ? "success" : "setback"}
@@ -2255,13 +2364,13 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
         onClose={returnHome}
         secondaryText="Return to Conquest Track"
         onSecondary={returnHome}
-        ctaText={<><span>{summary.objectiveComplete ? summary.node.level === 1 && ftueProgress.pendingMandatoryStep ? "CONTINUE" : `Play Level ${player.currentLevel}` : "Retry Level"}</span><small>{summary.objectiveComplete && summary.node.level === 1 && ftueProgress.pendingMandatoryStep ? "OPEN YOUR NEW ALBUM" : "1 ⚡ Ticket"}</small></>}
+        ctaText={<><span>{summary.objectiveComplete ? `RETURN TO ${summary.node.level <= 5 ? "OCEAN" : "FOREST"} MAP` : "Retry Level"}</span><small>{summary.objectiveComplete ? summary.node.level === 10 ? "KINGDOM DISCOVERED" : "NEXT LEVEL UNLOCKED" : "1 ⚡ Ticket"}</small></>}
         onCta={() => {
           if (!summary.objectiveComplete) requestLevelStart(summary.node);
-          else if (summary.node.level === 1 && ftueProgressRef.current.pendingMandatoryStep) returnHome();
-          else requestLevelStart(track.node(player.currentLevel));
+          else returnHome();
         }}
       >
+        {summary.objectiveComplete && summary.node.level === 10 && <div className={styles.albumUnlockNotice}>🌿 <b>You discovered the Forest Kingdom.</b></div>}
         {summary.objectiveComplete && summary.node.level > 5 && summary.node.level <= 10 && <div className={styles.albumUnlockNotice}>📖 <b>New Album page unlocked!</b><button onClick={() => openAlbumPage(summary.node.level)}>OPEN</button></div>}
         <div className={`${base.stars} ${styles.summaryStars}`} aria-label={`${summary.stars} of 3 stars earned`}>{[1, 2, 3].map((star) => <span data-earned={star <= summary.stars && summary.objectiveComplete ? "true" : undefined} className={star <= summary.stars && summary.objectiveComplete ? base.starEarned : ""} key={star}>★</span>)}</div>
         <div className={`${base.summaryGrid} ${styles.royalSummaryGrid}`}><Result label="Score" value={formatNumber(summary.score)} /><Result label="Time" value={`${summary.elapsedSeconds}s`} /><Result label="Accuracy" value={`${Math.round(summary.accuracy * 100)}%`} /><Result label="Longest Word" value={summary.longestWord || "—"} /><Result label="Hints" value={String(summary.hints)} /><Result label="Objective" value={summary.objectiveComplete ? "Complete" : "Retry"} /></div>
@@ -2295,11 +2404,9 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     "--theme-background-image": chapterTheme.backgroundImage ? `url("${chapterTheme.backgroundImage}")` : "none",
   } as CSSProperties;
   return <main data-chapter-theme={chapterTheme.id} className={`${base.shell} ${base.boardShell} ${styles.boardShell} ${isGoldenRun ? styles.goldenBoard : ""} ${boardLocked ? styles.boardPaused : ""} ${juiceShake ? styles.juiceScreenShake : ""}`} style={chapterStyle} onClickCapture={playUiTap}>
-    {!(isGoldenRun && !player.completedLevels.includes(1))
-      && <GameTopBar player={player} timer={energyTimer(player, clock)} onBack={returnHome} onSettings={() => setSettingsOpen(true)} coinPulse={coinCounterPulse} />}
+    <GameTopBar player={player} timer={energyTimer(player, clock)} onBack={returnHome} onSettings={() => setSettingsOpen(true)} coinPulse={coinCounterPulse} />
     <section className={styles.chapterIdentity} aria-label={`${chapterTheme.chapterTitle}, Level ${node.level}`}>
       <div className={styles.chapterTopRow}>
-        {isGoldenRun && !player.completedLevels.includes(1) && <button className={styles.ftueInlineBack} onClick={returnHome} aria-label="Return to menu">‹</button>}
         <div className={styles.chapterBannerLine}>
           <i aria-hidden="true">{chapterTheme.ornaments[0]}</i>
           <h1>{chapterTheme.chapterTitle}</h1>
@@ -2314,18 +2421,6 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       <div className={styles.themeObjectiveHeading}><span>FIND</span><small>{activeWords.length} ACTIVE</small></div>
       <div className={styles.themeObjectiveWords}>{activeWords.map((word, index) => <div data-ftue-active-word="true" className={`${base.activeWordChip} ${goldenTutorial.recommendedObjectiveId === word.id ? styles.tutorialRecommendedWord : ""} ${goldenTutorial.localSuccessorObjectiveId === word.id ? styles.tutorialSuccessorWord : ""} ${ftueActive && ftueStall === "SUGGESTION" && index === 0 ? styles.ftueSuggestedWord : ""}`} aria-label={`${word.word}${goldenTutorial.recommendedObjectiveId === word.id ? ", recommended first word" : ""}`} key={word.id}><span>{word.word}</span></div>)}</div>
     </section>
-    {contextualPrompt && <FtueCoachmark
-      icon={<span aria-hidden="true">💡</span>}
-      title="Need a hint?"
-      message="If you're ever stuck, tap Hint to reveal your next move."
-      targetRef={hintButtonRef}
-      gesture="tap"
-      dim
-      messageOpen
-      onDismiss={dismissHintCoach}
-      reducedMotion={prefersReducedMotion}
-      testId="level-3-hint-guide"
-    />}
     {!isGoldenRun && visiblePowers.length > 0 && <div className={styles.mobilePowerProgress}><PowerProgress kinds={visiblePowers} badgeCounts={badgeCounts} readyActions={pvpState.readyActions} impactSlots={trayImpactSlots} /></div>}
     {node.level > 10 && <>
       <section className={`${base.runHeader} ${styles.runHeaderWithPreview}`}><div><span className={base.kicker}>{`${area.icon} ${area.displayName} · Level ${node.level}`}</span><h1>{node.kind === "BOSS" ? "Guardian Board" : "Living Board"}</h1></div><div className={styles.previewScoreHud}><span><small>SCORE</small><b>{formatNumber(score.score)}</b></span><i>{`x${score.comboMultiplier.toFixed(1)}`}</i></div><div className={`${base.cascadeCounter} ${styles.largeCascadeCounter}`}><b>{cascades}</b><span>/ {runStepTarget}</span><small>Steps</small></div></section>
@@ -2419,53 +2514,26 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     </section>
     <JuiceFxLayer effects={juiceEffects} />
     <FeedbackOverlay open={feedbackOpen} targetRef={boardCardRef} level={node.level} onClose={() => setFeedbackOpen(false)} />
-    {levelOneCoach?.kind === "welcome" && <ConceptCard
-      title="Welcome to Word Kingdom!"
-      message="Find hidden words, collect royal cards, raid rival kingdoms, and gather gold as you build your realm."
-      cta="Let's go"
-      icon="👑"
-      messageOpen={levelOneCoach.messageOpen}
-      onDismiss={dismissWelcomeCoach}
-      testId="level-1-welcome-guide"
+    {levelOneCoach?.kind === "first-word" && levelOneCoach.messageOpen && <ConceptCard
+      title="Swipe to Spell"
+      message="Drag in a straight line across the letters. Words can be forwards or backwards."
+      cta="LET'S GO!"
+      icon={<span className={styles.wordSelectionVisual}>{[..."WORD"].map((letter) => <i key={letter}>{letter}</i>)}</span>}
+      onDismiss={() => {
+        ftueLastUsefulAt.current = Date.now();
+        setLevelOneCoach({ kind: "first-word", messageOpen: false });
+      }}
+      testId="level-1-first-word-guide"
     />}
-    {levelOneCoach?.kind === "level-2-rules" && <ConceptCard
-      title="Words Can Run Both Ways!"
-      message="Swipe in any straight line — forward, backward, up, down, or diagonal. If the letters spell a word either direction, it counts."
-      cta="Got it"
-      icon="🔤"
-      messageOpen={levelOneCoach.messageOpen}
-      onDismiss={dismissLevelTwoRulesCoach}
-      testId="level-2-rules-guide"
-    />}
-    {levelOneCoach?.kind === "level-3-raid" && <ConceptCard
-      title="Coming Up: Raid!"
-      message="Collect three Raid badges as you play to fill the tray. After the level, open the Vault Raid — pick 3 of 9 boxes for coins."
-      cta="Let's go"
-      icon={<img src={BADGES.raid.icon} alt="" />}
-      messageOpen={levelOneCoach.messageOpen}
-      onDismiss={dismissLevelThreeRaidCoach}
-      testId="level-3-raid-guide"
-    />}
-    {levelOneCoach?.kind === "level-4-hint-economy" && <ConceptCard
-      title="Hints Are Limited"
-      message={`You start with ${player.hints} 💡 Hints. Use them wisely — you'll earn more as you keep playing.`}
-      cta="Got it"
-      icon="💡"
-      messageOpen={levelOneCoach.messageOpen}
-      onDismiss={dismissHintEconomyCoach}
-      testId="level-4-hint-economy-guide"
-    />}
-    {levelOneCoach?.kind === "first-word" && <FtueCoachmark
+    {levelOneCoach?.kind === "first-word" && !levelOneCoach.messageOpen && <FtueCoachmark
       icon={<span className={styles.wordSelectionVisual}>{[..."SHORE"].map((letter) => <i key={letter}>{letter}</i>)}</span>}
-      title="Find your first word!"
-      message="Swipe across the letters to find SHORE."
+      title="Swipe to Spell"
+      message="Drag across the highlighted word."
       swipeTileIds={shoreTutorialPath}
       gesture="swipe"
-      dim={levelOneCoach.messageOpen}
-      messageOpen={levelOneCoach.messageOpen}
-      onDismiss={() => setLevelOneCoach({ kind: "first-word", messageOpen: false })}
+      messageOpen={false}
       reducedMotion={prefersReducedMotion}
-      testId="level-1-first-word-guide"
+      testId="level-1-first-word-gesture"
     />}
     {levelOneCoach?.kind === "transformation" && <FtueCoachmark
       icon={<span className={styles.transformedTileVisual}><i>A</i><b>R</b></span>}
@@ -2481,7 +2549,9 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       testId="level-1-transformation-message"
     />}
     {pvpOverlay && <PvpEventOverlay state={pvpOverlay} ownedCards={ownedCards()} onAttack={chooseAttackCard} onAttackSkip={deferAttack} onSteal={performSteal} onUseLater={deferSteal} onShield={chooseShieldCard} onShieldSkip={deferShield} onPick={pickRaidChest} onClose={closePvpOverlay} />}
-    {pvpOverlay?.tutorial && <PowerTutorialPrompt kind={pvpOverlay.kind} />}
+    {contextualPrompt && <ConceptCard title="Need a Hint?" message="Tap Hint to reveal part of a word. Hints are optional." cta="GOT IT" icon="💡" onDismiss={dismissHintCoach} testId="hint-available-guide" />}
+    {pvpOverlay?.tutorial && pvpOverlay.kind === "raid" && !ftueProgress.completedTutorials.includes("level-3-raid") && <ConceptCard title="Raid the Royal Vault" message="Choose 3 chests. Every chest can hide coins for your next sticker pack." cta="START RAID" icon={<img src={BADGES.raid.icon} alt="" />} onDismiss={() => markTutorialComplete("level-3-raid")} testId="raid-intro-guide" />}
+    {pvpOverlay?.tutorial && pvpOverlay.kind !== "raid" && <PowerTutorialPrompt kind={pvpOverlay.kind} />}
     {packReveal && <PackModal result={packReveal} onClose={closePackReveal} />}
     {settingsOpen && <SettingsModal account={account} signOutUrl={signOutUrl} player={player} onToggle={updateSetting} onRestart={restartProgress} onHowToPlay={() => { setSettingsOpen(false); setTutorialLibraryOpen(true); }} onClose={() => setSettingsOpen(false)} />}
     {tutorialLibraryOpen && <TutorialLibrary maxLevel={Math.min(10, Math.max(player.currentLevel, ...player.completedLevels, 1))} onClose={() => setTutorialLibraryOpen(false)} />}
@@ -2490,7 +2560,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
 }
 
 function LevelOneResults({ summary, onContinue }: { summary: V3RunSummary; onContinue: () => void }) {
-  return <ConquestCompletePanel summary={summary} title="LEVEL 1 COMPLETE!" cta="PLAY LEVEL 2" onContinue={onContinue} />;
+  return <ConquestCompletePanel summary={summary} title="LEVEL 1 COMPLETE!" cta="RETURN TO OCEAN MAP" onContinue={onContinue} />;
 }
 
 function ConquestCompletePanel({ summary, title, cta, onContinue }: { summary: V3RunSummary; title: string; cta: string; onContinue: () => void }) {
@@ -2559,17 +2629,17 @@ function OceanRewardExperience({ level, phase, summary, revealCount, collectedCo
   return <section className={`${base.summaryCard} ${styles.summaryCard} ${styles.ftueSummaryCard} ${styles.oceanRewardCard}`} role="dialog" aria-modal="true" aria-labelledby="ocean-reward-title" data-phase={phase} data-reduced-motion={reducedMotion ? "true" : undefined}>
     <div className={styles.summaryRays} aria-hidden="true" />
     <span className={`${base.kicker} ${styles.summaryKicker}`}>OCEAN KINGDOM · LEVEL {level}</span>
-    <h1 id="ocean-reward-title">{phase === "KINGDOM_COMPLETE" ? "OCEAN KINGDOM DISCOVERED!" : showingPack ? "OCEAN PACK EARNED!" : "NEW OCEAN STICKERS"}</h1>
+    <h1 id="ocean-reward-title">{phase === "KINGDOM_COMPLETE" ? "OCEAN ALBUM COMPLETE!" : showingPack ? "OCEAN PACK EARNED!" : "NEW OCEAN STICKERS"}</h1>
     {showingPack && <div className={styles.levelOnePackSection}><p>Tap the pack when you are ready.</p><button onClick={onOpenPack} aria-label="Open Ocean sticker pack"><span className={styles.levelOnePackArtwork}><DiscoveryArtwork kind="album" /><i>OCEAN</i><b>STICKER PACK</b></span></button></div>}
     {showingStickers && <div className={styles.levelOneStickerReveal} aria-live="polite"><div className={styles.levelOneAlbumTray}><DiscoveryArtwork kind="album" /><span>{Math.min(12, collectedCount + safeRevealCount)}/12 OCEAN STICKERS</span></div><div className={styles.levelOneStickerRow}>{stickers.map((sticker, index) => { const revealed = index < safeRevealCount; return <article key={sticker} data-revealed={revealed ? "true" : undefined}>{revealed ? <OceanStickerVisual sticker={sticker} /> : <OceanStickerVisual sticker={sticker} missing />}<b>{revealed ? OCEAN_STICKER_LABELS[sticker] : "Mystery"}</b></article>; })}</div>{phase === "ALBUM_ACTIVATED" && <div className={styles.levelOneAlbumActivated}><h2>Your Ocean Album is ready</h2><p>Visit the real Album area to place your first stickers.</p><button onClick={onOpenAlbum}><DiscoveryArtwork kind="album" /><span>GO TO ALBUM</span></button></div>}</div>}
     {phase === "PACK_COMPLETE" && <div className={styles.oceanPackComplete}><div className={styles.levelOneStickerRow}>{stickers.map((sticker) => <article data-revealed="true" key={sticker}><OceanStickerVisual sticker={sticker} /><b>{OCEAN_STICKER_LABELS[sticker]}</b></article>)}</div><p>{collectedCount}/12 Ocean stickers collected.</p><button className={`${base.primaryCta} ${styles.summaryPrimaryCta}`} onClick={onFinish}><span>CONTINUE</span></button></div>}
-    {phase === "KINGDOM_COMPLETE" && <div className={styles.oceanKingdomComplete}><div className={styles.levelOneStickerRow}>{stickers.map((sticker) => <article data-revealed="true" key={sticker}><OceanStickerVisual sticker={sticker} /><b>{OCEAN_STICKER_LABELS[sticker]}</b></article>)}</div><p>All 12 Ocean stickers are in place. Forest Kingdom is now unlocked.</p><button className={`${base.primaryCta} ${styles.summaryPrimaryCta}`} onClick={onFinish}><span>RETURN TO CONQUEST</span></button></div>}
+    {phase === "KINGDOM_COMPLETE" && <div className={styles.oceanKingdomComplete}><div className={styles.levelOneStickerRow}>{stickers.map((sticker) => <article data-revealed="true" key={sticker}><OceanStickerVisual sticker={sticker} /><b>{OCEAN_STICKER_LABELS[sticker]}</b></article>)}</div><p>You discovered the Ocean Kingdom. The Forest gate is now open.</p><button className={`${base.primaryCta} ${styles.summaryPrimaryCta}`} onClick={onFinish}><span>SEE THE GATE</span></button></div>}
   </section>;
 }
 
 function TopBar({ player, locked = false, onShop, onSettings }: { player: V3PlayerState; locked?: boolean; onShop: () => void; onSettings: () => void }) {
   return <header className={styles.royalTopBar} aria-label="Resources">
-    <img className={styles.royalTopBarArt} src="/topbar/word-kingdom-topbar.webp" alt="" aria-hidden="true" draggable={false} />
+    <img className={styles.royalTopBarArt} src="/topbar/word-kingdom-topbar.png" alt="" aria-hidden="true" draggable={false} />
     <output className={styles.royalTopBarEnergy} aria-label={`Energy: ${player.energy}/${ENERGY_CAP}`}>{player.energy}/{ENERGY_CAP}</output>
     <output className={styles.royalTopBarStars} aria-label={`Stars: ${player.stars}`}>{player.stars}</output>
     <output className={styles.royalTopBarCoins} aria-label={`Coins: ${formatNumber(player.coins)}`}>{formatResourceNumber(player.coins)}</output>
@@ -2596,15 +2666,101 @@ function PowerProgress({ kinds, badgeCounts, readyActions, impactSlots }: { kind
   </section>;
 }
 
-function HomeMenu({ player, hydrated, playRef, guideLevelTwo, onPlay }: { player: V3PlayerState; hydrated: boolean; playRef: RefObject<HTMLButtonElement | null>; guideLevelTwo: boolean; onPlay: () => void }) {
-  return <section className={styles.mainMenu}>
-    <div className={styles.heroArtwork}>
-      <img src="/word-kingdom-mobile-v3.webp" alt="Word Kingdom: Spell & Steal with the young king, living word board, and castle raid" />
-      <div className={styles.heroShine} />
-    </div>
-    <button ref={playRef} className={`${styles.mainPlayButton} ${guideLevelTwo ? styles.guidedLevelTwoButton : ""}`} disabled={!hydrated || (!guideLevelTwo && player.energy < 1)} onClick={onPlay}>
-      <span>PLAY LEVEL</span><b>{player.currentLevel}</b><small>{guideLevelTwo ? "CONTINUE JOURNEY" : "1 ENERGY"}</small>
-    </button>
+function WorldMapMenu({
+  world,
+  player,
+  hydrated,
+  albumUnlocked,
+  forestUnlocked,
+  currentLevelRef,
+  albumRef,
+  gateRef,
+  focusTarget,
+  shakingTarget,
+  transitioning,
+  onLevel,
+  onAlbum,
+  onGate,
+}: {
+  world: WorldMapDefinition;
+  player: V3PlayerState;
+  hydrated: boolean;
+  albumUnlocked: boolean;
+  forestUnlocked: boolean;
+  currentLevelRef: RefObject<HTMLButtonElement | null>;
+  albumRef: RefObject<HTMLButtonElement | null>;
+  gateRef: RefObject<HTMLButtonElement | null>;
+  focusTarget: "level" | "album" | "gate" | null;
+  shakingTarget: string | null;
+  transitioning: boolean;
+  onLevel: (level: number) => void;
+  onAlbum: () => void;
+  onGate: () => void;
+}) {
+  const gateOpen = world.id === "ocean" && forestUnlocked;
+  return <section className={styles.worldMap} data-world={world.id} data-transitioning={transitioning ? "true" : undefined} aria-label={`${world.title} level journey`}>
+    <img className={styles.worldMapBackground} src={world.background} alt="" aria-hidden="true" draggable={false} />
+    <h1 className={styles.worldMapTitle}>{world.title}</h1>
+    {world.levels.map((level) => {
+      const hotspot = world.levelHotspots[level];
+      const complete = player.completedLevels.includes(level);
+      const current = player.currentLevel === level;
+      const locked = !current && !complete;
+      return <button
+        ref={current ? currentLevelRef : undefined}
+        key={level}
+        type="button"
+        className={styles.worldLevelButton}
+        style={{ left: `${hotspot.x}%`, top: `${hotspot.y}%` } as CSSProperties}
+        data-current={current ? "true" : undefined}
+        data-complete={complete ? "true" : undefined}
+        data-locked={locked ? "true" : undefined}
+        data-milestone={hotspot.milestone}
+        data-guided={current && focusTarget === "level" ? "true" : undefined}
+        data-shake={shakingTarget === `level-${level}` ? "true" : undefined}
+        disabled={!hydrated}
+        aria-disabled={locked}
+        aria-label={locked ? `Level ${level}, locked` : complete ? `Replay Level ${level}` : `Play Level ${level}`}
+        onClick={() => onLevel(level)}
+      >
+        <b>{level}</b>
+        <span aria-hidden="true">{locked ? "🔒" : complete ? "★" : hotspot.milestone === "raid" ? "♦" : ""}</span>
+        <small>{locked ? "LOCKED" : complete ? "REPLAY" : "PLAY"}</small>
+      </button>;
+    })}
+    <button
+      ref={albumRef}
+      className={styles.worldAlbumButton}
+      type="button"
+      style={{ left: `${world.album.x}%`, top: `${world.album.y}%` } as CSSProperties}
+      data-unlocked={albumUnlocked ? "true" : undefined}
+      data-guided={focusTarget === "album" ? "true" : undefined}
+      data-shake={shakingTarget === "album" ? "true" : undefined}
+      disabled={!hydrated}
+      aria-disabled={!albumUnlocked}
+      aria-label={albumUnlocked ? `Open ${world.title} album` : "Album unlocks after Level 2"}
+      onClick={onAlbum}
+    ><DiscoveryArtwork kind="album" /><b>{albumUnlocked ? "ALBUM" : "LOCKED"}</b></button>
+    <img
+      className={styles.worldRaidChest}
+      src={RAID_BOX_ART.locked}
+      alt=""
+      aria-hidden="true"
+      style={{ left: `${world.raidChest.x}%`, top: `${world.raidChest.y}%` } as CSSProperties}
+    />
+    <button
+      ref={gateRef}
+      className={styles.worldGateButton}
+      type="button"
+      style={{ left: `${world.gate.x}%`, top: `${world.gate.y}%` } as CSSProperties}
+      data-open={gateOpen ? "true" : undefined}
+      data-guided={focusTarget === "gate" ? "true" : undefined}
+      data-shake={shakingTarget === "gate" ? "true" : undefined}
+      disabled={!hydrated}
+      aria-disabled={!gateOpen}
+      aria-label={gateOpen ? "Enter Forest Kingdom" : world.id === "forest" ? "Next kingdom is coming soon" : "Complete Level 5 and the Ocean album to open the Forest gate"}
+      onClick={onGate}
+    >{gateOpen ? <span>FOREST OPEN</span> : <span>🔒</span>}</button>
   </section>;
 }
 

@@ -186,6 +186,8 @@ const FTUE_VISUAL_STEPS: readonly FtueVisualStep[] = [
   "level-2-album-activated",
   "level-2-album-guidance",
   "level-2-album-view",
+  "level-2-album-card",
+  "forest-welcome-guidance",
 ];
 
 const OCEAN_REWARD_PHASES: readonly Exclude<OceanRewardPhase, null>[] = [
@@ -398,8 +400,8 @@ export function recordOceanLevelCompletion(progress: FtueProgress, level: number
     oceanRewardedLevels: uniqueOceanLevels([...progress.oceanRewardedLevels, level]),
     oceanStickerRevealCount: 0,
     oceanCompletionResult: result,
-    oceanPackMessageDismissed: true,
-    oceanAlbumMessageDismissed: true,
+    oceanPackMessageDismissed: false,
+    oceanAlbumMessageDismissed: level !== 2,
   };
 }
 
@@ -408,12 +410,22 @@ export function continueToOceanPack(progress: FtueProgress): FtueProgress {
   return { ...progress, oceanRewardPhase: "PACK_READY" };
 }
 
+export function dismissOceanPackMessage(progress: FtueProgress): FtueProgress {
+  if (progress.oceanPackMessageDismissed) return progress;
+  return { ...progress, oceanPackMessageDismissed: true };
+}
+
 export function openOceanDiscoveryPack(progress: FtueProgress): FtueProgress {
-  if (!progress.oceanRewardLevel || progress.oceanRewardPhase !== "PACK_READY") return progress;
+  if (!progress.oceanRewardLevel || progress.oceanRewardPhase !== "PACK_READY" || !progress.oceanPackMessageDismissed) return progress;
   return {
     ...(progress.oceanRewardLevel === 2 ? completeFtueVisualStep(progress, "level-2-pack-opened") : progress),
     oceanRewardPhase: "STICKER_REVEAL",
   };
+}
+
+export function dismissOceanAlbumMessage(progress: FtueProgress): FtueProgress {
+  if (progress.oceanAlbumMessageDismissed) return progress;
+  return { ...progress, oceanAlbumMessageDismissed: true };
 }
 
 export function revealNextOceanSticker(progress: FtueProgress): FtueProgress {
@@ -434,7 +446,7 @@ export function completeOceanStickerPack(progress: FtueProgress): FtueProgress {
 }
 
 export function beginLevelTwoAlbumGuide(progress: FtueProgress): FtueProgress {
-  if (progress.oceanRewardLevel !== 2 || progress.oceanRewardPhase !== "ALBUM_ACTIVATED") return progress;
+  if (progress.oceanRewardLevel !== 2 || progress.oceanRewardPhase !== "ALBUM_ACTIVATED" || !progress.oceanAlbumMessageDismissed) return progress;
   return {
     ...completeFtueVisualStep(progress, "level-2-album-guidance"),
     pendingMandatoryStep: "OPEN_LEVEL_2_ALBUM",

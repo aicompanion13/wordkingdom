@@ -152,16 +152,16 @@ test("coach messages are dismissible and block click-through", () => {
   assert.doesNotMatch(source, /setTimeout/);
 });
 
-test("Level 1 completion contains no Pack, Album, currency, or kingdom completion UI", () => {
+test("Level 1 completion contains no Pack, Album, currency, or kingdom completion UI and returns to the map", () => {
   const source = fs.readFileSync(path.resolve("app/v3/WordKingdomV3.tsx"), "utf8");
   const block = source.slice(source.indexOf("function LevelOneResults"), source.indexOf("function ConquestCompletePanel"));
   assert.doesNotMatch(block, /Pack|Album|Energy|Raid|Kingdom discovered/);
-  assert.match(block, /PLAY LEVEL 2/);
+  assert.match(block, /RETURN TO OCEAN MAP/);
 });
 
-test("Levels 1–5 never render tile badge wrappers", () => {
+test("Levels 1–5 keep obstacle wrappers disabled and power badges state-gated", () => {
   const source = fs.readFileSync(path.resolve("app/v3/WordKingdomV3.tsx"), "utf8");
-  assert.match(source, /if \(level <= 5\) return result/);
+  assert.match(source, /const allowed = new Set\(visiblePowerKinds\(level\)\)/);
   assert.match(source, /const blocked = currentRunLevel > 5/);
   assert.doesNotMatch(source, /levelOneDiscoveryTracker/);
 });

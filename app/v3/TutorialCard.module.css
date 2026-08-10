@@ -13,7 +13,7 @@
 .card {
   position: relative;
   width: min(380px, calc(100vw - 24px));
-  aspect-ratio: 1108 / 1420;
+  aspect-ratio: 760 / 1175;
   color: #17365f;
   filter: drop-shadow(0 12px 22px rgba(37,28,18,.28));
   animation: tutorialCardPop 260ms cubic-bezier(.2,.85,.3,1.3) both;
@@ -29,29 +29,21 @@
   user-select: none;
 }
 
-.close {
+.illustration {
   position: absolute;
-  top: 2.2%;
-  right: 2.6%;
-  width: 9%;
-  aspect-ratio: 1;
+  top: 10.5%;
+  left: 21%;
+  width: 58%;
+  height: 21%;
   display: grid;
   place-items: center;
-  border: 2px solid rgba(255,255,255,.75);
-  border-radius: 50%;
-  background: rgba(15,40,86,.62);
-  color: #fff4d2;
-  font: 800 clamp(15px,4.6vw,19px)/1 var(--game-ui,system-ui,sans-serif);
-  box-shadow: 0 2px 0 rgba(0,0,0,.3);
-  cursor: pointer;
 }
 
 .copy {
   position: absolute;
-  top: 21%;
-  left: 18%;
-  width: 64%;
-  bottom: 19%;
+  top: 39%;
+  left: 15%;
+  width: 70%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -62,14 +54,16 @@
 
 .topicIcon {
   display: block;
-  font-size: clamp(28px,9vw,38px);
+  max-width: 100%;
+  max-height: 100%;
+  font-size: clamp(42px,14vw,62px);
   line-height: 1;
   filter: drop-shadow(0 3px 3px rgba(34,26,14,.22));
 }
 
 .topicIcon img {
-  width: clamp(32px,10vw,42px);
-  height: clamp(32px,10vw,42px);
+  width: clamp(52px,17vw,76px);
+  height: clamp(52px,17vw,76px);
   object-fit: contain;
   filter: drop-shadow(0 3px 3px rgba(34,26,14,.22));
 }
@@ -79,7 +73,7 @@
   margin: 0;
   font-family: var(--game-headline,ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif)!important;
   font-weight: 700;
-  font-size: clamp(20px,7vw,28px);
+  font-size: clamp(25px,8vw,34px);
   line-height: 1.12;
   letter-spacing: -.01em;
   color: transparent;
@@ -108,15 +102,15 @@
 .body {
   margin: 0;
   color: #604c35;
-  font: 650 clamp(13px,4.2vw,16px)/1.4 var(--game-ui,system-ui,sans-serif);
+  font: 650 clamp(14px,4.4vw,18px)/1.35 var(--game-ui,system-ui,sans-serif);
 }
 
 .actions {
   position: absolute;
-  left: 24%;
-  bottom: 4.5%;
-  width: 52%;
-  height: 10%;
+  left: 16%;
+  bottom: 7.2%;
+  width: 68%;
+  height: 9.5%;
   display: grid;
   place-items: center;
 }
