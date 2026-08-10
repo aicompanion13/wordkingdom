@@ -2285,9 +2285,9 @@
   }
 
   .v3Shell .hubContent {
-    height: calc(100dvh - 64px - 10px - min(430px,96vw) * 0.2172 - env(safe-area-inset-bottom));
+    height: calc(100dvh - 64px - 9px - min(430px,96vw) * 0.2172 - env(safe-area-inset-bottom));
     min-height: 0;
-    padding: 4px 5px 3px!important;
+    padding: 0 5px 3px!important;
     overflow: hidden;
   }
 
