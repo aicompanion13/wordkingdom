@@ -529,7 +529,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       if (revealCount < 3) {
         playSfx("sticker_reveal", { cooldownMs: 180 });
       } else if (ftueProgress.oceanRewardLevel === 5) {
-        playSfx("album_complete", { duckMs: 1420 });
+        playSfx("album_complete", { duckMs: 3600 });
       } else if (ftueProgress.oceanRewardLevel === 2) {
         playSfx("album_unlock", { duckMs: 1080 });
       }
@@ -1195,7 +1195,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     setAnimating(false);
     setScreen("summary");
     if (progress.complete) {
-      playSfx("level_complete", { duckMs: 1500 });
+      playSfx("level_complete", { duckMs: 2600 });
       window.setTimeout(() => beginPostLevelMeta(runNode.current!.level), 420);
     }
   };
