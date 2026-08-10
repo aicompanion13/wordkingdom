@@ -2026,7 +2026,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   if (screen === "hub") {
     const albumGuided = ftueProgress.pendingMandatoryStep === "OPEN_LEVEL_2_ALBUM";
     return <main className={`${base.shell} ${base.hubShell} ${styles.v3Shell}`} style={{ "--chapter-accent": viewedChapter.accent } as CSSProperties}>
-      <TopBar player={player} timer={energyTimer(player, clock)} locked={albumGuided} onShop={() => setTab("shop")} onSettings={() => setSettingsOpen(true)} />
+      <TopBar player={player} locked={albumGuided} onShop={() => setTab("shop")} onSettings={() => setSettingsOpen(true)} />
       <section className={`${base.hubContent} ${styles.hubContent}`}>
         {tab === "home" && <HomeMenu player={player} hydrated={hydrated && ftueReady && !albumGuided} playRef={levelPlayButtonRef} guideLevelTwo={false} onPlay={() => requestLevelStart(track.node(player.currentLevel))} />}
         {tab === "albums" && <AlbumPanel albums={albums} pages={albumPages} pageLevel={albumPageLevel} player={player} pvp={pvpState} activeChapter={activeChapter} ftueProgress={ftueProgress} reducedMotion={prefersReducedMotion} onContinuePage={continueFromAlbumPage} onOpenPage={openAlbumPage} unlockedPages={ftueProgress.unlockedAlbumPages} onClaim={claimSet} onVault={redeemVault} onClaimAlbum={claimAlbum} onRepair={repairCard} />}
@@ -2467,14 +2467,14 @@ function OceanRewardExperience({ level, phase, summary, revealCount, collectedCo
   </section>;
 }
 
-function TopBar({ player, timer, locked = false, onShop, onSettings }: { player: V3PlayerState; timer: string; locked?: boolean; onShop: () => void; onSettings: () => void }) {
+function TopBar({ player, locked = false, onShop, onSettings }: { player: V3PlayerState; locked?: boolean; onShop: () => void; onSettings: () => void }) {
   return <header className={styles.royalTopBar} aria-label="Resources">
-    <img className={styles.royalTopBarArt} src="/topbar/word-kingdom-topbar.webp" alt="" />
-    <span className={styles.royalTopBarEnergy}>{player.energy}/{ENERGY_CAP}{timer && <small>{timer}</small>}</span>
-    <span className={styles.royalTopBarStars}>{player.stars}</span>
-    <span className={styles.royalTopBarCoins}>{formatResourceNumber(player.coins)}</span>
-    <button disabled={locked} data-coin-counter className={styles.royalTopBarShop} onClick={onShop} aria-label={`Coins: ${formatNumber(player.coins)}. Open shop`} />
-    <button disabled={locked} className={styles.royalTopBarSettings} onClick={onSettings} aria-label="Settings" />
+    <img className={styles.royalTopBarArt} src="/topbar/word-kingdom-topbar.webp" alt="" aria-hidden="true" draggable={false} />
+    <output className={styles.royalTopBarEnergy} aria-label={`Energy: ${player.energy}/${ENERGY_CAP}`}>{player.energy}/{ENERGY_CAP}</output>
+    <output className={styles.royalTopBarStars} aria-label={`Stars: ${player.stars}`}>{player.stars}</output>
+    <output className={styles.royalTopBarCoins} aria-label={`Coins: ${formatNumber(player.coins)}`}>{formatResourceNumber(player.coins)}</output>
+    <button disabled={locked} data-coin-counter className={styles.royalTopBarShop} onClick={onShop} aria-label="Get more coins" />
+    <button disabled={locked} className={styles.royalTopBarSettings} onClick={onSettings} aria-label="Open settings" />
   </header>;
 }
 
