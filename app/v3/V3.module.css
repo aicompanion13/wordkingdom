@@ -970,6 +970,9 @@
 }
 .boardShell > * { position: relative; z-index: 1; }
 .boardShell > *:first-child { padding-top: max(8px,env(safe-area-inset-top)); }
+.boardShell > .royalTopBar,
+.summaryShell > .royalTopBar { position:fixed; z-index:30; padding-top:0; }
+.gameTopBarSpacer { width:100%; height:clamp(54px,16.5vw,71px); flex:0 0 auto; pointer-events:none; }
 .boardShell[data-chapter-theme="coral"] { color: #142c63; }
 .boardShell[data-chapter-theme="forest"] { color: #142c63; }
 .boardShell {

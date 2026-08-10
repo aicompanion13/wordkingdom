@@ -2352,7 +2352,8 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       </main>;
     }
     return <main data-chapter-theme={summaryTheme.id} className={`${base.shell} ${base.summaryShell} ${styles.summaryShell}`} style={summaryStyle} onClickCapture={playUiTap}>
-      <GameTopBar player={player} timer={energyTimer(player, clock)} onBack={returnHome} onSettings={() => setSettingsOpen(true)} coinPulse={coinCounterPulse} />
+      <TopBar player={player} coinPulse={coinCounterPulse} onShop={() => { returnHome(); setTab("shop"); }} onSettings={() => setSettingsOpen(true)} />
+      <div className={styles.gameTopBarSpacer} aria-hidden="true" />
       <div className={styles.summaryAtmosphere} aria-hidden="true"><i /><i /><i /><i /><i /><span>🪙</span><span>🪙</span></div>
       {summary.objectiveComplete && <CelebrationBurst />}
       <KingdomPopup
@@ -2404,9 +2405,11 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     "--theme-background-image": chapterTheme.backgroundImage ? `url("${chapterTheme.backgroundImage}")` : "none",
   } as CSSProperties;
   return <main data-chapter-theme={chapterTheme.id} className={`${base.shell} ${base.boardShell} ${styles.boardShell} ${isGoldenRun ? styles.goldenBoard : ""} ${boardLocked ? styles.boardPaused : ""} ${juiceShake ? styles.juiceScreenShake : ""}`} style={chapterStyle} onClickCapture={playUiTap}>
-    <GameTopBar player={player} timer={energyTimer(player, clock)} onBack={returnHome} onSettings={() => setSettingsOpen(true)} coinPulse={coinCounterPulse} />
+    <TopBar player={player} coinPulse={coinCounterPulse} onShop={() => { returnHome(); setTab("shop"); }} onSettings={() => setSettingsOpen(true)} />
+    <div className={styles.gameTopBarSpacer} aria-hidden="true" />
     <section className={styles.chapterIdentity} aria-label={`${chapterTheme.chapterTitle}, Level ${node.level}`}>
       <div className={styles.chapterTopRow}>
+        <button className={styles.ftueInlineBack} onClick={returnHome} aria-label="Back to kingdom map">‹</button>
         <div className={styles.chapterBannerLine}>
           <i aria-hidden="true">{chapterTheme.ornaments[0]}</i>
           <h1>{chapterTheme.chapterTitle}</h1>
@@ -2637,22 +2640,16 @@ function OceanRewardExperience({ level, phase, summary, revealCount, collectedCo
   </section>;
 }
 
-function TopBar({ player, locked = false, onShop, onSettings }: { player: V3PlayerState; locked?: boolean; onShop: () => void; onSettings: () => void }) {
+function TopBar({ player, locked = false, coinPulse = false, onShop, onSettings }: { player: V3PlayerState; locked?: boolean; coinPulse?: boolean; onShop: () => void; onSettings: () => void }) {
   return <header className={styles.royalTopBar} aria-label="Resources">
     <img className={styles.royalTopBarArt} src="/topbar/word-kingdom-topbar.png" alt="" aria-hidden="true" draggable={false} />
     <output className={styles.royalTopBarEnergy} aria-label={`Energy: ${player.energy}/${ENERGY_CAP}`}>{player.energy}/{ENERGY_CAP}</output>
     <output className={styles.royalTopBarStars} aria-label={`Stars: ${player.stars}`}>{player.stars}</output>
     <output className={styles.royalTopBarCoins} aria-label={`Coins: ${formatNumber(player.coins)}`}>{formatResourceNumber(player.coins)}</output>
-    <button disabled={locked} data-coin-counter className={styles.royalTopBarShop} onClick={onShop} aria-label="Get more coins" />
+    <button disabled={locked} data-coin-counter className={`${styles.royalTopBarShop} ${coinPulse ? styles.coinCounterImpact : ""}`} onClick={onShop} aria-label="Get more coins" />
     <button disabled={locked} className={styles.royalTopBarSettings} onClick={onSettings} aria-label="Open settings" />
   </header>;
 }
-
-function GameTopBar({ player, timer, onBack, onSettings, coinPulse }: { player: V3PlayerState; timer: string; onBack: () => void; onSettings: () => void; coinPulse: boolean }) {
-  return <header className={`${base.gameTopBar} ${styles.largeTopBar}`}><button className={`${base.gameBack} ${styles.largeTopIcon}`} onClick={onBack}>‹</button><Resource icon="⚡" value={`${player.energy}/${ENERGY_CAP}`} sub={timer} /><Resource icon="⭐" value={String(player.stars)} /><div data-coin-counter className={`${base.coinResource} ${styles.largeCoin} ${styles.gameCoin} ${coinPulse ? styles.coinCounterImpact : ""}`}><span>🪙</span><b>{formatResourceNumber(player.coins)}</b><i>+</i></div><button className={`${base.settingsButton} ${styles.largeTopIcon}`} onClick={onSettings}>⚙</button></header>;
-}
-
-function Resource({ icon, value, sub }: { icon: string; value: string; sub?: string }) { return <div className={`${base.navResource} ${styles.largeResource}`}><span>{icon}</span><b>{value}</b>{sub && <small>{sub}</small>}</div>; }
 
 function PowerProgress({ kinds, badgeCounts, readyActions, impactSlots }: { kinds: PowerUpKind[]; badgeCounts: Record<BadgeType, number>; readyActions: Record<PowerUpKind, number>; impactSlots: string[] }) {
   return <section className={styles.powerProgress} aria-label="Persistent royal powers">
