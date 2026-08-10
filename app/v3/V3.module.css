@@ -1140,29 +1140,47 @@
 
 .mobilePowerProgress { width: min(100%,920px); margin: 0 auto 9px; }
 .desktopPowerProgress { display: none; }
+/*
+ * Royal Powers sizing is driven by these tokens so a breakpoint only has to restate the
+ * few numbers that change. Every height-driving rule below reads from them — do not
+ * hard-code sizes in a media query, override the token instead.
+ */
 .powerProgress {
+  --pw-pad: 7px 6px 8px;
+  --pw-head-lift: -14px;
+  --pw-head-gap: 7px;
+  --pw-grid-gap: 5px;
+  --pw-card-min: 61px;
+  --pw-card-pad: 5px 4px 6px;
+  --pw-icon: clamp(30px,8vw,38px);
+  --pw-icon-glyph: clamp(16px,5vw,22px);
+  --pw-label: clamp(6.5px,2vw,9px);
+  --pw-counter: clamp(6px,1.8vw,8px);
+  --pw-dot: clamp(8px,2.4vw,11px);
+  --pw-dot-gap: 4px;
+  --pw-dot-lift: 5px;
   border: 2px solid #f0dcae;
   border-radius: 16px;
-  padding: 7px 6px 8px;
+  padding: var(--pw-pad);
   background: #fff8ea;
   box-shadow: 0 2px 0 rgba(216,192,143,.53);
 }
 .powerProgress:has(.powerProgressGrid[data-count="1"]) {
   padding: 5px 6px 6px;
 }
-.powerProgressHeading { display: flex; justify-content: space-between; align-items: center; margin: -14px 3px 7px; color: #17386f; }
+.powerProgressHeading { display: flex; justify-content: space-between; align-items: center; margin: var(--pw-head-lift) 3px var(--pw-head-gap); color: #17386f; }
 .powerProgressHeading span { border: 2px solid #fff; border-radius: 10px; padding: 5px 10px; color: #fff5c7; background: linear-gradient(180deg,#3b92cc,#1c579e 55%,#113674); font-family: var(--game-display); font-size: 8px; letter-spacing: .05em; box-shadow:0 2px 0 rgba(0,0,0,.35); }
 .powerProgressHeading small { color: #7b5d39; font-size: 6px; font-weight: 900; }
-.powerProgressGrid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 5px; }
-.powerProgressGrid article { position: relative; min-width: 0; min-height: 61px; overflow: hidden; border: 2px solid #fff; border-radius: 13px; padding: 5px 4px 6px; background: #fdf1d9; box-shadow: 0 3px 0 rgba(130,69,27,.35); }
+.powerProgressGrid { display: grid; grid-template-columns: repeat(var(--pw-cols,4),minmax(0,1fr)); gap: var(--pw-grid-gap); }
+.powerProgressGrid article { position: relative; min-width: 0; min-height: var(--pw-card-min); overflow: hidden; border: 2px solid #fff; border-radius: 13px; padding: var(--pw-card-pad); background: #fdf1d9; box-shadow: 0 3px 0 rgba(130,69,27,.35); }
 .powerProgressGrid article > div { position:relative; display: grid; grid-template-columns: minmax(22px,32px) minmax(0,1fr); grid-template-rows: 1fr auto; align-items: center; gap: 1px 3px; }
-.powerProgressGrid article > div > b { grid-row: 1/3; width: clamp(30px,8vw,38px); height: clamp(30px,8vw,38px); display:grid; place-items:center; border:1.5px solid rgba(255,255,255,.9); border-radius:10px; font-size: clamp(16px,5vw,22px); background:rgba(255,255,255,.75); box-shadow:0 2px 0 rgba(119,66,21,.28); }
+.powerProgressGrid article > div > b { grid-row: 1/3; width: var(--pw-icon); height: var(--pw-icon); display:grid; place-items:center; border:1.5px solid rgba(255,255,255,.9); border-radius:10px; font-size: var(--pw-icon-glyph); background:rgba(255,255,255,.75); box-shadow:0 2px 0 rgba(119,66,21,.28); }
 .powerProgressGrid article > div > b img { width: 78%; height: 78%; object-fit: contain; }
-.powerProgressGrid article > div > span { align-self:end; overflow: hidden; color: #233c6b; font-family: var(--game-display); font-size: clamp(6.5px,2vw,9px); line-height:1; font-weight: 700; text-overflow: ellipsis; text-transform: uppercase; }
-.powerProgressGrid article > div > strong { grid-column:2; align-self:start; color:#8a5220; font-family:var(--game-display); font-size:clamp(6px,1.8vw,8px); line-height:1; }
+.powerProgressGrid article > div > span { align-self:end; overflow: hidden; color: #233c6b; font-family: var(--game-display); font-size: var(--pw-label); line-height:1; font-weight: 700; text-overflow: ellipsis; text-transform: uppercase; }
+.powerProgressGrid article > div > strong { grid-column:2; align-self:start; color:#8a5220; font-family:var(--game-display); font-size:var(--pw-counter); line-height:1; }
 .powerProgressGrid article > div > em { position:absolute; left:1px; top:25px; border-radius:99px; padding:1px 3px; color: #fff; background:#25813b; font-size: 4.5px; font-weight: 1000; font-style: normal; white-space: nowrap; }
-.powerProgressGrid article > p { position:relative; display: flex; justify-content: center; gap: 4px; margin: 5px 0 0; }
-.powerProgressGrid article > p > i { width: clamp(8px,2.4vw,11px); height: clamp(8px,2.4vw,11px); border: 1px solid #d7c79d; border-radius: 50%; background: #fff; }
+.powerProgressGrid article > p { position:relative; display: flex; justify-content: center; gap: var(--pw-dot-gap); margin: var(--pw-dot-lift) 0 0; }
+.powerProgressGrid article > p > i { width: var(--pw-dot); height: var(--pw-dot); border: 1px solid #d7c79d; border-radius: 50%; background: #fff; }
 .powerProgressGrid article > p > i[data-collected="true"] { border-color: #efaf24; background: #ffd13f; }
 .powerProgressGrid article[data-power="raid"] { background:#fdf1d9; }
 .powerProgressGrid article[data-power="attack"] { background:#fdece1; }
@@ -1173,8 +1191,31 @@
 .powerProgressGrid article[data-power="steal"] > div > span { color: #6c388d; }
 .powerProgressGrid article[data-power="shield"] > div > span { color: #175d96; }
 .powerProgressGrid[data-count="1"] { grid-template-columns: max-content; justify-content: center; }
-.powerProgressGrid[data-count="2"] { grid-template-columns: repeat(2,minmax(0,1fr)); }
-.powerProgressGrid[data-count="3"] { grid-template-columns: repeat(3,minmax(0,1fr)); }
+.powerProgressGrid[data-count="2"] { --pw-cols: 2; }
+.powerProgressGrid[data-count="3"] { --pw-cols: 3; }
+/*
+ * Five or more powers (three more are planned) would squeeze the cards past a usable
+ * width, so the rail scrolls sideways instead. The panel height never changes.
+ */
+.powerProgressGrid[data-count="5"],
+.powerProgressGrid[data-count="6"],
+.powerProgressGrid[data-count="7"] {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+.powerProgressGrid[data-count="5"]::-webkit-scrollbar,
+.powerProgressGrid[data-count="6"]::-webkit-scrollbar,
+.powerProgressGrid[data-count="7"]::-webkit-scrollbar { display: none; }
+.powerProgressGrid[data-count="5"] article,
+.powerProgressGrid[data-count="6"] article,
+.powerProgressGrid[data-count="7"] article {
+  flex: 0 0 calc((100% - var(--pw-grid-gap) * 3) / 4);
+  scroll-snap-align: start;
+}
 
 /* Compact single-power layout: a big square card looks oversized when it's the only one shown (e.g. levels 3-5, raid only). Shrinks to content width instead of stretching full-card, with a punchier pill treatment. */
 .powerProgressGrid[data-count="1"] article {
@@ -1182,7 +1223,7 @@
   display: flex!important;
   align-items: center!important;
   gap: 6px!important;
-  padding: 4px 14px 4px 4px!important;
+  padding: 3px 12px 3px 3px!important;
   border-radius: 999px!important;
   border: 2px solid #f2c34d!important;
   background: linear-gradient(180deg,#fffaea 0%,#fbe4a4 100%)!important;
@@ -1197,9 +1238,9 @@
 }
 .powerProgressGrid[data-count="1"] article > div > b {
   grid-row: auto!important;
-  width: 60px!important;
-  height: 60px!important;
-  font-size: 19px!important;
+  width: 42px!important;
+  height: 42px!important;
+  font-size: 15px!important;
   flex: none!important;
   border: none!important;
   background: transparent!important;
@@ -1212,27 +1253,27 @@
 }
 .powerProgressGrid[data-count="1"] article > div > span {
   align-self: auto!important;
-  font-size: 12px!important;
+  font-size: 11px!important;
 }
 .powerProgressGrid[data-count="1"] article > div > strong {
   grid-column: auto!important;
   align-self: auto!important;
-  font-size: 10px!important;
+  font-size: 9px!important;
   margin-left: 2px;
 }
 .powerProgressGrid[data-count="1"] article > div > em {
   position: static!important;
   margin-left: 4px;
-  padding: 3px 7px!important;
-  font-size: 9px!important;
+  padding: 2px 6px!important;
+  font-size: 8px!important;
 }
 .powerProgressGrid[data-count="1"] article > p {
   flex: none!important;
   margin: 0!important;
 }
 .powerProgressGrid[data-count="1"] article > p > i {
-  width: 9px!important;
-  height: 9px!important;
+  width: 8px!important;
+  height: 8px!important;
 }
 @keyframes powerIconPulse {
   0%, 100% { transform: scale(1); }
@@ -1507,14 +1548,7 @@
   .levelMedal b { font-size:10px; }
   .permanentBrand { font-size:clamp(6px,1.75vw,7px); padding:3px 5px; }
   .themeObjectiveWords > div { min-height: 33px; font-size: clamp(11px,3.8vw,14px); }
-  .powerProgressGrid { gap: 3px; }
-  .powerProgressGrid article { min-height:57px; padding: 4px 2px 5px; }
   .powerProgressGrid article > div { grid-template-columns:minmax(22px,28px) minmax(0,1fr); gap-inline:2px; }
-  .powerProgressGrid article > div > b { width:26px; height:26px; font-size:17px; }
-  .powerProgressGrid article > div > span { font-size: clamp(6px,1.8vw,7px); }
-  .powerProgressGrid article > div > strong { font-size:6px; }
-  .powerProgressGrid article > p { gap: 3px; }
-  .powerProgressGrid article > p > i { width: 8px; height: 8px; }
   .boldTile { border-radius: 7px!important; padding-bottom: 3px!important; font-size: clamp(17px,5.4vw,21px)!important; }
   .tileFace { border-width: 1.5px; border-radius: 6px; }
 }
@@ -1529,13 +1563,10 @@
   .themeObjectiveRail { margin-bottom: 7px; }
   .themeObjectiveHeading span { padding-inline:7px; }
   .themeObjectiveWords > div { flex-basis: 92px; }
-  .powerProgress { padding: 5px; }
   .powerProgressGrid article > div { grid-template-columns:1fr; justify-items:center; }
-  .powerProgressGrid article > div > b { grid-row:auto; width:24px; height:24px; font-size:15px; }
-  .powerProgressGrid article > div > span { font-size:6px; }
+  .powerProgressGrid article > div > b { grid-row:auto; }
   .powerProgressGrid article > div > strong { display:none; }
   .powerProgressGrid article > div > em { display: none; }
-  .powerProgressGrid article > p { margin-top:3px; }
   .boardLetterGrid { padding: 5px!important; }
   .boldTile { font-size: 17px!important; }
 }
@@ -1642,7 +1673,7 @@
 }
 
 .powerProgressGrid article {
-  min-height: 66px;
+  min-height: var(--pw-card-min);
   border-width: 2px;
   border-radius: 14px;
   box-shadow: 0 3px 0 rgba(122,66,29,.35);
@@ -1654,7 +1685,7 @@
 }
 .powerProgressGrid article>div>span {
   overflow: visible;
-  font-size: clamp(7.5px,2.15vw,10px);
+  font-size: var(--pw-label);
   letter-spacing: .01em;
   text-overflow: clip;
 }
@@ -2061,8 +2092,6 @@
   .chapterBannerLine { width:100%; }
   .themeObjectiveRail { padding:5px; }
   .mobilePowerProgress { margin-bottom:8px; }
-  .powerProgress { padding:7px 5px 7px; }
-  .powerProgressHeading { margin-top:-13px; }
   .boardShell :global([class*="boardCard"]) { border-radius:19px!important; padding:7px!important; }
   .boardLetterGrid { border-width:3px!important; border-radius:15px!important; }
 }
@@ -2078,8 +2107,6 @@
   .largeResource>small,.largeCoin>small { font-size:clamp(6px,1.8vw,8px)!important; }
   .chapterBannerLine h1 { letter-spacing:-.02em; }
   .themeObjectiveHeading span { padding:6px 8px; font-size:8px; }
-  .powerProgressGrid article { min-height:62px; }
-  .powerProgressGrid article>div>b { width:clamp(27px,7.7vw,33px); height:clamp(27px,7.7vw,33px); }
   .boldTile { font-size:clamp(18px,5.9vw,24px)!important; }
   .summaryCard { width:calc(100% - 18px)!important; }
 }
@@ -2088,8 +2115,6 @@
   .themeObjectiveRail { grid-template-columns:48px minmax(0,1fr); gap:4px; }
   .themeObjectiveHeading span { padding-inline:6px; }
   .themeObjectiveHeading small { font-size:5px; }
-  .powerProgressGrid article { min-height:58px; }
-  .powerProgressGrid article>div>span { font-size:6.5px; }
   .boardShell :global([class*="boardActions"])>span { max-width:150px; text-align:center; }
   .summaryCard { padding:15px 10px 13px!important; }
   .summaryCrownMedal { width:64px!important; height:64px!important; }
@@ -2481,22 +2506,31 @@
     margin: 0 auto 4px;
   }
 
+  /* Mobile scale for Royal Powers: compact, so the board keeps the focus. */
   .powerProgress {
+    --pw-pad: 3px 4px 4px;
+    --pw-head-lift: -10px;
+    --pw-head-gap: 1px;
+    --pw-grid-gap: 3px;
+    --pw-card-min: 38px;
+    --pw-card-pad: 2px 3px 2px;
+    --pw-icon: clamp(20px,6vw,23px);
+    --pw-icon-glyph: clamp(12px,4.1vw,16px);
+    --pw-label: clamp(6.5px,2vw,8.5px);
+    --pw-counter: clamp(6px,1.8vw,7.5px);
+    --pw-dot: clamp(5.5px,1.75vw,7px);
+    --pw-dot-gap: 3px;
+    --pw-dot-lift: 2px;
     border-width: 2px;
     border-radius: 12px;
-    padding: 4px 4px 5px;
     box-shadow: 0 8px 18px rgba(0,0,0,.22)!important;
-  }
-
-  .powerProgressHeading {
-    margin: -9px 2px 3px;
   }
 
   .powerProgressHeading span {
     border-width: 1.5px;
     border-radius: 8px;
-    padding: 3px 7px;
-    font-size: 7px;
+    padding: 2px 6px;
+    font-size: 6.5px;
     box-shadow: 0 2px 0 rgba(0,0,0,.35);
   }
 
@@ -2504,38 +2538,28 @@
     font-size: 5.5px;
   }
 
-  .powerProgressGrid {
-    gap: 3px;
-  }
-
   .powerProgressGrid article {
-    min-height: 50px;
     border-width: 1.5px;
     border-radius: 10px;
-    padding: 3px 3px 4px;
     box-shadow: 0 3px 0 rgba(122,66,29,.35);
   }
 
   .powerProgressGrid article > div {
-    grid-template-columns: minmax(22px,27px) minmax(0,1fr)!important;
+    grid-template-columns: minmax(20px,25px) minmax(0,1fr)!important;
     grid-template-rows: 1fr auto;
     justify-items: initial!important;
     gap: 0 2px;
   }
 
   .powerProgressGrid article > div > b {
-    width: clamp(22px,6.8vw,28px)!important;
-    height: clamp(22px,6.8vw,28px)!important;
     border-width: 1px;
     border-radius: 8px;
-    font-size: clamp(14px,4.7vw,19px);
     box-shadow: 0 2px 0 rgba(102,52,19,.35);
   }
 
   .powerProgressGrid article > div > span {
     align-self: end;
     overflow: hidden;
-    font-size: clamp(6.5px,2vw,8.5px);
     text-overflow: clip;
   }
 
@@ -2543,23 +2567,15 @@
     display: block!important;
     grid-column: 2;
     align-self: start;
-    font-size: clamp(6px,1.8vw,7.5px);
   }
 
   .powerProgressGrid article > div > em {
     left: 0;
-    top: 21px;
+    top: 18px;
     font-size: 4px;
   }
 
-  .powerProgressGrid article > p {
-    gap: 3px;
-    margin-top: 3px;
-  }
-
   .powerProgressGrid article > p > i {
-    width: clamp(7px,2.2vw,9px);
-    height: clamp(7px,2.2vw,9px);
     border-width: 1px;
   }
 
@@ -2802,14 +2818,12 @@
   }
 
   .powerProgressGrid article > div > span {
-    font-size:clamp(7.5px,2.15vw,9px);
     letter-spacing:.015em;
     text-shadow:0 1px 0 rgba(255,255,255,.72);
   }
 
   .powerProgressGrid article > div > strong {
     color:#70441f;
-    font-size:clamp(7px,2vw,8px);
     letter-spacing:.01em;
   }
 
@@ -3014,12 +3028,10 @@
 }
 
 @media(max-width:340px) {
-  .powerProgressGrid article > div > span {
-    font-size:7.5px;
-  }
-
-  .powerProgressGrid article > div > strong {
-    font-size:7px;
+  .powerProgress {
+    --pw-label: 7px;
+    --pw-counter: 6.5px;
+    --pw-card-min: 38px;
   }
 
   .rewardStrip {
@@ -3060,7 +3072,6 @@
   }
 
   .powerProgressGrid article {
-    min-height: 48px;
     padding-inline: 2px;
   }
 
