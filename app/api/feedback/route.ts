@@ -6,6 +6,27 @@ export const dynamic = "force-dynamic";
 
 const MAX_FIELD_BYTES = 6 * 1024 * 1024; // generous cap for a short voice memo + a single screen capture
 
+// Private, unguessable ntfy.sh topic — anyone who knows it can read/publish
+// notifications, so it stands in for a shared secret rather than real auth.
+const NTFY_TOPIC = "wordkingdom-feedback-1bc9720822ad3899";
+
+async function notifyNewFeedback(input: { displayName: string; level: number }): Promise<void> {
+  try {
+    await fetch("https://ntfy.sh/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        topic: NTFY_TOPIC,
+        title: "New Word Kingdom feedback",
+        message: `${input.displayName} left feedback on level ${input.level}.`,
+        tags: ["speech_balloon"],
+      }),
+    });
+  } catch {
+    // Best-effort ping — a failed notification must not fail the submission.
+  }
+}
+
 async function blobToDataUrl(blob: Blob): Promise<string> {
   if (blob.size > MAX_FIELD_BYTES) {
     throw new Error("File too large");
@@ -50,6 +71,8 @@ export async function POST(request: Request): Promise<Response> {
     screenshotDataUrl,
     audioDataUrl,
   });
+
+  await notifyNewFeedback({ displayName: user.displayName, level });
 
   return Response.json({ submitted: true, id });
 }
