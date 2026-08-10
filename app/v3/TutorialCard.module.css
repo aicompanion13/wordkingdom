@@ -43,7 +43,6 @@
   text-align: center;
 }
 
-
 .title {
   margin: 0;
   color: #173f73;
@@ -63,30 +62,34 @@
 
 .actions {
   position: absolute;
-  left: 25%;
-  bottom: 5.2%;
-  width: 50%;
-  height: 8.2%;
+  left: 22%;
+  bottom: 6.2%;
+  width: 56%;
+  height: clamp(40px,10.6%,52px);
   display: grid;
   place-items: center;
 }
 
 .cta {
   width: 100%;
-  min-height: 44px;
+  min-height: 0;
   height: 100%;
   display: grid;
   place-items: center;
-  padding: 6px 8px;
+  padding: 0 8px;
   border: 0;
   border-radius: 999px;
   background: transparent;
   box-shadow: none;
   filter: none;
   color: #173f73;
-  font: 700 clamp(18px,5.6vw,23px)/1 var(--game-display,ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif);
+  font-family: var(--game-display,ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif)!important;
+  font-size: clamp(20px,6.3vw,27px)!important;
+  font-weight: 1000!important;
+  line-height: 1!important;
   letter-spacing: .015em;
   text-shadow: 0 1px 0 rgba(255,255,255,.75);
+  white-space: nowrap;
   cursor: pointer;
 }
 
