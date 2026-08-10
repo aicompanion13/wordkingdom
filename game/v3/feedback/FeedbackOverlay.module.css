@@ -6,13 +6,14 @@
   flex-direction: column;
   background: #05122c;
   color: #fff;
-  touch-action: none;
+  overflow-y: auto;
 }
 
 .canvasWrap {
   position: relative;
   flex: 1;
   min-height: 0;
+  max-height: 55vh;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -28,6 +29,10 @@
 }
 
 .loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
   color: #cfe0ff;
   font-family: var(--game-ui, "Trebuchet MS", Arial, sans-serif);
   font-size: 15px;
@@ -147,7 +152,7 @@
 .actions {
   display: flex;
   gap: 10px;
-  padding: 0 12px 12px;
+  padding: 0 12px calc(12px + env(safe-area-inset-bottom));
   background: #0a1c40;
 }
 
