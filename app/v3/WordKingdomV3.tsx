@@ -265,6 +265,24 @@ function freshPvpState(): PvpState {
   };
 }
 
+function playerBackupKey(accountId: string): string {
+  return `wk-v3-player-backup:${accountId}`;
+}
+
+/** Last known good state mirrored on this device, used only when the cloud load fails outright. */
+function readLocalBackup(accountId: string): { player: V3PlayerState; pvp: PvpState } | null {
+  try {
+    const raw = window.localStorage.getItem(playerBackupKey(accountId));
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as { player?: V3PlayerState; pvp?: PvpState };
+    if (!parsed?.player || !parsed?.pvp) return null;
+    if (!Number.isFinite(parsed.player.currentLevel)) return null;
+    return { player: parsed.player, pvp: parsed.pvp };
+  } catch {
+    return null;
+  }
+}
+
 function formatNumber(value: number): string {
   return new Intl.NumberFormat("en", { notation: value >= 10000 ? "compact" : "standard" }).format(value);
 }
@@ -381,6 +399,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const cloudReady = useRef(false);
   const cloudSaveTimer = useRef<number | null>(null);
   const cloudSaveInFlight = useRef<Promise<void> | null>(null);
+  const pendingCloudSave = useRef<{ player: V3PlayerState; pvp: PvpState } | null>(null);
   const ftueLastUsefulAt = useRef(Date.now());
   const ftueProgressRef = useRef(ftueProgress);
   const ftueFirstChangeAt = useRef(0);
@@ -394,11 +413,23 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const hintButtonRef = useRef<HTMLButtonElement>(null);
   const audibleDialogRef = useRef<string | null>(null);
 
+  const writeLocalBackup = (nextPlayer: V3PlayerState, nextPvp: PvpState) => {
+    try {
+      window.localStorage.setItem(playerBackupKey(account.email), JSON.stringify({ player: nextPlayer, pvp: nextPvp }));
+    } catch {
+      // Browser storage can be unavailable; the cloud save stays authoritative.
+    }
+  };
+
   const queueCloudSave = (nextPlayer: V3PlayerState, nextPvp: PvpState) => {
     if (!cloudReady.current) return;
+    // Mirror locally first: this survives the tab closing before the debounce fires.
+    writeLocalBackup(nextPlayer, nextPvp);
+    pendingCloudSave.current = { player: nextPlayer, pvp: nextPvp };
     if (cloudSaveTimer.current !== null) window.clearTimeout(cloudSaveTimer.current);
     cloudSaveTimer.current = window.setTimeout(() => {
       cloudSaveTimer.current = null;
+      pendingCloudSave.current = null;
       const request = (cloudSaveInFlight.current ?? Promise.resolve())
         .catch(() => undefined)
         .then(() => fetch("/api/player", {
@@ -411,11 +442,33 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
         });
       cloudSaveInFlight.current = request;
       void request
-        .catch(() => setToast("Progress is safe locally, but cloud sync needs a retry."))
+        .catch(() => setToast("Progress is saved on this device, but cloud sync needs a retry."))
         .finally(() => {
           if (cloudSaveInFlight.current === request) cloudSaveInFlight.current = null;
         });
     }, 180);
+  };
+
+  // Send any debounced save immediately. `keepalive` lets the request outlive the page,
+  // which is the whole point when the player closes the tab right after a reward.
+  const flushCloudSave = () => {
+    if (cloudSaveTimer.current !== null) {
+      window.clearTimeout(cloudSaveTimer.current);
+      cloudSaveTimer.current = null;
+    }
+    const pending = pendingCloudSave.current;
+    if (!pending) return;
+    pendingCloudSave.current = null;
+    try {
+      void fetch("/api/player", {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(pending),
+        keepalive: true,
+      }).catch(() => undefined);
+    } catch {
+      // The local mirror written in queueCloudSave is the fallback.
+    }
   };
 
   const persistPvp = (next = pvp.current?.snapshot()) => {
@@ -514,20 +567,42 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       })
       .catch(() => {
         if (!active) return;
-        const restored = freshPlayer();
-        const restoredPvp = freshPvpState();
+        // Cloud gave us nothing, so fall back to this device's mirror rather than
+        // showing a brand new game. cloudReady stays false, so this is never
+        // written back over whatever the account actually holds.
+        const backup = readLocalBackup(account.email);
+        const restored = backup ? { ...freshPlayer(), ...backup.player, settings: { ...freshPlayer().settings, ...backup.player.settings } } : freshPlayer();
+        const restoredPvp = backup?.pvp ?? freshPvpState();
         economy.current = new EconomyManagerV3(restored);
         pvp.current = new PvpManager(restoredPvp);
         setPlayer(economy.current.snapshot());
         const normalizedPvp = pvp.current.snapshot();
         setPvpState(normalizedPvp);
         setBadgeCounts(normalizedPvp.badgeProgress);
-        setToast("Your account could not sync yet. Please reload once.");
+        setViewChapterId(track.chapterForLevel(economy.current.snapshot().currentLevel).chapterId);
+        setToast(backup
+          ? "Showing progress saved on this device. Reload once to sync your account."
+          : "Your account could not sync yet. Please reload once.");
         setHydrated(true);
       });
     return () => {
       active = false;
-      if (cloudSaveTimer.current !== null) window.clearTimeout(cloudSaveTimer.current);
+      // Send the debounced save rather than dropping it on the floor.
+      flushCloudSave();
+    };
+  }, []);
+
+  useEffect(() => {
+    const onPageHide = () => flushCloudSave();
+    const onVisibilityChange = () => {
+      // Mobile browsers often only fire visibilitychange when the player switches away.
+      if (document.visibilityState === "hidden") flushCloudSave();
+    };
+    window.addEventListener("pagehide", onPageHide);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      window.removeEventListener("pagehide", onPageHide);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
     };
   }, []);
 
@@ -2057,6 +2132,9 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       window.clearTimeout(cloudSaveTimer.current);
       cloudSaveTimer.current = null;
     }
+    // Drop the queued save and the device mirror, or a restart could be undone by stale state.
+    pendingCloudSave.current = null;
+    try { window.localStorage.removeItem(playerBackupKey(account.email)); } catch { /* Nothing to clean up. */ }
     await cloudSaveInFlight.current?.catch(() => undefined);
 
     const response = await fetch("/api/player", {

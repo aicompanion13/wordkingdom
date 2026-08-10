@@ -35,7 +35,8 @@
     "oceanStickerRevealCount": 0,
     "oceanCompletionResult": null,
     "oceanPackMessageDismissed": false,
-    "oceanAlbumMessageDismissed": false
+    "oceanAlbumMessageDismissed": false,
+    "introVideoSeen": false
   },
   "pvpHistory": [],
   "matchmakingQueue": [
