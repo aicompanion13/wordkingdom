@@ -14,6 +14,8 @@ import defaultPvpJson from "@/game/v3/data/pvp_state.json";
 import oceanAlbumJson from "@/game/v3/data/ocean_album.json";
 import { AlbumManager } from "@/game/v3/album-manager";
 import { BadgeManager } from "@/game/v3/badge-manager";
+import { considerCelebration, createPraiseBudget } from "@/game/v3/praise-budget";
+import type { CelebrationBannerKind } from "@/game/v3/praise-budget";
 import type { BadgeCollectionResult } from "@/game/v3/badge-manager";
 import type { BoardSession, SessionActiveWord } from "@/game/v3/board-session";
 import type { CanonicalBoardSnapshot } from "@/game/v3/canonical-board-state";
@@ -134,7 +136,6 @@ const EMPTY_SCORE: ScoreManagerSnapshot = {
   wordsFound: 0,
   idleRemainingRatio: 0,
 };
-type CelebrationBannerKind = "great-word" | "royal-combo" | "bonus-found" | "keep-going" | "on-fire" | "one-more";
 const CELEBRATION_BANNERS: Record<CelebrationBannerKind, { src: string; alt: string }> = {
   "great-word": { src: "/banners/great-word.webp", alt: "Great Word!" },
   "royal-combo": { src: "/banners/royal-combo.webp", alt: "Royal Combo!" },
@@ -392,6 +393,9 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const celebrationTimeout = useRef<number | undefined>(undefined);
   const celebrationLeaveTimeout = useRef<number | undefined>(undefined);
   const celebrationShown = useRef({ royalCombo: false, onFire: false });
+  /* Board-scoped praise budget: how many spent, and the solve that spent the last one. */
+  const praiseBudget = useRef(createPraiseBudget());
+  const solveIndex = useRef(0);
   const boardCardRef = useRef<HTMLDivElement | null>(null);
   const cloudReady = useRef(false);
   const cloudSaveTimer = useRef<number | null>(null);
@@ -810,6 +814,9 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   };
 
   const fireCelebration = (kind: CelebrationBannerKind) => {
+    const verdict = considerCelebration(kind, praiseBudget.current, solveIndex.current);
+    praiseBudget.current = verdict.budget;
+    if (!verdict.show) return;
     window.clearTimeout(celebrationTimeout.current);
     window.clearTimeout(celebrationLeaveTimeout.current);
     setCelebrationLeaving(false);
@@ -979,6 +986,8 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     const nextScorer = new ScoreManager(activatedAt);
     scoreIdleUnsubscribe.current?.();
     celebrationShown.current = { royalCombo: false, onFire: false };
+    praiseBudget.current = createPraiseBudget();
+    solveIndex.current = 0;
     scoreIdleUnsubscribe.current = nextScorer.on("OnComboBreak", (event) => {
       if (event.reason === "idle-timeout") {
         setScore(nextScorer.snapshot());
@@ -1056,6 +1065,8 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     const nextScorer = new ScoreManager(activatedAt);
     scoreIdleUnsubscribe.current?.();
     celebrationShown.current = { royalCombo: false, onFire: false };
+    praiseBudget.current = createPraiseBudget();
+    solveIndex.current = 0;
     scoreIdleUnsubscribe.current = nextScorer.on("OnComboBreak", (event) => {
       if (event.reason === "idle-timeout") {
         setScore(nextScorer.snapshot());
@@ -1117,6 +1128,8 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     const nextScorer = new ScoreManager(activatedAt);
     scoreIdleUnsubscribe.current?.();
     celebrationShown.current = { royalCombo: false, onFire: false };
+    praiseBudget.current = createPraiseBudget();
+    solveIndex.current = 0;
     scoreIdleUnsubscribe.current = nextScorer.on("OnComboBreak", (event) => {
       if (event.reason === "idle-timeout") {
         setScore(nextScorer.snapshot());
@@ -1618,6 +1631,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       queueBadgeFx(badgeResult);
       saveBadgeResult(badgeResult);
     }
+    solveIndex.current += 1;
     if (!isGoldenRun) {
       const comboNow = scorer.current?.snapshot().comboMultiplier ?? INITIAL_COMBO;
       if (comboNow >= ON_FIRE_THRESHOLD - 0.001 && !celebrationShown.current.onFire) {
