@@ -28,16 +28,14 @@ test("the V3 gameplay rail hides mission UI and never couples powers to objectiv
     readFile(new URL("../app/v3/V3.module.css", import.meta.url), "utf8"),
   ]);
 
-  const objectiveRail = component.slice(
-    component.indexOf("className={styles.themeObjectiveRail}"),
-    component.indexOf("className={styles.mobilePowerProgress}"),
-  );
-  assert.match(objectiveRail, /activeWords\.map/);
+  const trayStart = component.indexOf("<ObjectiveTray");
+  const objectiveRail = component.slice(trayStart, component.indexOf("/>", trayStart));
+  assert.match(objectiveRail, /activeWords={activeWords}/);
   assert.doesNotMatch(objectiveRail, /BADGES|badgeByTile|readyActions|lockedWord|objectiveProgress/);
   assert.match(css, /\.boardShell \.objectiveBar[\s\S]*display: none!important/);
   assert.match(css, /\[class\*="cascadeTrack"\]/);
   assert.match(css, /\[class\*="activeRail"\]/);
-  assert.match(component, /const POWER_ORDER: readonly BadgeType\[\] = \["raid", "attack", "steal", "shield"\]/);
+  assert.match(component, /const POWER_ORDER: readonly BadgeType\[\] = \["shield", "attack", "steal", "raid"\]/);
 });
 
 test("responsive tiles separate their square hitbox, face, letter, and blue base", async () => {

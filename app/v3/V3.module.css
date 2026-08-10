@@ -162,7 +162,7 @@
 .chapterTopRow{display:flex;align-items:center;gap:clamp(6px,2vw,10px);width:100%}
 .chapterTopRow .chapterBannerLine{flex:1 1 auto;min-width:0}
 .ftueInlineBack{flex:0 0 auto;width:38px;height:38px;display:grid;place-items:center;border:2px solid #fff;border-radius:11px;color:#fff;background:#144e8c;font:900 20px/1 var(--game-ui);box-shadow:0 2px 0 rgba(0,0,0,.35)}
-.ftuePrimaryContinue{align-self:end;width:100%;min-height:54px;border:3px solid #fff;border-radius:16px;color:#fff;background:linear-gradient(180deg,#2d86d4,#0f4d96);box-shadow:0 4px 0 #082f68;font:900 18px var(--game-display);letter-spacing:.04em}
+.ftuePrimaryContinue{align-self:end;width:100%;min-height:54px;border:3px solid #fff;border-radius:16px;color:#fff;background:linear-gradient(180deg,#2d86d4,#0f4d96);box-shadow:0 4px 0 #082f68;font:700 18px var(--game-display);letter-spacing:.04em}
 .levelTwoCoachIcon { width:46px; height:46px; display:grid; place-items:center; border:3px solid #fff; border-radius:50%; color:#fff; background:linear-gradient(#5bd66a,#1e8d3b); font-family:var(--game-display); font-size:24px; box-shadow:0 3px 0 rgba(21,94,43,.5); }
 .mobileBottomNav button>span>[data-artwork="album"] { width:32px; height:32px; border-radius:7px; }
 @keyframes discoverySlotPop { 45%{transform:scale(1.18)} }
@@ -1066,7 +1066,7 @@
   color: #6b3410;
   font-family: var(--game-display);
   font-size: 12px;
-  font-weight: 1000;
+  font-weight: 700;
   line-height: 1;
   text-shadow: 0 1px 0 rgba(255,255,255,.45);
 }
@@ -1078,7 +1078,7 @@
   background: linear-gradient(180deg,#194f9b,#0b2d6e);
   font-family: var(--game-display);
   font-size: clamp(7px,1.9vw,10px);
-  font-weight: 1000;
+  font-weight: 700;
   line-height: 1;
   letter-spacing: .07em;
   box-shadow: 0 2px 0 rgba(0,0,0,.35);
@@ -1086,7 +1086,7 @@
 .previewScoreHud span small,.previewScoreHud span b { display: block; }
 .previewScoreHud span small { color: #98501c; font-size: 5px; font-weight: 1000; letter-spacing: .08em; }
 .previewScoreHud span b { font-family: var(--game-display); font-size: 14px; }
-.previewScoreHud > i { min-width: 82px; border-radius: 999px; padding: 4px 8px; color: #633415; font-family: var(--game-display); font-size: 8px; font-weight: 1000; font-style: normal; }
+.previewScoreHud > i { min-width: 82px; border-radius: 999px; padding: 4px 8px; color: #633415; font-family: var(--game-display); font-size: 8px; font-weight: 700; font-style: normal; }
 
 .themeObjectiveRail {
   width: min(100%,920px);
@@ -1156,7 +1156,7 @@
 .powerProgressGrid article > div { position:relative; display: grid; grid-template-columns: minmax(22px,32px) minmax(0,1fr); grid-template-rows: 1fr auto; align-items: center; gap: 1px 3px; }
 .powerProgressGrid article > div > b { grid-row: 1/3; width: clamp(30px,8vw,38px); height: clamp(30px,8vw,38px); display:grid; place-items:center; border:1.5px solid rgba(255,255,255,.9); border-radius:10px; font-size: clamp(16px,5vw,22px); background:rgba(255,255,255,.75); box-shadow:0 2px 0 rgba(119,66,21,.28); }
 .powerProgressGrid article > div > b img { width: 78%; height: 78%; object-fit: contain; }
-.powerProgressGrid article > div > span { align-self:end; overflow: hidden; color: #233c6b; font-family: var(--game-display); font-size: clamp(6.5px,2vw,9px); line-height:1; font-weight: 1000; text-overflow: ellipsis; text-transform: uppercase; }
+.powerProgressGrid article > div > span { align-self:end; overflow: hidden; color: #233c6b; font-family: var(--game-display); font-size: clamp(6.5px,2vw,9px); line-height:1; font-weight: 700; text-overflow: ellipsis; text-transform: uppercase; }
 .powerProgressGrid article > div > strong { grid-column:2; align-self:start; color:#8a5220; font-family:var(--game-display); font-size:clamp(6px,1.8vw,8px); line-height:1; }
 .powerProgressGrid article > div > em { position:absolute; left:1px; top:25px; border-radius:99px; padding:1px 3px; color: #fff; background:#25813b; font-size: 4.5px; font-weight: 1000; font-style: normal; white-space: nowrap; }
 .powerProgressGrid article > p { position:relative; display: flex; justify-content: center; gap: 4px; margin: 5px 0 0; }
@@ -1708,7 +1708,7 @@
 .tileLetter {
   color: var(--royal-ink);
   font-family: var(--game-display);
-  font-weight: 400;
+  font-weight: 700;
   text-shadow: 0 1px 0 #fff,0 2px 0 rgba(21,43,95,.12);
 }
 .boardShell :global([class*="boardMessage"]) {
@@ -2194,7 +2194,7 @@
 .oceanAlbumCover [data-artwork] { width:100px; height:80px; margin:auto; }
 .oceanAlbumCover h1 { margin:4px 0; font-family:var(--game-display); font-size:34px; }
 .oceanAlbumCover p { font-weight:900; }
-.oceanAlbumCover button,.oceanAlbumPage>.albumPageContinue { width:100%; min-height:48px; border:3px solid #fff; border-radius:14px; color:#fff; background:linear-gradient(#328fd7,#14529b); box-shadow:0 4px 0 rgba(0,0,0,.35); font:1000 13px var(--game-display); }
+.oceanAlbumCover button,.oceanAlbumPage>.albumPageContinue { width:100%; min-height:48px; border:3px solid #fff; border-radius:14px; color:#fff; background:linear-gradient(#328fd7,#14529b); box-shadow:0 4px 0 rgba(0,0,0,.35); font:700 13px var(--game-display); }
 
 @media(max-width:430px) {
   .ftueSummaryCard { max-height:calc(100dvh - clamp(54px,16.5vw,71px) - 12px)!important; padding:14px 10px!important; }

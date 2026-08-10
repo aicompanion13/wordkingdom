@@ -314,7 +314,6 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const [toast, setToast] = useState<string | null>(null);
   const [board, setBoard] = useState<BoardSnapshot | null>(null);
   const [activeWords, setActiveWords] = useState<SessionActiveWord[]>([]);
-  const [completedWords, setCompletedWords] = useState<string[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [acceptedPathIds, setAcceptedPathIds] = useState<string[]>([]);
   const [transformationDiffIds, setTransformationDiffIds] = useState<string[]>([]);
@@ -709,10 +708,6 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
                 ? "hint-coach"
                 : null;
   const shoreTutorialPath = activeWords.find((word) => word.id === "a0-shore")?.tileIds ?? [];
-  // The session owns the found-word list; mirror it whenever the objectives change.
-  useEffect(() => {
-    setCompletedWords(boardSession.current?.shownWords() ?? []);
-  }, [activeWords]);
   const standardHintVisible = currentRunLevel >= 4
     || (currentRunLevel === 3 && (contextualPrompt || ftueProgress.completedTutorials.includes("level-3-hint")))
     || (currentRunLevel === 2 && Math.max(0, clock - ftueLastUsefulAt.current) >= 10_000);
@@ -2527,7 +2522,6 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     </section>
     <ObjectiveTray
       activeWords={activeWords}
-      completedWords={completedWords}
       recommendedObjectiveId={goldenTutorial.recommendedObjectiveId}
       hintedTileId={hintedId}
       stall={ftueActive ? ftueStall : undefined}
