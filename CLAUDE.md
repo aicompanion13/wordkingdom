@@ -1,5 +1,18 @@
 # Word Kingdom: Spell & Steal
 
+## CRITICAL: canonical branch, route, and shared-agent workflow
+
+This rule applies to every Claude task, Codex task, handoff, prompt, implementation plan, and release:
+
+- Work on **Word Kingdom `/v3` only** unless the owner explicitly requests another version.
+- The production Worker is **`wordkingdom-prod`** and the canonical player URL is **https://wordkingdom-prod.inspectorkush1.workers.dev/v3**.
+- The shared repository is `aicompanion13/wordkingdom`; the shared deployment branch is **`claude/game-access-5fn1b6`**.
+- Codex and Claude share this branch. Before every edit, inspect the latest remote head and reconcile the other agent's work.
+- Never force-push, reset away, or silently overwrite newer collaborator commits. Push only a reconciled fast-forward update.
+- After validation, commit and push the complete intended change so both agents use the same canonical source, then confirm the `wordkingdom-prod` `/v3` deployment.
+- Every handoff or generated prompt must repeat this critical routing note.
+- If these requirements cannot be followed, stop and report the blocker before editing or publishing.
+
 Mobile word-search game (Next.js 16 + React 19 on Cloudflare Workers via
 `vinext`). The owner collaborates from a phone; treat pushed commits as
 instantly player-visible.
