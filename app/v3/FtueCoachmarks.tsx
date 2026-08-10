@@ -101,7 +101,6 @@ export function ConceptCard({
   title,
   message,
   cta,
-  icon = "👑",
   messageOpen = true,
   onDismiss,
   testId,
@@ -131,9 +130,8 @@ export function ConceptCard({
       ctaRef.current?.focus();
     }}
   >
-    <section className={tutorialStyles.card} data-has-illustration={icon ? "true" : "false"} role="dialog" aria-modal="true" aria-labelledby="tutorial-card-title">
-      <img className={tutorialStyles.frame} src="/tutorial/progression-card-frame.png" alt="" />
-      {icon && <div className={tutorialStyles.illustration}><span className={tutorialStyles.topicIcon} aria-hidden="true">{icon}</span></div>}
+    <section className={tutorialStyles.card} role="dialog" aria-modal="true" aria-labelledby="tutorial-card-title">
+      <img className={tutorialStyles.frame} src="/tutorial/announcement-scroll-v2.png" alt="" />
       <div className={tutorialStyles.copy}>
         <h2 id="tutorial-card-title" className={tutorialStyles.title} data-text={title} aria-label={title}>{title}</h2>
         <p className={tutorialStyles.body}>{message}</p>
