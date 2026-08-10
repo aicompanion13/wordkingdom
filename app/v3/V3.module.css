@@ -8,8 +8,8 @@
 .loginIntroChrome button{pointer-events:auto;min-height:48px;border:3px solid #fff;border-radius:14px;padding:10px 16px;color:#fff8d9;background:linear-gradient(180deg,#5bd45a,#1f9b3f);font-family:var(--game-display);font-size:clamp(14px,4vw,18px);letter-spacing:.035em;text-shadow:0 2px 0 #1f9b3f;box-shadow:0 4px 0 #1f9b3f,0 10px 16px -4px rgba(0,0,0,.4);cursor:pointer}
 .loginIntroChrome button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.loginIntro video{display:none}.loginIntro{background:radial-gradient(circle at 50% 20%,#397ec0,#0b265e 65%,#051633)}}
-.hubContent{padding-bottom:95px}
-.royalTopBar{position:sticky;z-index:20;top:max(6px,env(safe-area-inset-top));width:min(100%,430px);margin:0 auto 6px;aspect-ratio:1496/325;overflow:visible;filter:drop-shadow(0 6px 14px rgba(4,12,34,.4))}
+.hubContent{position:relative;z-index:1;padding-bottom:95px}
+.royalTopBar{position:sticky;z-index:20;top:0;width:min(100%,430px);margin:0 auto calc(clamp(16px,5.2vw,22px) * -1);aspect-ratio:1496/325;overflow:visible;filter:drop-shadow(0 6px 14px rgba(4,12,34,.4))}
 .royalTopBar::before{content:"";position:absolute;left:2.5%;right:2.5%;top:5%;bottom:34%;border-radius:22%/45%;background:#1f4c85}
 .royalTopBarArt{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none}
 .royalTopBarEnergy,.royalTopBarStars,.royalTopBarCoins{position:absolute;top:39.4%;transform:translate(-50%,-50%);display:grid;place-items:center;min-width:12%;overflow:hidden;color:#6a351b;font-family:var(--game-display);font-weight:700;font-size:clamp(9px,3vw,13px);line-height:1;letter-spacing:.01em;text-shadow:0 1px 0 rgba(255,255,255,.7);white-space:nowrap}
@@ -2286,7 +2286,7 @@
   }
 
   .v3Shell .hubContent {
-    height: calc(100dvh - 64px - 9px - min(430px,96vw) * 0.2172 - env(safe-area-inset-bottom));
+    height: calc(100dvh - 64px - min(430px,100dvw) * 0.2172 + clamp(16px,5.2vw,22px) - env(safe-area-inset-bottom));
     min-height: 0;
     padding: 0 5px 3px!important;
     overflow: hidden;
