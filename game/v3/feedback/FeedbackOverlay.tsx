@@ -2,6 +2,7 @@
 
 import type { PointerEvent as ReactPointerEvent, RefObject } from "react";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { captureElementScreenshot } from "./capture-screenshot";
 import styles from "./FeedbackOverlay.module.css";
 
@@ -34,6 +35,7 @@ export function FeedbackOverlay({ open, targetRef, level, onClose }: FeedbackOve
   const [elapsedSec, setElapsedSec] = useState(0);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [errorText, setErrorText] = useState<string | null>(null);
+  const [captureAttempt, setCaptureAttempt] = useState(0);
 
   useEffect(() => {
     if (!open) return;
@@ -63,7 +65,11 @@ export function FeedbackOverlay({ open, targetRef, level, onClose }: FeedbackOve
     return () => {
       cancelled = true;
     };
-  }, [open, targetRef]);
+  }, [open, targetRef, captureAttempt]);
+
+  function retryCapture() {
+    setCaptureAttempt((attempt) => attempt + 1);
+  }
 
   useEffect(() => {
     if (!open) return;
@@ -80,7 +86,7 @@ export function FeedbackOverlay({ open, targetRef, level, onClose }: FeedbackOve
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-  if (!open) return null;
+  if (!open || typeof document === "undefined") return null;
 
   function getCanvasPoint(event: ReactPointerEvent<HTMLCanvasElement>) {
     const canvas = canvasRef.current;
@@ -226,29 +232,37 @@ export function FeedbackOverlay({ open, targetRef, level, onClose }: FeedbackOve
 
   const canSubmit = phase === "ready" && recordState === "recorded";
 
-  return (
+  return createPortal(
     <div className={styles.overlay} role="dialog" aria-modal="true" aria-label="Send feedback">
       <div className={styles.canvasWrap}>
         {phase === "capturing" && <div className={styles.loading}>Capturing screen…</div>}
-        {phase === "error" && <div className={styles.loading}>Couldn't capture the screen.</div>}
-        {(phase === "ready" || phase === "submitting" || phase === "done") && (
-          <>
-            <div className={styles.hint}>Draw on what you didn't like, then record a quick note</div>
-            <canvas
-              ref={canvasRef}
-              className={styles.canvas}
-              onPointerDown={onCanvasPointerDown}
-              onPointerMove={onCanvasPointerMove}
-              onPointerUp={stopDrawing}
-              onPointerCancel={stopDrawing}
-              onPointerLeave={stopDrawing}
-            />
-          </>
+        {phase === "error" && (
+          <div className={styles.loading}>
+            <p>Couldn't capture the screen.</p>
+            <button type="button" className={styles.iconButton} onClick={retryCapture}>
+              Try again
+            </button>
+          </div>
         )}
+        {(phase === "ready" || phase === "submitting" || phase === "done") && (
+          <div className={styles.hint}>Draw on what you didn't like, then record a quick note</div>
+        )}
+        {/* Always mounted (not gated on `phase`) so canvasRef.current exists by the time
+            the capture effect needs to draw into it; hidden via CSS until ready. */}
+        <canvas
+          ref={canvasRef}
+          className={styles.canvas}
+          style={{ display: phase === "ready" || phase === "submitting" || phase === "done" ? undefined : "none" }}
+          onPointerDown={onCanvasPointerDown}
+          onPointerMove={onCanvasPointerMove}
+          onPointerUp={stopDrawing}
+          onPointerCancel={stopDrawing}
+          onPointerLeave={stopDrawing}
+        />
         {phase === "done" && <div className={styles.successBanner}>Feedback sent — thanks!</div>}
       </div>
 
-      {phase !== "error" && (
+      {(phase === "ready" || phase === "submitting" || phase === "done") && (
         <div className={styles.toolbar}>
           <div className={styles.colorRow}>
             {MARK_COLORS.map((swatch) => (
@@ -309,6 +323,7 @@ export function FeedbackOverlay({ open, targetRef, level, onClose }: FeedbackOve
           {phase === "submitting" ? "Sending…" : "Send feedback"}
         </button>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
