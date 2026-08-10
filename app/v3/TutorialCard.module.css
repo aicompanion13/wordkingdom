@@ -77,7 +77,8 @@
 .title {
   position: relative;
   margin: 0;
-  font-family: var(--game-headline,ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif);
+  font-family: var(--game-headline,ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif)!important;
+  font-weight: 700;
   font-size: clamp(20px,7vw,28px);
   line-height: 1.12;
   letter-spacing: -.01em;

@@ -102,7 +102,8 @@
 .title {
   position: relative;
   margin: 6px 0 2px;
-  font-family: var(--game-headline);
+  font-family: var(--game-headline)!important;
+  font-weight: 700;
   font-size: clamp(24px,7.5vw,32px);
   line-height: 1.1;
   letter-spacing: -.01em;
