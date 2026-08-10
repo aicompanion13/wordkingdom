@@ -83,13 +83,13 @@
   line-height: 1.12;
   letter-spacing: -.01em;
   color: transparent;
-  background: linear-gradient(180deg,#dcf0ff 0%,#6fa8ec 50%,#2f63b8 100%);
+  background: linear-gradient(180deg,#fff8bd 0%,#ffd452 42%,#e5961d 70%,#b85d16 100%);
   -webkit-background-clip: text;
   background-clip: text;
-  -webkit-text-stroke: 1px rgba(11,36,86,.5);
+  -webkit-text-stroke: 1px rgba(90,54,14,.55);
   text-shadow:
-    0 2px 0 rgba(11,36,86,.4),
-    0 5px 10px rgba(10,30,70,.22);
+    0 2px 0 rgba(90,54,14,.45),
+    0 5px 10px rgba(60,35,10,.25);
 }
 
 .title::before {
