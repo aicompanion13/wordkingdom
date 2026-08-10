@@ -91,6 +91,7 @@ import type { AlbumDefinition, CardDefinition, ChapterDefinition, ObstacleState,
 import { JuiceFxLayer } from "./JuiceFxLayer";
 import { KingdomPopup } from "./KingdomPopup";
 import { ConceptCard, DiscoveryArtwork, FtueCoachmark } from "./FtueCoachmarks";
+import { ObjectiveTray } from "./ObjectiveTray";
 import { useWordKingdomAudio } from "./useWordKingdomAudio";
 import base from "../v2/V2.module.css";
 import styles from "./V3.module.css";
@@ -313,6 +314,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const [toast, setToast] = useState<string | null>(null);
   const [board, setBoard] = useState<BoardSnapshot | null>(null);
   const [activeWords, setActiveWords] = useState<SessionActiveWord[]>([]);
+  const [completedWords, setCompletedWords] = useState<string[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [acceptedPathIds, setAcceptedPathIds] = useState<string[]>([]);
   const [transformationDiffIds, setTransformationDiffIds] = useState<string[]>([]);
@@ -707,6 +709,10 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
                 ? "hint-coach"
                 : null;
   const shoreTutorialPath = activeWords.find((word) => word.id === "a0-shore")?.tileIds ?? [];
+  // The session owns the found-word list; mirror it whenever the objectives change.
+  useEffect(() => {
+    setCompletedWords(boardSession.current?.shownWords() ?? []);
+  }, [activeWords]);
   const standardHintVisible = currentRunLevel >= 4
     || (currentRunLevel === 3 && (contextualPrompt || ftueProgress.completedTutorials.includes("level-3-hint")))
     || (currentRunLevel === 2 && Math.max(0, clock - ftueLastUsefulAt.current) >= 10_000);
@@ -2519,10 +2525,13 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
         </div>
       </div>
     </section>
-    <section className={styles.themeObjectiveRail} data-ftue-stall={ftueActive ? ftueStall : undefined}>
-      <div className={styles.themeObjectiveHeading}><span>FIND</span><small>{activeWords.length} ACTIVE</small></div>
-      <div className={styles.themeObjectiveWords}>{activeWords.map((word, index) => <div data-ftue-active-word="true" className={`${base.activeWordChip} ${goldenTutorial.recommendedObjectiveId === word.id ? styles.tutorialRecommendedWord : ""} ${goldenTutorial.localSuccessorObjectiveId === word.id ? styles.tutorialSuccessorWord : ""} ${ftueActive && ftueStall === "SUGGESTION" && index === 0 ? styles.ftueSuggestedWord : ""}`} aria-label={`${word.word}${goldenTutorial.recommendedObjectiveId === word.id ? ", recommended first word" : ""}`} key={word.id}><span>{word.word}</span></div>)}</div>
-    </section>
+    <ObjectiveTray
+      activeWords={activeWords}
+      completedWords={completedWords}
+      recommendedObjectiveId={goldenTutorial.recommendedObjectiveId}
+      hintedTileId={hintedId}
+      stall={ftueActive ? ftueStall : undefined}
+    />
     {!isGoldenRun && visiblePowers.length > 0 && <div className={styles.mobilePowerProgress}><PowerProgress kinds={visiblePowers} badgeCounts={badgeCounts} readyActions={pvpState.readyActions} impactSlots={trayImpactSlots} /></div>}
     {node.level > 10 && <>
       <section className={`${base.runHeader} ${styles.runHeaderWithPreview}`}><div><span className={base.kicker}>{`${area.icon} ${area.displayName} · Level ${node.level}`}</span><h1>{node.kind === "BOSS" ? "Guardian Board" : "Living Board"}</h1></div><div className={styles.previewScoreHud}><span><small>SCORE</small><b>{formatNumber(score.score)}</b></span><i>{`x${score.comboMultiplier.toFixed(1)}`}</i></div><div className={`${base.cascadeCounter} ${styles.largeCascadeCounter}`}><b>{cascades}</b><span>/ {runStepTarget}</span><small>Steps</small></div></section>

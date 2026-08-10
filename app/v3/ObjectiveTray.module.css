@@ -1,0 +1,115 @@
+/*
+ * Objective tray. Live words stay in HTML; every decorative surface is the supplied art.
+ * Geometry is measured from objective-tray-frame.png: the two cream slots span
+ * 36.6%-80.2% vertically (centre 58.4%) and 10%-46.9% / 52.8%-89.9% horizontally.
+ */
+.tray {
+  position: relative;
+  width: min(360px, calc(100vw - 24px));
+  aspect-ratio: 1294 / 369;
+  margin-inline: auto;
+  background: url('/objective-tray/objective-tray-frame.webp') center / 100% 100% no-repeat;
+}
+
+.rail {
+  position: absolute;
+  left: 9.5%;
+  right: 9.5%;
+  top: 58.4%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.objective {
+  flex: 1 1 0;
+  min-width: 0;
+  /* Natural proportions of word-tile-normal.png, so the art never stretches. */
+  aspect-ratio: 703 / 172;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  padding: 0 7%;
+  color: #633719;
+  background: url('/objective-tray/word-tile-normal.webp') center / 100% 100% no-repeat;
+  font-family: var(--game-headline, Georgia, serif);
+  font-weight: 700;
+  font-size: clamp(9px, 3.1vw, 13px);
+  line-height: 1;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* One objective centres at its natural size instead of stretching across both slots. */
+.rail[data-count="1"] .objective { flex: 0 0 45%; }
+
+/*
+ * The glow is baked around the pill in the active art, so keep the box identical and
+ * oversize only the background. The pill then lines up with the other states and the
+ * glow bleeds outside without shifting layout.
+ */
+.objective[data-state="active"] {
+  background-image: url('/objective-tray/word-tile-active.webp');
+  background-size: 103.4% 133.1%;
+}
+
+.objective[data-state="completed"] {
+  color: #765335;
+  /* Clear the gold check baked into the right of the art. */
+  padding-right: 22%;
+  background-image: url('/objective-tray/word-tile-completed.webp');
+}
+
+.objective > span {
+  overflow: hidden;
+  max-width: 100%;
+  text-overflow: ellipsis;
+}
+
+/* Three or more objectives scroll sideways; the tray height never changes. */
+.rail[data-count="3"],
+.rail[data-count="4"],
+.rail[data-count="5"],
+.rail[data-count="6"],
+.rail[data-count="7"],
+.rail[data-count="8"] {
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-snap-type: x proximity;
+  justify-content: flex-start;
+}
+
+.rail[data-count="3"]::-webkit-scrollbar,
+.rail[data-count="4"]::-webkit-scrollbar,
+.rail[data-count="5"]::-webkit-scrollbar,
+.rail[data-count="6"]::-webkit-scrollbar,
+.rail[data-count="7"]::-webkit-scrollbar,
+.rail[data-count="8"]::-webkit-scrollbar { display: none; }
+
+.rail:not([data-count="1"]):not([data-count="2"]) .objective {
+  flex: 0 0 47%;
+  scroll-snap-align: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .objective { transition: color 200ms ease; }
+  .objective[data-state="active"] { animation: objectiveBreathe 1.8s ease-in-out infinite alternate; }
+  .objective[data-state="completed"] { animation: objectiveSettle 220ms ease-out both; }
+}
+
+@keyframes objectiveBreathe {
+  from { filter: brightness(.98); }
+  to { filter: brightness(1.08); }
+}
+
+@keyframes objectiveSettle {
+  from { opacity: .55; transform: scale(.97); }
+  to { opacity: 1; transform: scale(1); }
+}

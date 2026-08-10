@@ -188,13 +188,22 @@ test("legacy level briefing data reveals no hidden word information", async () =
   assert.doesNotMatch(visibleCopy, /raid/, "Level 4 must not explain Raid before it unlocks");
 });
 
-test("Objective rail does not render badge icons or reveal reward-bearing words", async () => {
+test("Objective tray does not render badge icons or reveal reward-bearing words", async () => {
+  // The tray owns objective presentation; it must never surface power-up information.
+  const tray = await readFile(resolve(process.cwd(), "app/v3/ObjectiveTray.tsx"), "utf8");
+  assert.ok(tray.length > 0);
+  assert.doesNotMatch(tray, /word\.badges|data-badge|BADGES\[/);
+
+  const model = await readFile(resolve(process.cwd(), "game/v3/objective-tray-state.ts"), "utf8");
+  assert.doesNotMatch(model, /badges|BADGES\[/);
+
+  // The call site must not pass badge data into the tray either.
   const source = await readFile(resolve(process.cwd(), "app/v3/WordKingdomV3.tsx"), "utf8");
-  const railStart = source.indexOf("<section className={styles.themeObjectiveRail}");
-  const railEnd = source.indexOf("{!isGoldenRun && visiblePowers", railStart);
-  const rail = source.slice(railStart, railEnd);
-  assert.ok(rail.length > 0);
-  assert.doesNotMatch(rail, /word\.badges|data-badge|BADGES\[/);
+  const trayStart = source.indexOf("<ObjectiveTray");
+  const trayEnd = source.indexOf("/>", trayStart);
+  const usage = source.slice(trayStart, trayEnd);
+  assert.ok(usage.length > 0);
+  assert.doesNotMatch(usage, /word\.badges|data-badge|BADGES\[/);
 });
 
 test("Steal and briefing controls expose the guarded actions required by the UI flow", async () => {
