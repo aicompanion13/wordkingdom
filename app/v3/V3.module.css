@@ -1,4 +1,4 @@
-.v3Shell,.boardShell,.summaryShell{--game-display:var(--font-game-display),"Arial Rounded MT Bold","Arial Black",sans-serif;--game-ui:var(--font-game-ui),"Trebuchet MS",Arial,sans-serif;font-family:var(--game-ui)}
+.v3Shell,.boardShell,.summaryShell{--game-display:var(--font-game-display),"Arial Rounded MT Bold","Arial Black",sans-serif;--game-headline:var(--font-game-display),"Arial Rounded MT Bold","Arial Black",sans-serif;--game-ui:var(--font-game-ui),"Trebuchet MS",Arial,sans-serif;font-family:var(--game-ui)}
 .v3Shell{--chapter-accent:#13a9c5;background:radial-gradient(circle at 50% 10%,color-mix(in srgb,var(--chapter-accent) 38%,transparent),transparent 35%),linear-gradient(180deg,#173a7a,#0d2559 60%,#091a42)}
 .loginIntro{position:fixed;z-index:1000;inset:0;display:grid;place-items:center;overflow:hidden;background:#06183d;color:#fff;isolation:isolate}
 .loginIntro::after{content:"";position:absolute;z-index:1;inset:auto 0 0;height:31%;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(3,13,39,.2) 25%,rgba(3,13,39,.86))}
@@ -959,6 +959,7 @@
 .boardShell[data-chapter-theme="forest"] { color: #142c63; }
 .boardShell {
   --game-display: var(--font-game-display),"Arial Rounded MT Bold","Arial Black",sans-serif;
+  --game-headline: var(--font-game-display),"Arial Rounded MT Bold","Arial Black",sans-serif;
   --game-ui: var(--font-game-ui),"Trebuchet MS",Arial,sans-serif;
 }
 

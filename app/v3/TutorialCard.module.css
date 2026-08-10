@@ -75,10 +75,33 @@
 }
 
 .title {
+  position: relative;
   margin: 0;
-  color: #17365f;
-  font: 900 clamp(20px,7vw,28px)/1.08 var(--game-display,ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif);
-  letter-spacing: -.02em;
+  font-family: var(--game-headline,ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif);
+  font-size: clamp(20px,7vw,28px);
+  line-height: 1.12;
+  letter-spacing: -.01em;
+  color: transparent;
+  background: linear-gradient(180deg,#dcf0ff 0%,#6fa8ec 50%,#2f63b8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-stroke: 1px rgba(11,36,86,.5);
+  text-shadow:
+    0 2px 0 rgba(11,36,86,.4),
+    0 5px 10px rgba(10,30,70,.22);
+}
+
+.title::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,rgba(255,255,255,.75) 0%,rgba(255,255,255,.2) 42%,rgba(255,255,255,0) 60%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+  mix-blend-mode: screen;
+  pointer-events: none;
 }
 
 .body {
