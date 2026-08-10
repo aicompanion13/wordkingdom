@@ -242,8 +242,14 @@ export class GeneratedLevelSession implements BoardSession {
     objective: CanonicalObjective,
     path = objective.expectedPath,
   ): GeneratedRuntimeWord {
+    /*
+     * The Level 3 Raid tokens are scripted teaching beats, not random drops. The
+     * back-to-back cooldown must not apply to them: a suppressed token is lost for
+     * good, and losing one leaves the tray short so the tutorial Raid never arrives.
+     */
+    const scriptedTutorialBadge = this.level.levelNumber === 3;
     const badgeType =
-      this.badgeCooldownMoves > 0
+      this.badgeCooldownMoves > 0 && !scriptedTutorialBadge
         ? undefined
         : objective.badgeType === "shield" && this.activeShields >= 3
           ? "raid"
@@ -285,10 +291,10 @@ export class GeneratedLevelSession implements BoardSession {
     wordIndex: number,
   ): BadgeType | undefined {
     if (this.level.levelNumber === 3) {
-      // Level 3 introduces Raid: one token per stage across the first three
-      // stages (spread across both words so it doesn't look mechanical),
-      // so the tray fills with a stage still left to play before the level ends.
-      if (stageIndex > 2) return undefined;
+      // Level 3 introduces Raid: one token per stage across the last three stages
+      // (alternating words so it does not look mechanical), so the tray completes
+      // around the seventh accepted word and the Raid interrupts a live board.
+      if (stageIndex < 1) return undefined;
       const badgeWordIndex = stageIndex % 2;
       return wordIndex === badgeWordIndex ? "raid" : undefined;
     }

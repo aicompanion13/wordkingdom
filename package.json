@@ -12,7 +12,7 @@
     "build": "bash scripts/build-verified.sh",
     "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start",
     "test": "npm run build && node --test tests/rendered-html.test.mjs",
-    "test:golden-core": "node --experimental-strip-types --test --test-isolation=none tests/golden-core.test.mjs tests/golden-level-1.test.mjs tests/golden-level-1-interaction.test.mjs tests/word-discovery-wrapper.test.mjs tests/levels-1-10-wrapper.test.mjs tests/progress-restart-wrapper.test.mjs tests/card-meta-wrapper.test.mjs tests/ftue-levels-1-10-wrapper.test.mjs tools/board-generator/test.js",
+    "test:golden-core": "node --experimental-strip-types --test --test-isolation=none tests/golden-core.test.mjs tests/golden-level-1.test.mjs tests/golden-level-1-interaction.test.mjs tests/word-discovery-wrapper.test.mjs tests/levels-1-10-wrapper.test.mjs tests/progress-restart-wrapper.test.mjs tests/card-meta-wrapper.test.mjs tests/ftue-levels-1-10-wrapper.test.mjs tests/level-3-raid-pacing-wrapper.test.mjs tools/board-generator/test.js",
     "verify:golden-level": "node tools/golden-levels/verify-golden-level-1.mjs",
     "verify:golden-10": "node tools/golden-levels/verify-levels-1-10.mjs",
     "validate:artifact": "bash scripts/validate-artifact.sh",
