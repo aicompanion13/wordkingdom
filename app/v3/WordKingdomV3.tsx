@@ -88,6 +88,7 @@ import type { AlbumDefinition, CardDefinition, ChapterDefinition, ObstacleState,
 import { JuiceFxLayer } from "./JuiceFxLayer";
 import { KingdomPopup } from "./KingdomPopup";
 import { ConceptCard, DiscoveryArtwork, FtueCoachmark } from "./FtueCoachmarks";
+import { useWordKingdomAudio } from "./useWordKingdomAudio";
 import base from "../v2/V2.module.css";
 import styles from "./V3.module.css";
 
@@ -290,6 +291,11 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const [celebration, setCelebration] = useState<CelebrationBannerKind | null>(null);
   const [celebrationLeaving, setCelebrationLeaving] = useState(false);
 
+  const { playSfx, playTileSelect, setMusic } = useWordKingdomAudio({
+    sfxEnabled: player.settings.sfx,
+    bgmEnabled: player.settings.bgm,
+  });
+
   const economy = useRef<EconomyManagerV3 | null>(null);
   const pvp = useRef<PvpManager | null>(null);
   const boardSession = useRef<BoardSession | null>(null);
@@ -330,6 +336,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const albumButtonRef = useRef<HTMLButtonElement>(null);
   const levelPlayButtonRef = useRef<HTMLButtonElement>(null);
   const hintButtonRef = useRef<HTMLButtonElement>(null);
+  const audibleDialogRef = useRef<string | null>(null);
 
   const queueCloudSave = (nextPlayer: V3PlayerState, nextPvp: PvpState) => {
     if (!cloudReady.current) return;
@@ -519,10 +526,17 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     if (phase !== "STICKER_REVEAL") return;
     const revealCount = ftueProgress.oceanStickerRevealCount;
     const timer = window.setTimeout(() => {
+      if (revealCount < 3) {
+        playSfx("sticker_reveal", { cooldownMs: 180 });
+      } else if (ftueProgress.oceanRewardLevel === 5) {
+        playSfx("album_complete", { duckMs: 1420 });
+      } else if (ftueProgress.oceanRewardLevel === 2) {
+        playSfx("album_unlock", { duckMs: 1080 });
+      }
       updateFtueProgress(revealCount < 3 ? revealNextOceanSticker : completeOceanStickerPack);
     }, prefersReducedMotion ? 180 : revealCount < 3 ? 540 : 620);
     return () => window.clearTimeout(timer);
-  }, [ftueProgress.oceanRewardPhase, ftueProgress.oceanCompletionResult, ftueProgress.oceanRewardLevel, ftueProgress.oceanStickerRevealCount, prefersReducedMotion, screen]);
+  }, [ftueProgress.oceanRewardPhase, ftueProgress.oceanCompletionResult, ftueProgress.oceanRewardLevel, ftueProgress.oceanStickerRevealCount, playSfx, prefersReducedMotion, screen]);
 
   const activeChapter = track.chapterForLevel(player.currentLevel);
   const viewedChapter = track.chapter(viewChapterId) ?? activeChapter;
@@ -531,6 +545,21 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const albumUnseenCount = unseenAlbumPages(ftueProgress).length;
   const currentRunLevel = runNode.current?.level ?? player.currentLevel;
   const visiblePowers = visiblePowerKinds(currentRunLevel);
+  const audibleDialog = packReveal
+    ? "pack"
+    : pvpOverlay
+      ? `power-${pvpOverlay.kind}`
+      : settingsOpen
+        ? "settings"
+        : tutorialLibraryOpen
+          ? "tutorial-library"
+          : selectedNode
+            ? "level"
+            : levelOneCoach?.messageOpen
+              ? `coach-${levelOneCoach.kind}`
+              : contextualPrompt
+                ? "hint-coach"
+                : null;
   const shoreTutorialPath = activeWords.find((word) => word.id === "a0-shore")?.tileIds ?? [];
   const standardHintVisible = currentRunLevel >= 4
     || (currentRunLevel === 3 && (contextualPrompt || ftueProgress.completedTutorials.includes("level-3-hint")))
@@ -562,6 +591,38 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       ).filter((word): word is string => Boolean(word))
     : [];
   const goldenLockedCount = isGoldenRun ? canonicalDebug?.queuedObjectives.length ?? 0 : 0;
+
+  useEffect(() => {
+    if (loginIntroOpen) {
+      setMusic(null);
+      return;
+    }
+    if (screen === "hub") {
+      setMusic(tab === "albums" ? "album" : "kingdom");
+      return;
+    }
+    const level = screen === "summary" ? summary?.node.level ?? currentRunLevel : currentRunLevel;
+    setMusic(level >= 6 && level <= 10 ? "forest" : "ocean");
+  }, [currentRunLevel, loginIntroOpen, screen, setMusic, summary?.node.level, tab]);
+
+  useEffect(() => {
+    const previous = audibleDialogRef.current;
+    audibleDialogRef.current = audibleDialog;
+    if (audibleDialog === previous) return;
+    if (!audibleDialog) {
+      if (previous) playSfx("ui_popup_close");
+      return;
+    }
+    if (audibleDialog === "pack") {
+      playSfx("pack_open", { duckMs: 1250 });
+      return;
+    }
+    if (audibleDialog.startsWith("power-")) {
+      playSfx(`power_${audibleDialog.slice(6)}` as "power_attack" | "power_steal" | "power_raid" | "power_shield", { duckMs: 900 });
+      return;
+    }
+    playSfx("ui_popup_open");
+  }, [audibleDialog, playSfx]);
 
   useEffect(() => {
     if (screen !== "board" || !ftueActive) {
@@ -617,6 +678,15 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
         setCelebrationLeaving(false);
       }, CELEBRATION_FADE_MS);
     }, CELEBRATION_HOLD_MS);
+  };
+
+  const playComboSfx = (comboMultiplier: number) => {
+    const comboIndex = scoringConfig.comboLadder.findIndex(
+      (value) => Math.abs(value - comboMultiplier) < 0.001,
+    );
+    if (comboIndex === 1) playSfx("combo_2");
+    else if (comboIndex === 2) playSfx("combo_3");
+    else if (comboIndex >= 3) playSfx("combo_4_plus");
   };
 
   const elementCenter = (element: Element): FxPoint => {
@@ -690,6 +760,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   };
 
   const queueCoinFx = (source: FxPoint, amount: number, includeVaultReveal = false): number => {
+    playSfx("coin_reward", { cooldownMs: 180, volume: includeVaultReveal ? 1 : 0.82 });
     const counter = document.querySelector("[data-coin-counter]");
     if (!counter) return 0;
     const coinEffect = juice.current.createCoinShower({ amount, source, target: elementCenter(counter) });
@@ -726,6 +797,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
 
   const startRun = (node = track.node(player.currentLevel)) => {
     const replayingCompletedLevel = player.completedLevels.includes(node.level);
+    const retryingFailedLevel = summary?.node.level === node.level && summary.objectiveComplete === false;
     if (node.level !== player.currentLevel && !replayingCompletedLevel) { setToast("Reach this node first."); return; }
     if (node.kind === "MILESTONE") {
       if (!economy.current) return;
@@ -742,6 +814,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     const freeFtueLevel = node.level <= 2 && !player.completedLevels.includes(node.level);
     if (!freeFtueLevel && !economy.current?.spendEnergy(1)) { setToast("You need one Energy ticket to play."); return; }
     clearJuiceFx();
+    if (retryingFailedLevel) playSfx("level_retry", { duckMs: 800 });
     if (!freeFtueLevel && economy.current) persist(economy.current.snapshot());
     const area = areas.find((candidate) => candidate.areaId === node.areaId) ?? areas[0];
     const activatedAt = Date.now();
@@ -1024,6 +1097,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
 
   const openAlbumPage = (level: number) => {
     if (!ftueProgressRef.current.unlockedAlbumPages.includes(level)) return;
+    playSfx("ui_tap");
     const theme = chapterThemeForLevel(level);
     updateFtueProgress((current) => level === 2
       ? beginLevelTwoAlbumReveal(current)
@@ -1120,7 +1194,10 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     setSummary({ ...baseSummary, node: runNode.current, objectiveComplete: progress.complete, reward: runNode.current.reward, packResult: rewardPack });
     setAnimating(false);
     setScreen("summary");
-    if (progress.complete) window.setTimeout(() => beginPostLevelMeta(runNode.current!.level), 420);
+    if (progress.complete) {
+      playSfx("level_complete", { duckMs: 1500 });
+      window.setTimeout(() => beginPostLevelMeta(runNode.current!.level), 420);
+    }
   };
 
   const ownedCards = (): CardDefinition[] => albums
@@ -1402,6 +1479,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
 
       setTransformationDiffIds(result.flippedTileIds);
       setBoard(result.board);
+      playSfx("board_refill", { cooldownMs: 180 });
       setActiveWords(result.activeWords);
       if (!isGoldenRun && !result.complete && result.activeWords.length === 1) fireCelebration("one-more");
       setCanonicalDebug(session.debugSnapshot());
@@ -1524,6 +1602,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       setSelectedIds([]);
       selection.current = [];
       setBoard(result.board);
+      playSfx("board_refill", { cooldownMs: 180 });
       if (result.complete) {
         setAnimating(false);
         window.setTimeout(finishRun, 360);
@@ -1622,6 +1701,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
 
   const updateSelection = (path: Position[]) => {
     const ids = boardSession.current?.tileIdsForPath(path) ?? [];
+    if (ids.length > 0 && ids.at(-1) !== selection.current.at(-1)) playTileSelect();
     selection.current = ids;
     setSelectedIds(ids);
     return ids;
@@ -1655,7 +1735,10 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
         setMessage("");
       }
       setCanonicalDebug(session.debugSnapshot());
-      setScore(scoreManager.snapshot(matchTimestamp));
+      const nextScore = scoreManager.snapshot(matchTimestamp);
+      setScore(nextScore);
+      playSfx("word_found");
+      playComboSfx(nextScore.comboMultiplier);
       solveWord(
         result.word,
         result.score.points,
@@ -1665,6 +1748,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       return;
     }
     if (result.kind === "bonus") {
+      playSfx("bonus_word");
       celebrateBonusWord(
         result.wordId,
         result.word,
@@ -1676,6 +1760,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       return;
     }
     if (result.kind === "neutral") {
+      playSfx("invalid_word");
       setNeutralShakeIds(result.tileIds);
       selection.current = [];
       setSelectedIds([]);
@@ -1683,6 +1768,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       return;
     }
     scoreManager.onInvalidSelection(matchTimestamp);
+    playSfx("invalid_word");
     setScore(scoreManager.snapshot(matchTimestamp));
     setMessage("Try another path");
     setNeutralShakeIds(result.tileIds);
@@ -1719,6 +1805,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   };
 
   const onPointerCancel = () => {
+    if (selection.current.length > 0) playSfx("selection_cancel");
     dragging.current = false;
     dragStart.current = null;
     selection.current = [];
@@ -1763,6 +1850,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       persist(economy.current.snapshot());
     }
     hintsUsedRef.current += 1;
+    playSfx("hint_reveal");
     setHintsUsed(hintsUsedRef.current);
     setHintedId(word.tileIds[0]);
     if (isGoldenRun) noteUsefulFtueInteraction();
@@ -2023,9 +2111,15 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     setToast("Card repaired and ready for play.");
   };
 
+  const playUiTap = (event: React.MouseEvent<HTMLElement>) => {
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>("button");
+    if (!button || button.disabled || button.matches("[data-v3-tile-id]")) return;
+    playSfx("ui_tap", { cooldownMs: 35, volume: 0.62 });
+  };
+
   if (screen === "hub") {
     const albumGuided = ftueProgress.pendingMandatoryStep === "OPEN_LEVEL_2_ALBUM";
-    return <main className={`${base.shell} ${base.hubShell} ${styles.v3Shell}`} style={{ "--chapter-accent": viewedChapter.accent } as CSSProperties}>
+    return <main className={`${base.shell} ${base.hubShell} ${styles.v3Shell}`} style={{ "--chapter-accent": viewedChapter.accent } as CSSProperties} onClickCapture={playUiTap}>
       <TopBar player={player} locked={albumGuided} onShop={() => setTab("shop")} onSettings={() => setSettingsOpen(true)} />
       <section className={`${base.hubContent} ${styles.hubContent}`}>
         {tab === "home" && <HomeMenu player={player} hydrated={hydrated && ftueReady && !albumGuided} playRef={levelPlayButtonRef} guideLevelTwo={false} onPlay={() => requestLevelStart(track.node(player.currentLevel))} />}
@@ -2096,7 +2190,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       "--theme-background-image": summaryTheme.backgroundImage ? `url("${summaryTheme.backgroundImage}")` : "none",
     } as CSSProperties;
     if (summary.objectiveComplete && summary.node.level === 1 && ftueProgress.level1CompletionResult) {
-      return <main data-chapter-theme={summaryTheme.id} className={`${base.shell} ${base.summaryShell} ${styles.summaryShell} ${styles.levelOneCompletionShell}`} style={summaryStyle}>
+      return <main data-chapter-theme={summaryTheme.id} className={`${base.shell} ${base.summaryShell} ${styles.summaryShell} ${styles.levelOneCompletionShell}`} style={summaryStyle} onClickCapture={playUiTap}>
         <LevelOneResults
           summary={summary}
           onContinue={() => {
@@ -2115,7 +2209,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       && ftueProgress.oceanRewardPhase !== "ALBUM_GUIDE"
       && ftueProgress.oceanRewardPhase !== "ALBUM_REVEAL";
     if (oceanCompletionActive) {
-      return <main data-chapter-theme={summaryTheme.id} className={`${base.shell} ${base.summaryShell} ${styles.summaryShell} ${styles.levelOneCompletionShell}`} style={summaryStyle}>
+      return <main data-chapter-theme={summaryTheme.id} className={`${base.shell} ${base.summaryShell} ${styles.summaryShell} ${styles.levelOneCompletionShell}`} style={summaryStyle} onClickCapture={playUiTap}>
         <OceanRewardExperience
           level={summary.node.level}
           phase={ftueProgress.oceanRewardPhase!}
@@ -2123,8 +2217,14 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
           revealCount={ftueProgress.oceanStickerRevealCount}
           collectedCount={ftueProgress.oceanCollectedStickers.length}
           reducedMotion={prefersReducedMotion}
-          onContinueResults={() => updateFtueProgress(continueToOceanPack)}
-          onOpenPack={() => updateFtueProgress(openOceanDiscoveryPack)}
+          onContinueResults={() => {
+            playSfx("ui_tap");
+            updateFtueProgress(continueToOceanPack);
+          }}
+          onOpenPack={() => {
+            playSfx("pack_open", { duckMs: 1250 });
+            updateFtueProgress(openOceanDiscoveryPack);
+          }}
           onOpenAlbum={() => {
             updateFtueProgress(beginLevelTwoAlbumGuide);
             setSummary(null);
@@ -2142,7 +2242,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
         />
       </main>;
     }
-    return <main data-chapter-theme={summaryTheme.id} className={`${base.shell} ${base.summaryShell} ${styles.summaryShell}`} style={summaryStyle}>
+    return <main data-chapter-theme={summaryTheme.id} className={`${base.shell} ${base.summaryShell} ${styles.summaryShell}`} style={summaryStyle} onClickCapture={playUiTap}>
       <GameTopBar player={player} timer={energyTimer(player, clock)} onBack={returnHome} onSettings={() => setSettingsOpen(true)} coinPulse={coinCounterPulse} />
       <div className={styles.summaryAtmosphere} aria-hidden="true"><i /><i /><i /><i /><i /><span>🪙</span><span>🪙</span></div>
       {summary.objectiveComplete && <CelebrationBurst />}
@@ -2194,7 +2294,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     "--theme-veil": chapterTheme.veil,
     "--theme-background-image": chapterTheme.backgroundImage ? `url("${chapterTheme.backgroundImage}")` : "none",
   } as CSSProperties;
-  return <main data-chapter-theme={chapterTheme.id} className={`${base.shell} ${base.boardShell} ${styles.boardShell} ${isGoldenRun ? styles.goldenBoard : ""} ${boardLocked ? styles.boardPaused : ""} ${juiceShake ? styles.juiceScreenShake : ""}`} style={chapterStyle}>
+  return <main data-chapter-theme={chapterTheme.id} className={`${base.shell} ${base.boardShell} ${styles.boardShell} ${isGoldenRun ? styles.goldenBoard : ""} ${boardLocked ? styles.boardPaused : ""} ${juiceShake ? styles.juiceScreenShake : ""}`} style={chapterStyle} onClickCapture={playUiTap}>
     {!(isGoldenRun && !player.completedLevels.includes(1))
       && <GameTopBar player={player} timer={energyTimer(player, clock)} onBack={returnHome} onSettings={() => setSettingsOpen(true)} coinPulse={coinCounterPulse} />}
     <section className={styles.chapterIdentity} aria-label={`${chapterTheme.chapterTitle}, Level ${node.level}`}>
