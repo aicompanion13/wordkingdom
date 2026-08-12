@@ -10,16 +10,17 @@
 .loginIntroChrome button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.loginIntro video{display:none}.loginIntro{background:radial-gradient(circle at 50% 20%,#397ec0,#0b265e 65%,#051633)}}
 .hubContent{position:relative;z-index:1;padding-bottom:95px}
-.royalTopBar{position:fixed;z-index:30;top:-3px;left:50%;width:min(100%,430px);margin:0;aspect-ratio:1496/325;overflow:visible;transform:translateX(-50%);filter:drop-shadow(0 6px 14px rgba(4,12,34,.4));pointer-events:none}
+.royalTopBar{position:fixed;z-index:30;top:-3px;left:50%;width:min(100%,430px);margin:0;aspect-ratio:1848/304;overflow:visible;transform:translateX(-50%);filter:drop-shadow(0 6px 14px rgba(4,12,34,.4));pointer-events:none}
 .royalTopBar::before{display:none}
 .royalTopBarArt{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none}
-.royalTopBarEnergy,.royalTopBarStars,.royalTopBarCoins{position:absolute;top:39.4%;transform:translate(-50%,-50%);display:grid;place-items:center;min-width:12%;overflow:hidden;color:#6a351b;font-family:var(--game-display);font-weight:700;font-size:clamp(9px,3vw,13px);line-height:1;letter-spacing:.01em;text-shadow:0 1px 0 rgba(255,255,255,.7);white-space:nowrap}
-.royalTopBarEnergy{left:22.4%}
-.royalTopBarStars{left:45.5%}
-.royalTopBarCoins{left:69.6%}
-.royalTopBarShop,.royalTopBarSettings{position:absolute;top:39.4%;transform:translate(-50%,-50%);width:44px;height:44px;margin:0;border:0;border-radius:50%;background:transparent;padding:0;cursor:pointer;pointer-events:auto;-webkit-tap-highlight-color:transparent}
-.royalTopBarShop{left:79%}
-.royalTopBarSettings{left:91.2%}
+.royalTopBarEnergy,.royalTopBarStars,.royalTopBarCoins{position:absolute;top:46.9%;transform:translate(-50%,-50%);display:grid;place-items:center;min-width:12%;overflow:hidden;color:#6a351b;font-family:var(--game-display);font-weight:700;font-size:clamp(9px,3vw,13px);line-height:1;letter-spacing:.01em;text-shadow:0 1px 0 rgba(255,255,255,.7);white-space:nowrap}
+.royalTopBarCoins{left:28.1%}
+.royalTopBarEnergy{left:56.7%}
+.royalTopBarStars{left:80.5%}
+.royalTopBarProfile,.royalTopBarShop,.royalTopBarSettings{position:absolute;top:46.9%;transform:translate(-50%,-50%);width:44px;height:44px;margin:0;border:0;border-radius:50%;background:transparent;padding:0;cursor:pointer;pointer-events:auto;-webkit-tap-highlight-color:transparent}
+.royalTopBarProfile{left:9%}
+.royalTopBarShop{left:36.3%}
+.royalTopBarSettings{left:94.3%}
 .royalTopBarShop:focus-visible,.royalTopBarSettings:focus-visible{outline:3px solid #fff4bf;outline-offset:2px;box-shadow:0 0 0 5px rgba(39,99,144,.9)}
 .royalTopBarShop:active,.royalTopBarSettings:active{transform:translate(-50%,-50%) scale(.94)}
 .royalTopBarShop:disabled,.royalTopBarSettings:disabled{cursor:not-allowed;opacity:.55}

@@ -1,3 +1,13 @@
+/*
+ * Royal Ribbon announcement popup.
+ *
+ * The artwork is a single locked composite: crown and W/K tiles on top, a blue title
+ * ribbon, a cream body panel and a green action pill. Nothing is baked into it, so every
+ * region below is a runtime layer positioned as a percentage of the art. Percentages are
+ * measured from royal-ribbon-popup.webp (1011x1181): the ribbon runs clear of the tiles
+ * between 29% and 44%, the cream panel between 48% and 80%, and the pill sits at
+ * 24.3%-75.6% across and 83.1%-96.4% down.
+ */
 .overlay {
   position: fixed;
   z-index: 12500;
@@ -12,8 +22,8 @@
 
 .card {
   position: relative;
-  width: min(380px, calc(100vw - 24px));
-  aspect-ratio: 1108 / 1420;
+  width: min(340px, calc(100vw - 32px));
+  aspect-ratio: 1011 / 1181;
   color: #17365f;
   filter: drop-shadow(0 12px 22px rgba(37,28,18,.28));
   animation: tutorialCardPop 260ms cubic-bezier(.2,.85,.3,1.3) both;
@@ -29,78 +39,78 @@
   user-select: none;
 }
 
-.copy {
+/* Sits on the blue ribbon, clear of the W/K tiles that overlap its top edge. */
+.title {
   position: absolute;
-  top: 27%;
-  left: 16%;
+  top: 36.5%;
+  left: 50%;
   width: 68%;
-  min-height: 34%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
+  margin: 0;
+  transform: translate(-50%,-50%);
+  color: #fff8e1;
+  font-family: var(--game-headline,ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif)!important;
+  font-weight: 700;
+  font-size: clamp(19px,5.6vw,25px);
+  line-height: 1.1;
+  letter-spacing: -.005em;
+  text-align: center;
+  text-shadow: 0 2px 0 rgba(9,38,104,.75), 0 4px 8px rgba(6,24,69,.35);
+}
+
+/* Sits on the cream panel between the ribbon and the action pill. */
+.body {
+  position: absolute;
+  top: 65%;
+  left: 50%;
+  width: 74%;
+  max-height: 30%;
+  overflow: hidden;
+  margin: 0;
+  transform: translate(-50%,-50%);
+  color: #604c35;
+  font: 650 clamp(13px,4vw,16px)/1.35 var(--game-ui,system-ui,sans-serif);
   text-align: center;
 }
 
-.title {
-  margin: 0;
-  color: #173f73;
-  font-family: var(--game-headline,ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif)!important;
-  font-weight: 700;
-  font-size: clamp(23px,7.2vw,32px);
-  line-height: 1.12;
-  letter-spacing: -.01em;
-  text-shadow: 0 2px 0 rgba(255,255,255,.65);
-}
-
-.body {
-  margin: 0;
-  color: #604c35;
-  font: 650 clamp(14px,4.4vw,18px)/1.35 var(--game-ui,system-ui,sans-serif);
-}
-
-.actions {
-  position: absolute;
-  left: 22%;
-  bottom: 6.2%;
-  width: 56%;
-  height: clamp(40px,10.6%,52px);
-  display: grid;
-  place-items: center;
-}
-
+/*
+ * The green pill is part of the artwork, so the button itself stays completely
+ * transparent and only supplies the label, the hit area and the focus ring.
+ */
 .cta {
-  width: 100%;
-  min-height: 0;
-  height: 100%;
+  position: absolute;
+  top: 89.7%;
+  left: 50%;
+  width: 51.3%;
+  height: 13.3%;
+  min-height: 44px;
   display: grid;
   place-items: center;
   padding: 0 8px;
+  transform: translate(-50%,-50%);
   border: 0;
   border-radius: 999px;
   background: transparent;
   box-shadow: none;
   filter: none;
-  color: #173f73;
+  color: #fdfff4;
   font-family: var(--game-display,ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif)!important;
-  font-size: clamp(20px,6.3vw,27px)!important;
-  font-weight: 1000!important;
+  font-size: clamp(17px,5.2vw,22px)!important;
+  font-weight: 700!important;
   line-height: 1!important;
-  letter-spacing: .015em;
-  text-shadow: 0 1px 0 rgba(255,255,255,.75);
+  letter-spacing: .02em;
+  text-shadow: 0 2px 0 rgba(35,86,15,.8);
   white-space: nowrap;
   cursor: pointer;
 }
 
 .cta:active {
-  transform: translateY(2px);
-  color: #132f55;
+  transform: translate(-50%,calc(-50% + 2px));
+  filter: brightness(.94);
 }
 
 .cta:focus-visible {
-  outline: 3px solid #286ea7;
-  outline-offset: -3px;
+  outline: 3px solid #fff2b0;
+  outline-offset: -4px;
 }
 
 @keyframes tutorialCardFade { from { opacity: 0; } to { opacity: 1; } }

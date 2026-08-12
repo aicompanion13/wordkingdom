@@ -131,14 +131,10 @@ export function ConceptCard({
     }}
   >
     <section className={tutorialStyles.card} role="dialog" aria-modal="true" aria-labelledby="tutorial-card-title">
-      <img className={tutorialStyles.frame} src="/tutorial/announcement-scroll-v2.png" alt="" />
-      <div className={tutorialStyles.copy}>
-        <h2 id="tutorial-card-title" className={tutorialStyles.title} data-text={title} aria-label={title}>{title}</h2>
-        <p className={tutorialStyles.body}>{message}</p>
-      </div>
-      <div className={tutorialStyles.actions}>
-        <button ref={ctaRef} className={tutorialStyles.cta} type="button" onClick={onDismiss}>{cta}</button>
-      </div>
+      <img className={tutorialStyles.frame} src="/tutorial/royal-ribbon-popup.webp" alt="" />
+      <h2 id="tutorial-card-title" className={tutorialStyles.title}>{title}</h2>
+      <p className={tutorialStyles.body}>{message}</p>
+      <button ref={ctaRef} className={tutorialStyles.cta} type="button" onClick={onDismiss}>{cta}</button>
     </section>
   </div>;
 }
