@@ -16,6 +16,15 @@ import { AlbumManager } from "@/game/v3/album-manager";
 import { BadgeManager } from "@/game/v3/badge-manager";
 import { considerCelebration, createPraiseBudget } from "@/game/v3/praise-budget";
 import type { CelebrationBannerKind } from "@/game/v3/praise-budget";
+import {
+  createLevelTimer,
+  formatLevelClock,
+  isLevelTimeUrgent,
+  levelTimeRemainingMs,
+  pauseLevelTimer,
+  resumeLevelTimer,
+} from "@/game/v3/level-timer";
+import type { LevelTimerState } from "@/game/v3/level-timer";
 import type { BadgeCollectionResult } from "@/game/v3/badge-manager";
 import type { BoardSession, SessionActiveWord } from "@/game/v3/board-session";
 import type { CanonicalBoardSnapshot } from "@/game/v3/canonical-board-state";
@@ -396,6 +405,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   /* Board-scoped praise budget: how many spent, and the solve that spent the last one. */
   const praiseBudget = useRef(createPraiseBudget());
   const solveIndex = useRef(0);
+  const levelTimer = useRef<LevelTimerState | null>(null);
   const boardCardRef = useRef<HTMLDivElement | null>(null);
   const cloudReady = useRef(false);
   const cloudSaveTimer = useRef<number | null>(null);
@@ -726,6 +736,18 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     [obstacles, generatedObstacleTypes],
   );
   const boardLocked = animating || Boolean(levelOneCoach?.messageOpen) || contextualPrompt || pvpOverlay !== null || packReveal !== null || settingsOpen || feedbackOpen || Boolean(boardSession.current && !boardSession.current.canAcceptInput());
+  /*
+   * Anything that locks the board — a Raid, a tutorial card, settings — also stops the
+   * level clock, so an interruption the game imposed never costs the player board time.
+   */
+  useEffect(() => {
+    if (!levelTimer.current) return;
+    levelTimer.current = boardLocked || screen !== "board"
+      ? pauseLevelTimer(levelTimer.current, Date.now())
+      : resumeLevelTimer(levelTimer.current, Date.now());
+  }, [boardLocked, screen]);
+  const levelClockMs = levelTimer.current ? levelTimeRemainingMs(levelTimer.current, clock) : null;
+  const levelClockUrgent = levelTimer.current ? isLevelTimeUrgent(levelTimer.current, clock) : false;
   const comboDrain = score.comboMultiplier === INITIAL_COMBO ? 0 : scorer.current?.snapshot(clock).idleRemainingRatio ?? score.idleRemainingRatio;
   const comboUrgent = comboDrain > 0 && comboDrain <= COMBO_URGENT_RATIO;
   const runStepTarget = generatedRun?.totalWords ?? 5;
@@ -988,6 +1010,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     celebrationShown.current = { royalCombo: false, onFire: false };
     praiseBudget.current = createPraiseBudget();
     solveIndex.current = 0;
+    levelTimer.current = createLevelTimer(Date.now());
     scoreIdleUnsubscribe.current = nextScorer.on("OnComboBreak", (event) => {
       if (event.reason === "idle-timeout") {
         setScore(nextScorer.snapshot());
@@ -1067,6 +1090,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     celebrationShown.current = { royalCombo: false, onFire: false };
     praiseBudget.current = createPraiseBudget();
     solveIndex.current = 0;
+    levelTimer.current = createLevelTimer(Date.now());
     scoreIdleUnsubscribe.current = nextScorer.on("OnComboBreak", (event) => {
       if (event.reason === "idle-timeout") {
         setScore(nextScorer.snapshot());
@@ -1130,6 +1154,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     celebrationShown.current = { royalCombo: false, onFire: false };
     praiseBudget.current = createPraiseBudget();
     solveIndex.current = 0;
+    levelTimer.current = createLevelTimer(Date.now());
     scoreIdleUnsubscribe.current = nextScorer.on("OnComboBreak", (event) => {
       if (event.reason === "idle-timeout") {
         setScore(nextScorer.snapshot());
@@ -2546,6 +2571,11 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     <section className={styles.chapterIdentity} aria-label={`${chapterTheme.chapterTitle}, Level ${node.level}`}>
       <div className={styles.chapterTopRow}>
         <button className={styles.ftueInlineBack} onClick={returnHome} aria-label="Back to kingdom map">‹</button>
+        {levelClockMs !== null && <output
+          className={styles.levelClock}
+          data-urgent={levelClockUrgent ? "true" : undefined}
+          aria-label={`Time remaining: ${formatLevelClock(levelClockMs)}`}
+        >{formatLevelClock(levelClockMs)}</output>}
         <div className={styles.chapterBannerLine}>
           <i aria-hidden="true">{chapterTheme.ornaments[0]}</i>
           <h1>{chapterTheme.chapterTitle}</h1>

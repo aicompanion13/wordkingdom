@@ -162,6 +162,34 @@
 .guidedLevelTwoButton,.albumGuideButton { z-index:12010!important; outline:3px solid rgba(255,224,91,.95); box-shadow:0 0 0 5px rgba(20,78,147,.75),0 0 18px rgba(255,222,77,.85)!important; }
 .chapterTopRow{display:flex;align-items:center;gap:clamp(6px,2vw,10px);width:100%}
 .chapterTopRow .chapterBannerLine{flex:1 1 auto;min-width:0}
+/* Level clock. Sits beside the back arrow so it never competes with the board. */
+.levelClock{
+  flex:0 0 auto;
+  min-width:46px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  border:2px solid #fff;
+  border-radius:11px;
+  padding:0 7px;
+  color:#fff7d2;
+  background:linear-gradient(180deg,#2d86d4,#0f4d96);
+  box-shadow:0 2px 0 rgba(0,0,0,.35);
+  font-family:var(--game-display);
+  font-size:clamp(11px,3.4vw,14px);
+  font-variant-numeric:tabular-nums;
+  letter-spacing:.02em;
+  text-shadow:0 2px 0 rgba(8,38,90,.7);
+}
+.levelClock[data-urgent="true"]{
+  border-color:#ffd7cc;
+  color:#fff;
+  background:linear-gradient(180deg,#e8503a,#a52a1c);
+  box-shadow:0 2px 0 rgba(90,20,12,.5),0 0 10px rgba(232,80,58,.55);
+  animation:levelClockPulse 900ms ease-in-out infinite;
+}
+@keyframes levelClockPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.22)}}
+@media(prefers-reduced-motion:reduce){.levelClock[data-urgent="true"]{animation:none!important}}
 .ftueInlineBack{flex:0 0 auto;width:38px;height:38px;display:grid;place-items:center;border:2px solid #fff;border-radius:11px;color:#fff;background:#144e8c;font:900 20px/1 var(--game-ui);box-shadow:0 2px 0 rgba(0,0,0,.35)}
 .ftuePrimaryContinue{align-self:end;width:100%;min-height:54px;border:3px solid #fff;border-radius:16px;color:#fff;background:linear-gradient(180deg,#2d86d4,#0f4d96);box-shadow:0 4px 0 #082f68;font:700 18px var(--game-display);letter-spacing:.04em}
 .levelTwoCoachIcon { width:46px; height:46px; display:grid; place-items:center; border:3px solid #fff; border-radius:50%; color:#fff; background:linear-gradient(#5bd66a,#1e8d3b); font-family:var(--game-display); font-size:24px; box-shadow:0 3px 0 rgba(21,94,43,.5); }
