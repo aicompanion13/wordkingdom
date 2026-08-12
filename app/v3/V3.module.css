@@ -3416,3 +3416,16 @@
   .worldLevelButton[data-current="true"] { outline:4px solid #fff09a; outline-offset:4px; }
   .worldLevelButton[data-current="true"] .worldNodeLight { opacity:.88; }
 }
+
+/*
+ * Board width budget — owned here in one place.
+ *
+ * The board is square and purely width-constrained (there is 140-200px of unused height
+ * below it on every phone), so every pixel of horizontal chrome comes straight out of the
+ * tile size. Tiles are the game's only touch target and were sitting under the 44px
+ * guideline, so the nesting is kept as thin as it can be while still reading as a framed
+ * board. !important is used because several earlier blocks contest these same properties.
+ */
+.boardShell { padding-inline: 3px!important; }
+.boardShell :global([class*="boardCard"]) { padding: 2px!important; }
+.boardShell .boardLetterGrid { padding: 2px!important; }
