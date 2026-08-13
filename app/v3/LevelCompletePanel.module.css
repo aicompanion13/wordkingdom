@@ -1,14 +1,13 @@
 /*
  * Level Complete panel.
  *
- * Every surface is the supplied artwork; only the numbers, the lit stars, the reward
- * amounts and the button label are live. Percentages are measured from panel.webp
- * (853x1844): star sockets at 26.44/49.94/73.27% across with their centre at 30.2% down,
- * the stat boxes running between blue borders at 9.91-48.65% and 50.76-89.57%, and the
- * three reward cells at 25.91/49.47/73.51% with their centre at 78.1% down.
+ * The artwork is text-free: every label, value and title below is a runtime layer, so the
+ * same panel serves a win and a missed objective. Percentages are measured from
+ * panel.webp (923x1521) — star sockets at 26.06/50.11/74.32% with their row centre at
+ * 31.07%, the stat chips at 42.77% and 56.97%, the hints chip at 71.24%, the reward
+ * ribbon at 82.97% and the three reward cells at 25.51/49.73/74.21%.
  *
- * The artwork still has its labels painted in, so the copy here is English-only until a
- * text-free texture arrives; the layout below does not depend on that changing.
+ * There is no button: the whole panel is the continue affordance.
  */
 .overlay {
   position: fixed;
@@ -22,16 +21,27 @@
   animation: levelCompleteFade 200ms ease-out both;
 }
 
+/* The panel itself accepts the tap, so it is a button with all the chrome stripped. */
 .panel {
   position: relative;
   width: min(340px, calc(100vw - 28px));
-  aspect-ratio: 853 / 1844;
-  /* Never taller than the screen, even on a short phone. */
+  aspect-ratio: 923 / 1521;
   max-height: calc(100dvh - 24px);
+  margin: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
   color: #3c2a14;
+  font: inherit;
+  text-align: inherit;
   filter: drop-shadow(0 14px 26px rgba(24,16,8,.34));
   animation: levelCompletePop 300ms cubic-bezier(.2,.85,.3,1.3) both;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
+
+.panel:active { transform: scale(.985); }
+.panel:focus-visible { outline: 3px solid #fff2b0; outline-offset: 6px; border-radius: 22px; }
 
 .art {
   position: absolute;
@@ -43,52 +53,96 @@
   user-select: none;
 }
 
+/* Title ------------------------------------------------------------------ */
+
+.title {
+  position: absolute;
+  left: 50%;
+  top: 21.4%;
+  width: 74%;
+  margin: 0;
+  transform: translate(-50%,-50%);
+  color: #17509e;
+  font-family: var(--game-headline)!important;
+  font-weight: 700;
+  font-size: clamp(17px,5.2vw,23px);
+  line-height: 1.05;
+  letter-spacing: -.01em;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 0 2px 0 rgba(255,255,255,.85);
+}
+
 /* Stars ------------------------------------------------------------------ */
 
 .star {
   position: absolute;
-  top: 30.2%;
-  /* Sized to cover the pale socket rather than sit inside it. */
-  width: 19.4%;
+  top: 31.07%;
+  width: 18.5%;
   transform: translate(-50%,-50%);
   pointer-events: none;
 }
 
-.star[data-slot="0"] { left: 26.44%; }
-.star[data-slot="1"] { left: 49.94%; }
-.star[data-slot="2"] { left: 73.27%; }
+.star[data-slot="0"] { left: 26.06%; }
+.star[data-slot="1"] { left: 50.11%; }
+.star[data-slot="2"] { left: 74.32%; }
 
-/* Stats ------------------------------------------------------------------ */
+/* Stat chips and values -------------------------------------------------- */
+
+.label {
+  position: absolute;
+  transform: translate(-50%,-50%);
+  width: 26%;
+  color: #fff;
+  font-family: var(--game-display);
+  font-weight: 700;
+  font-size: clamp(8px,2.5vw,11px);
+  line-height: 1;
+  letter-spacing: .02em;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-shadow: 0 1px 1px rgba(24,40,90,.55);
+  pointer-events: none;
+}
 
 .value {
   position: absolute;
   transform: translate(-50%,-50%);
   display: grid;
   place-items: center;
-  width: 34%;
+  width: 30%;
   overflow: hidden;
   color: #6a4318;
   font-family: var(--game-display);
   font-weight: 700;
-  font-size: clamp(13px,4.2vw,19px);
+  font-size: clamp(13px,4.1vw,18px);
   line-height: 1;
   white-space: nowrap;
   text-shadow: 0 1px 0 rgba(255,255,255,.7);
+  pointer-events: none;
 }
 
-.score    { left: 29.3%; top: 43%; }
-.time     { left: 70.2%; top: 43%; }
-.accuracy { left: 29.3%; top: 55.4%; }
-.longest  { left: 70.2%; top: 55.4%; font-size: clamp(11px,3.6vw,16px); }
-.hints    { left: 49.9%; top: 66.4%; width: 70%; }
+.scoreLabel    { left: 28.71%; top: 42.77%; }
+.timeLabel     { left: 71.24%; top: 42.77%; }
+.accuracyLabel { left: 28.82%; top: 56.97%; }
+.longestLabel  { left: 71.20%; top: 56.97%; width: 30%; }
+.hintsLabel    { left: 50%;    top: 71.24%; }
+.rewardLabel   { left: 50%;    top: 82.97%; width: 44%; }
+
+.score    { left: 28.71%; top: 48.7%; }
+.time     { left: 71.24%; top: 48.7%; }
+.accuracy { left: 28.82%; top: 62.9%; }
+.longest  { left: 71.24%; top: 62.9%; font-size: clamp(11px,3.5vw,15px); }
+.hints    { left: 50%;    top: 77.1%; width: 60%; }
 
 /* Rewards ---------------------------------------------------------------- */
 
 .rewards {
   position: absolute;
-  left: 14%;
-  right: 14%;
-  top: 78.1%;
+  left: 12%;
+  right: 12%;
+  top: 89.9%;
   transform: translateY(-50%);
   display: flex;
   align-items: center;
@@ -96,67 +150,61 @@
   margin: 0;
   padding: 0;
   list-style: none;
+  pointer-events: none;
 }
 
 .reward {
   flex: 1 1 0;
   display: grid;
-  place-items: center;
-  gap: 2px;
+  grid-auto-flow: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
   min-width: 0;
 }
 
 .reward img {
   width: auto;
-  height: clamp(22px,6.6vw,30px);
+  height: clamp(20px,6vw,27px);
   object-fit: contain;
   filter: drop-shadow(0 2px 2px rgba(60,40,12,.28));
 }
 
 .reward b {
-  color: #5d3a12;
+  color: #2f4a86;
   font-family: var(--game-display);
   font-weight: 700;
   font-size: clamp(10px,3.1vw,13px);
   line-height: 1;
   white-space: nowrap;
-  text-shadow: 0 1px 0 rgba(255,255,255,.75);
+  text-shadow: 0 1px 0 rgba(255,255,255,.8);
 }
 
 /* A reward the level did not grant stays visible but reads as unearned. */
-.reward[data-earned="false"] { opacity: .32; filter: grayscale(.75); }
+.reward[data-earned="false"] { opacity: .34; filter: grayscale(.7); }
 
-/* Action ----------------------------------------------------------------- */
+/* Prompt ----------------------------------------------------------------- */
 
-.cta {
+.tapHint {
   position: absolute;
   left: 50%;
-  top: 88%;
-  width: 62%;
-  min-height: 46px;
-  display: grid;
-  place-items: center;
-  padding: 0 10px;
-  transform: translate(-50%,-50%);
-  border: 3px solid #fff;
-  border-radius: 14px;
-  color: #fff;
-  background: linear-gradient(180deg,#5bd45a,#1f9b3f);
-  box-shadow: 0 4px 0 #14702c, 0 8px 14px rgba(12,60,24,.3);
-  font-family: var(--game-display)!important;
-  font-weight: 700!important;
-  font-size: clamp(14px,4.3vw,18px)!important;
-  letter-spacing: .02em;
-  text-shadow: 0 2px 0 rgba(20,80,36,.7);
+  bottom: -26px;
+  transform: translateX(-50%);
+  color: #dceaff;
+  font-family: var(--game-ui);
+  font-size: clamp(10px,3vw,12px);
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 3px rgba(2,12,34,.7);
   white-space: nowrap;
-  cursor: pointer;
+  pointer-events: none;
+  animation: tapHintPulse 1.7s ease-in-out infinite;
 }
-
-.cta:active { transform: translate(-50%,calc(-50% + 2px)); box-shadow: 0 2px 0 #14702c; }
-.cta:focus-visible { outline: 3px solid #fff2b0; outline-offset: 3px; }
 
 @keyframes levelCompleteFade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes levelCompletePop { 0% { opacity: 0; transform: scale(.86) translateY(12px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes tapHintPulse { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
 
 @media (prefers-reduced-motion: no-preference) {
   /* Stars land one after another so three stars feel earned rather than stamped. */
@@ -181,5 +229,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .overlay, .panel { animation: none!important; }
+  .overlay, .panel, .tapHint { animation: none!important; }
 }

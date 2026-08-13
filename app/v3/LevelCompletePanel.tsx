@@ -1,21 +1,18 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import styles from "./LevelCompletePanel.module.css";
 import { formatRewardAmount, levelRewardLabel, levelRewardSlots } from "@/game/v3/level-complete-rewards";
 import type { LevelRewardInput, LevelRewardSlot } from "@/game/v3/level-complete-rewards";
 
-/*
- * The hint icon is a placeholder. Codex's reward sheet currently ships a lightning bolt
- * for this slot, but the reward is hints, so the glyph the game already uses for hints
- * stands in until the drawn lightbulb arrives. Swapping it is one line.
- */
-const REWARD_ART: Record<LevelRewardSlot["kind"], { src?: string; glyph?: string; alt: string }> = {
+const REWARD_ART: Record<LevelRewardSlot["kind"], { src: string; alt: string }> = {
   coins: { src: "/level-complete/reward-coin.webp", alt: "Coins" },
-  hints: { glyph: "💡", alt: "Hints" },
+  hints: { src: "/level-complete/reward-hint.webp", alt: "Hints" },
   card: { src: "/level-complete/reward-card.webp", alt: "Royal card" },
 };
 
 export function LevelCompletePanel({
+  title,
   stars,
   score,
   timeLabel,
@@ -23,10 +20,9 @@ export function LevelCompletePanel({
   longestWord,
   hintsUsed,
   rewards,
-  cta,
   onContinue,
-  levelLabel,
 }: {
+  title: string;
   stars: number;
   score: string;
   timeLabel: string;
@@ -34,25 +30,40 @@ export function LevelCompletePanel({
   longestWord: string;
   hintsUsed: number;
   rewards: LevelRewardInput;
-  cta: string;
   onContinue: () => void;
-  levelLabel: string;
 }) {
+  const panelRef = useRef<HTMLButtonElement>(null);
   const slots = levelRewardSlots(rewards);
   const earnedStars = Math.max(0, Math.min(3, stars));
 
+  useEffect(() => { panelRef.current?.focus(); }, []);
+
   return <div className={styles.overlay}>
-    <section
+    {/*
+      * There is no separate button: the panel is the affordance. It stays a real <button>
+      * so it keeps keyboard focus, Enter/Space and a screen-reader announcement.
+      */}
+    <button
+      ref={panelRef}
       className={styles.panel}
-      role="dialog"
-      aria-modal="true"
-      aria-label={`${levelLabel} complete, ${earnedStars} of 3 stars`}
+      type="button"
+      onClick={onContinue}
+      aria-label={`${title}. ${earnedStars} of 3 stars. Tap to continue.`}
     >
       <img className={styles.art} src="/level-complete/panel.webp" alt="" />
+
+      <h1 className={styles.title}>{title}</h1>
 
       {[0, 1, 2].filter((slot) => slot < earnedStars).map((slot) => (
         <img className={styles.star} data-slot={slot} key={slot} src="/level-complete/star-gold.webp" alt="" />
       ))}
+
+      <span className={`${styles.label} ${styles.scoreLabel}`}>Score</span>
+      <span className={`${styles.label} ${styles.timeLabel}`}>Time</span>
+      <span className={`${styles.label} ${styles.accuracyLabel}`}>Accuracy</span>
+      <span className={`${styles.label} ${styles.longestLabel}`}>Longest Word</span>
+      <span className={`${styles.label} ${styles.hintsLabel}`}>Hints</span>
+      <span className={`${styles.label} ${styles.rewardLabel}`}>Level Reward</span>
 
       <span className={`${styles.value} ${styles.score}`}>{score}</span>
       <span className={`${styles.value} ${styles.time}`}>{timeLabel}</span>
@@ -60,19 +71,16 @@ export function LevelCompletePanel({
       <span className={`${styles.value} ${styles.longest}`}>{longestWord || "—"}</span>
       <span className={`${styles.value} ${styles.hints}`}>{hintsUsed}</span>
 
-      <ul className={styles.rewards} aria-label="Level reward">
-        {slots.map((slot) => {
-          const art = REWARD_ART[slot.kind];
-          return <li className={styles.reward} data-earned={slot.earned} key={slot.kind} aria-label={levelRewardLabel(slot)}>
-            {art.src
-              ? <img src={art.src} alt="" aria-hidden="true" />
-              : <span aria-hidden="true" style={{ fontSize: "clamp(20px,6vw,28px)", lineHeight: 1 }}>{art.glyph}</span>}
+      <ul className={styles.rewards}>
+        {slots.map((slot) => (
+          <li className={styles.reward} data-earned={slot.earned} key={slot.kind} aria-label={levelRewardLabel(slot)}>
+            <img src={REWARD_ART[slot.kind].src} alt="" aria-hidden="true" />
             <b>{formatRewardAmount(slot)}</b>
-          </li>;
-        })}
+          </li>
+        ))}
       </ul>
 
-      <button className={styles.cta} type="button" onClick={onContinue}>{cta}</button>
-    </section>
+      <span className={styles.tapHint} aria-hidden="true">Tap to continue</span>
+    </button>
   </div>;
 }

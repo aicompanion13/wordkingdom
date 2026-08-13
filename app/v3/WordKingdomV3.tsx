@@ -2723,8 +2723,11 @@ function LevelOneResults({ summary, onContinue }: { summary: V3RunSummary; onCon
 }
 
 function ConquestCompletePanel({ summary, title, cta, onContinue }: { summary: V3RunSummary; title: string; cta: string; onContinue: () => void }) {
+  // `cta` is retained by the call sites but the panel no longer shows a button: the whole
+  // panel is the continue affordance, so the label would be a second, competing target.
+  void cta;
   return <LevelCompletePanel
-    levelLabel={title}
+    title={title}
     stars={summary.objectiveComplete ? summary.stars : 0}
     score={formatNumber(summary.score)}
     timeLabel={`${summary.elapsedSeconds}s`}
@@ -2737,7 +2740,6 @@ function ConquestCompletePanel({ summary, title, cta, onContinue }: { summary: V
       hints: summary.objectiveComplete && isScheduledHintRefill(summary.node.level) ? HINT_POOL_REFILL_AMOUNT : 0,
       cards: summary.packResult?.cards.length ?? 0,
     }}
-    cta={cta}
     onContinue={onContinue}
   />;
 }
