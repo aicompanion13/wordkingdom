@@ -105,6 +105,7 @@ import { JuiceFxLayer } from "./JuiceFxLayer";
 import { KingdomPopup } from "./KingdomPopup";
 import { ConceptCard, DiscoveryArtwork, FtueCoachmark } from "./FtueCoachmarks";
 import { ObjectiveTray } from "./ObjectiveTray";
+import { LevelCompletePanel } from "./LevelCompletePanel";
 import { useWordKingdomAudio } from "./useWordKingdomAudio";
 import base from "../v2/V2.module.css";
 import styles from "./V3.module.css";
@@ -2722,21 +2723,23 @@ function LevelOneResults({ summary, onContinue }: { summary: V3RunSummary; onCon
 }
 
 function ConquestCompletePanel({ summary, title, cta, onContinue }: { summary: V3RunSummary; title: string; cta: string; onContinue: () => void }) {
-  return <section className={`${base.summaryCard} ${styles.summaryCard} ${styles.ftueSummaryCard}`} role="dialog" aria-modal="true" aria-labelledby="ftue-results-title" data-complete="true">
-    <div className={styles.summaryRays} aria-hidden="true" />
-    <CelebrationBurst />
-    <div className={`${base.summaryCrown} ${styles.summaryCrownMedal}`}><span>👑</span><i aria-hidden="true">◆</i></div>
-    <span className={`${base.kicker} ${styles.summaryKicker}`}>WORD KINGDOM · LEVEL {summary.node.level}</span>
-    <h1 id="ftue-results-title">{title}</h1>
-    <div className={`${base.summaryGrid} ${styles.royalSummaryGrid} ${styles.ftueResultGrid}`} aria-label={`Level ${summary.node.level} results`}>
-      <Result label="Score" value={formatNumber(summary.score)} />
-      <Result label="Time" value={`${summary.elapsedSeconds}s`} />
-      <Result label="Longest Word" value={summary.longestWord || "—"} />
-      <Result label="Accuracy" value={`${Math.round(summary.accuracy * 100)}%`} />
-      <Result label="Words Found" value={String(summary.correct)} />
-    </div>
-    <button className={`${base.primaryCta} ${styles.summaryPrimaryCta} ${styles.ftuePrimaryContinue}`} onClick={onContinue}><span>{cta}</span></button>
-  </section>;
+  return <LevelCompletePanel
+    levelLabel={title}
+    stars={summary.objectiveComplete ? summary.stars : 0}
+    score={formatNumber(summary.score)}
+    timeLabel={`${summary.elapsedSeconds}s`}
+    accuracyLabel={`${Math.round(summary.accuracy * 100)}%`}
+    longestWord={summary.longestWord}
+    hintsUsed={summary.hints}
+    rewards={{
+      runCoins: summary.totalCoins,
+      levelCoins: summary.node.reward.coins,
+      hints: summary.objectiveComplete && isScheduledHintRefill(summary.node.level) ? HINT_POOL_REFILL_AMOUNT : 0,
+      cards: summary.packResult?.cards.length ?? 0,
+    }}
+    cta={cta}
+    onContinue={onContinue}
+  />;
 }
 
 const CELEBRATION_BURST_GLYPHS = ["🪙", "✦", "⭐", "◆", "🪙", "✦", "⭐", "◆"];
