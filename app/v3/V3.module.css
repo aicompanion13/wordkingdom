@@ -3429,3 +3429,31 @@
 .boardShell { padding-inline: 3px!important; }
 .boardShell :global([class*="boardCard"]) { padding: 2px!important; }
 .boardShell .boardLetterGrid { padding: 2px!important; }
+
+/*
+ * Crown Jewel board frame. The art is a thin rail with gem corners, a crest overhanging
+ * the top and gems dropping below the bottom, and a fully transparent centre — so it is
+ * laid over the grid rather than around it, and the tiles keep their size. Insets are
+ * measured from crown-jewel-slim-frame-v2.png (1536 square, opening x 49-1487, y 77-1439)
+ * so the rail lands just outside the tile area while the ornaments overhang.
+ */
+.boardLetterGrid {
+  position: relative;
+  /* Room for the crest above and the gem drops below, taken from the slack under the board. */
+  margin-top: 15px!important;
+  margin-bottom: 24px!important;
+}
+.boardLetterGrid::after {
+  content: "";
+  position: absolute;
+  /*
+   * Horizontally the rail is pulled in tighter than the art's own geometry. The board is
+   * nearly full width, so the true overhang would push the corner gems off the screen;
+   * this trades about a pixel of overlap on the outermost tiles for keeping every gem
+   * visible. Vertically the art's real overhang is used, since there is space for it.
+   */
+  inset: -5.65% -1.6% -7.04% -1.6%;
+  z-index: 3;
+  background: url('/board-frame/crown-jewel-slim-frame.webp') center / 100% 100% no-repeat;
+  pointer-events: none;
+}
