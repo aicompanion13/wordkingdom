@@ -20,6 +20,7 @@ import {
   createLevelTimer,
   formatLevelClock,
   isLevelTimeUrgent,
+  levelTimeElapsedMs,
   levelTimeRemainingMs,
   pauseLevelTimer,
   resumeLevelTimer,
@@ -98,6 +99,7 @@ import {
 } from "@/game/v3/golden-tutorial-state";
 import type { FtueBeat, FtueProgress, FtueStallStage, GoldenTutorialState } from "@/game/v3/golden-tutorial-state";
 import { OCEAN_ALBUM_STAGE_PLAN, OCEAN_STICKER_LABELS, oceanStickersForLevel, tutorialDefinition, visiblePowerKinds } from "@/game/v3/ftue-flow";
+import { RAID_TUTORIAL_LEVEL, shouldOpenBoardRaid } from "@/game/v3/raid-trigger";
 import type { FtueCreditId, FtueTutorialId, FtueVisualStep, OceanDiscoveryStickerId, OceanRewardPhase } from "@/game/v3/ftue-flow";
 import type { CardAttackResult, IncomingCardActionResult, MetaTutorialId, PowerUpKind, PvpState, RaidSession, RivalProfile, StealSession } from "@/game/v3/pvp-types";
 import type { AlbumDefinition, CardDefinition, ChapterDefinition, ObstacleState, PackResult, PackTier, TrackNode, V3PlayerState, V3RunSummary } from "@/game/v3/types";
@@ -392,8 +394,6 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const runNode = useRef<TrackNode | null>(null);
   const runArea = useRef<AreaDefinition>(areas[0]);
   const runStartedAt = useRef(0);
-  const totalPausedMs = useRef(0);
-  const pauseStartedAt = useRef(0);
   const pendingFinish = useRef(false);
   const resumeAfterPack = useRef(false);
   const eventCoins = useRef(0);
@@ -409,6 +409,9 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const praiseBudget = useRef(createPraiseBudget());
   const solveIndex = useRef(0);
   const levelTimer = useRef<LevelTimerState | null>(null);
+  /* Read from inside scheduled callbacks, where the rendered state would be stale. */
+  const pvpOverlayRef = useRef<PvpOverlayState | null>(null);
+  const screenRef = useRef<Screen>("hub");
   const boardCardRef = useRef<HTMLDivElement | null>(null);
   const cloudReady = useRef(false);
   const cloudSaveTimer = useRef<number | null>(null);
@@ -777,6 +780,9 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     setMusic(level >= 6 && level <= 10 ? "forest" : "ocean");
   }, [currentRunLevel, loginIntroOpen, screen, setMusic, summary?.node.level, tab]);
 
+  useEffect(() => { pvpOverlayRef.current = pvpOverlay; }, [pvpOverlay]);
+  useEffect(() => { screenRef.current = screen; }, [screen]);
+
   useEffect(() => {
     const previous = audibleDialogRef.current;
     audibleDialogRef.current = audibleDialog;
@@ -1026,8 +1032,6 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     objective.current = nextObjective;
     obstacleEngine.current = null;
     runStartedAt.current = activatedAt;
-    totalPausedMs.current = 0;
-    pauseStartedAt.current = 0;
     pendingFinish.current = false;
     resumeAfterPack.current = false;
     eventCoins.current = 0;
@@ -1105,8 +1109,6 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     objective.current = null;
     obstacleEngine.current = null;
     runStartedAt.current = activatedAt;
-    totalPausedMs.current = 0;
-    pauseStartedAt.current = 0;
     pendingFinish.current = false;
     resumeAfterPack.current = false;
     eventCoins.current = 0;
@@ -1169,8 +1171,6 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     objective.current = null;
     obstacleEngine.current = null;
     runStartedAt.current = activatedAt;
-    totalPausedMs.current = 0;
-    pauseStartedAt.current = 0;
     pendingFinish.current = false;
     resumeAfterPack.current = false;
     eventCoins.current = 0;
@@ -1346,7 +1346,13 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const finishRun = () => {
     if (!scorer.current || !economy.current || !runNode.current || !objective.current) return;
     const scoreSnapshot = scorer.current.snapshot();
-    const elapsedSeconds = Math.max(1, Math.round((Date.now() - runStartedAt.current - totalPausedMs.current) / 1000));
+    // The level clock already discounts every pause — a Raid, a tutorial card, the
+    // settings sheet — so it is the only honest source for the time actually played.
+    const elapsedSeconds = Math.max(1, Math.round(
+      (levelTimer.current
+        ? levelTimeElapsedMs(levelTimer.current, Date.now())
+        : Date.now() - runStartedAt.current) / 1000,
+    ));
     const attempts = scoreSnapshot.validSelections + scoreSnapshot.invalidSelections;
     const accuracy = attempts ? scoreSnapshot.validSelections / attempts : 1;
     // Preserve the existing V3 summary/economy behavior; the new mastery layer remains out of scope for this step.
@@ -1463,11 +1469,54 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     if (kind === "shield") setPvpOverlay({ kind: "shield", protectedCardId: null, result: null, tutorial });
   };
 
+  /**
+   * A Raid is spent on the board that earned it, never between games.
+   *
+   * The trigger is simply "a Raid is ready and we are on a live board", which covers both
+   * routes to one: the tray filling around the seventh word, and a Raid carried in from a
+   * scheduled top-up. Called after the badge flight lands so the third token is visibly in
+   * the tray before the vault takes over the screen.
+   */
+  const maybeLaunchBoardRaid = (level: number, session: BoardSession | null) => {
+    if (!pvp.current) return;
+    const open = shouldOpenBoardRaid({
+      screen: screenRef.current,
+      overlayOpen: Boolean(pvpOverlayRef.current),
+      level,
+      readyRaids: pvp.current.snapshot().readyActions.raid,
+      boardAlive: Boolean(boardSession.current) && boardSession.current === session,
+    });
+    if (!open) return;
+    launchPowerUp("raid", pvp.current.pendingTutorial(RAID_TUTORIAL_LEVEL) === "raid");
+  };
+
+  /**
+   * Closing an overlay hands off to the next queued one — but only between games. A Raid
+   * now fires mid-board, and closing it must return the player to the board rather than
+   * chaining into a Shield or Attack that belongs to the results screen.
+   */
+  const chainNextMeta = () => {
+    if (screenRef.current === "board") return;
+    launchNextMeta();
+  };
+
+  /** A beat after the token lands in the tray, so the player sees what triggered this. */
+  const RAID_HANDOVER_MS = 320;
+
+  const scheduleBoardRaid = (settleAt: number) => {
+    const level = runNode.current?.level ?? player.currentLevel;
+    const session = boardSession.current;
+    scheduleJuice(
+      () => maybeLaunchBoardRaid(level, session),
+      Math.max(0, settleAt - Date.now()) + RAID_HANDOVER_MS,
+    );
+  };
+
   const launchNextMeta = (level = completedMetaLevel.current) => {
     if (!pvp.current) return;
     const state = pvp.current.snapshot();
+    // Raid is deliberately absent: it belongs to the board, not to the results screen.
     const unlocked: PowerUpKind[] = [
-      ...(level >= 3 ? ["raid" as const] : []),
       ...(level >= 6 ? ["shield" as const] : []),
       ...(level >= 7 ? ["attack" as const] : []),
       ...(level >= 8 ? ["steal" as const] : []),
@@ -1592,7 +1641,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       if (pvpOverlay.tutorial) updateFtueProgress((current) => ({ ...current, pendingTutorialAction: null }));
       setPvpOverlay(null);
       setAcknowledgedPowerIntro(null);
-      window.setTimeout(() => launchNextMeta(), 180);
+      window.setTimeout(() => chainNextMeta(), 180);
       return;
     }
     if (pvpOverlay.kind === "shield" && !pvpOverlay.protectedCardId) return;
@@ -1624,7 +1673,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     }
     setPvpOverlay(null);
     setAcknowledgedPowerIntro(null);
-    window.setTimeout(() => launchNextMeta(), 180);
+    window.setTimeout(() => chainNextMeta(), 180);
   };
 
   const acknowledgePowerTutorialIntro = () => {
@@ -1674,8 +1723,9 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     objective.current?.recordWord();
     const badgeResult = badges.current?.collect({ badges: rewardBadges });
     if (badgeResult) {
-      queueBadgeFx(badgeResult);
+      const settleAt = queueBadgeFx(badgeResult);
       saveBadgeResult(badgeResult);
+      scheduleBoardRaid(settleAt);
     }
     solveIndex.current += 1;
     if (!isGoldenRun) {
@@ -1827,8 +1877,8 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     setObjectiveProgress(objective.current.progress());
     setObstacles(obstacleEngine.current?.snapshot() ?? null);
     const badgeResult = badges.current.collect({ badges: rewardBadges });
-    queueBadgeFx(badgeResult);
     saveBadgeResult(badgeResult);
+    scheduleBoardRaid(queueBadgeFx(badgeResult));
     setMessage(`+${formatNumber(points)} · ${word.word}${clearedObstacles ? ` · ${clearedObstacles} obstacle cleared` : ""}`);
     window.setTimeout(() => {
       if (boardSession.current !== session) return;
@@ -1877,8 +1927,13 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       points,
       acceptedAt,
     );
+    // A bonus word can carry the third token too, so it must be able to fire the Raid —
+    // otherwise a Raid earned here would have nowhere left to go.
     const badgeResult = badges.current?.collect({ badges: rewardBadges });
-    if (badgeResult) saveBadgeResult(badgeResult);
+    if (badgeResult) {
+      saveBadgeResult(badgeResult);
+      scheduleBoardRaid(queueBadgeFx(badgeResult));
+    }
     const nextPlayer = economy.current?.awardBonusWord(word, scoreEvent.points);
     if (nextPlayer) persist(nextPlayer);
 
