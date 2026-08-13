@@ -8,6 +8,8 @@ export type ObjectiveKind = "WORDS" | "OBSTACLES";
 export type TrackReward = {
   coins: number;
   energy?: number;
+  /** Hints granted on completion. Every level pays at least one. */
+  hints?: number;
   pack?: PackTier;
 };
 
@@ -107,6 +109,10 @@ export type V3RunSummary = V3RunSummaryCore & {
   objectiveComplete: boolean;
   reward: TrackReward;
   packResult?: PackResult;
+  /** Hints that actually landed, after the pool cap. May be less than `reward.hints`. */
+  hintsGranted?: number;
+  /** Collectibles credited by this level, whether album cards or FTUE ocean stickers. */
+  collectiblesGranted?: number;
 };
 
 export type PendingBadgeReward = { type: BadgeType; pack: PackTier };

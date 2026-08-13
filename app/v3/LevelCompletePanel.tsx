@@ -1,15 +1,19 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./LevelCompletePanel.module.css";
 import { formatRewardAmount, levelRewardLabel, levelRewardSlots } from "@/game/v3/level-complete-rewards";
 import type { LevelRewardInput, LevelRewardSlot } from "@/game/v3/level-complete-rewards";
+import type { PackTier } from "@/game/v3/types";
 
 const REWARD_ART: Record<LevelRewardSlot["kind"], { src: string; alt: string }> = {
   coins: { src: "/level-complete/reward-coin.webp", alt: "Coins" },
   hints: { src: "/level-complete/reward-hint.webp", alt: "Hints" },
   card: { src: "/level-complete/reward-card.webp", alt: "Royal card" },
 };
+
+/** Stars land at 540ms + 320ms of travel; the chest pops just after they settle. */
+const CHEST_OPEN_DELAY_MS = 980;
 
 export function LevelCompletePanel({
   title,
@@ -20,6 +24,8 @@ export function LevelCompletePanel({
   longestWord,
   hintsUsed,
   rewards,
+  hintsAtCap = false,
+  chest = null,
   onContinue,
 }: {
   title: string;
@@ -30,13 +36,27 @@ export function LevelCompletePanel({
   longestWord: string;
   hintsUsed: number;
   rewards: LevelRewardInput;
+  /** The level paid a hint but the pool was already full, so the slot says FULL, not "+1". */
+  hintsAtCap?: boolean;
+  /** Set on the levels that pay a card pack: the rewards arrive out of a chest. */
+  chest?: PackTier | null;
   onContinue: () => void;
 }) {
   const panelRef = useRef<HTMLButtonElement>(null);
   const slots = levelRewardSlots(rewards);
   const earnedStars = Math.max(0, Math.min(3, stars));
+  // A player who asked for less motion gets the chest already open rather than a
+  // rewards row that is missing for the first second.
+  const [chestOpen, setChestOpen] = useState(() => !chest
+    || (typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches));
 
   useEffect(() => { panelRef.current?.focus(); }, []);
+
+  useEffect(() => {
+    if (chestOpen) return;
+    const timer = window.setTimeout(() => setChestOpen(true), CHEST_OPEN_DELAY_MS);
+    return () => window.clearTimeout(timer);
+  }, [chestOpen]);
 
   return <div className={styles.overlay}>
     {/*
@@ -71,11 +91,26 @@ export function LevelCompletePanel({
       <span className={`${styles.value} ${styles.longest}`}>{longestWord || "—"}</span>
       <span className={`${styles.value} ${styles.hints}`}>{hintsUsed}</span>
 
-      <ul className={styles.rewards}>
+      {chest && <img
+        className={styles.chest}
+        data-open={chestOpen}
+        data-tier={chest}
+        src={chestOpen ? "/level-complete/chest-open.webp" : "/level-complete/chest-closed.webp"}
+        alt=""
+        aria-hidden="true"
+      />}
+
+      <ul className={styles.rewards} data-chest={Boolean(chest)} data-held={Boolean(chest) && !chestOpen} aria-live="polite">
         {slots.map((slot) => (
-          <li className={styles.reward} data-earned={slot.earned} key={slot.kind} aria-label={levelRewardLabel(slot)}>
+          <li
+            className={styles.reward}
+            data-earned={slot.earned}
+            data-full={slot.kind === "hints" && hintsAtCap ? true : undefined}
+            key={slot.kind}
+            aria-label={slot.kind === "hints" && hintsAtCap ? "Hint pouch already full" : levelRewardLabel(slot)}
+          >
             <img src={REWARD_ART[slot.kind].src} alt="" aria-hidden="true" />
-            <b>{formatRewardAmount(slot)}</b>
+            <b>{slot.kind === "hints" && hintsAtCap ? "FULL" : formatRewardAmount(slot)}</b>
           </li>
         ))}
       </ul>

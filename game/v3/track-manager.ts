@@ -40,11 +40,14 @@ export class TrackManager {
             ? "Complete 8 planned word flips"
             : "Complete 8 living words",
     };
+    // Every level pays all three currencies so the Level Complete tray never shows a dead
+    // slot: coins and a hint on a standard node, escalating into a card pack on the hard
+    // node and the chapter guardian.
     const reward = kind === "HARD"
-        ? { coins: 900, pack: "BLUE" as const }
+        ? { coins: 900, hints: 2, pack: "BLUE" as const }
         : kind === "BOSS"
-          ? { coins: 1600, energy: 15, pack: "GOLD" as const }
-          : { coins: 180 + localLevel * 15 };
+          ? { coins: 1600, energy: 15, hints: 3, pack: "GOLD" as const }
+          : { coins: 180 + localLevel * 15, hints: 1, pack: "GREEN" as const };
     return {
       level,
       chapterId: chapter.chapterId,

@@ -3,7 +3,22 @@ import type { PackResult, TrackNode, V3PlayerState } from "./types";
 
 export const ENERGY_CAP = 50;
 export const ENERGY_REGEN_MS = 20 * 60 * 1000;
-export const HINT_POOL_CAP = 6;
+/**
+ * Every level now pays a hint, so the pool needs room to bank a few for a hard board
+ * without the grant silently evaporating against the ceiling.
+ */
+export const HINT_POOL_CAP = 12;
+
+/**
+ * How many of `amount` would actually land in the pool. The Level Complete tray uses this
+ * so it can never promise a hint the cap is about to swallow.
+ */
+export function hintsThatLand(currentHints: number, amount: number): number {
+  const held = Math.max(0, currentHints);
+  // A pool already over the cap — an older save, a granted bundle — takes nothing more,
+  // but it must never report a negative grant.
+  return Math.max(0, Math.min(HINT_POOL_CAP, held + Math.max(0, amount)) - held);
+}
 
 export class EconomyManagerV3 {
   private player: V3PlayerState;
@@ -40,7 +55,12 @@ export class EconomyManagerV3 {
   }
 
   grantHints(amount: number): V3PlayerState {
-    this.player.hints = Math.min(HINT_POOL_CAP, this.player.hints + Math.max(0, amount));
+    // Clamping alone would confiscate hints from a pool that is somehow already over the
+    // cap, so a grant can only ever hold steady or add.
+    this.player.hints = Math.max(
+      this.player.hints,
+      Math.min(HINT_POOL_CAP, this.player.hints + Math.max(0, amount)),
+    );
     return this.snapshot();
   }
 
@@ -49,6 +69,7 @@ export class EconomyManagerV3 {
     this.player.coins += runCoins + node.reward.coins;
     this.player.stars += stars;
     this.player.energy += node.reward.energy ?? 0;
+    if (node.reward.hints) this.grantHints(node.reward.hints);
     if (unlockGateway && node.gatewayTo && !this.player.unlockedChapterIds.includes(node.gatewayTo)) this.player.unlockedChapterIds.push(node.gatewayTo);
     this.player.currentLevel = Math.max(
       this.player.currentLevel,

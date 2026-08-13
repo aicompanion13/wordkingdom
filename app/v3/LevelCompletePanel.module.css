@@ -183,6 +183,55 @@
 /* A reward the level did not grant stays visible but reads as unearned. */
 .reward[data-earned="false"] { opacity: .34; filter: grayscale(.7); }
 
+/*
+ * A full hint pouch is not an unearned reward — the level did pay, the pool simply had no
+ * room. It reads at full strength so the player does not think they were shorted.
+ */
+.reward[data-full] { opacity: 1; filter: none; }
+.reward[data-full] b { color: #7a5a1e; font-size: clamp(9px,2.7vw,11px); letter-spacing: .04em; }
+
+/* Chest ------------------------------------------------------------------ */
+
+/*
+ * On the levels that pay a card pack the rewards arrive out of a chest instead of simply
+ * being present. It opens on its own once the stars have landed — the panel is a single
+ * tap-to-continue surface, so the chest must never become a second thing to press.
+ */
+.chest {
+  position: absolute;
+  left: 50%;
+  top: 89.9%;
+  height: 17%;
+  width: auto;
+  transform: translate(-50%,-50%);
+  filter: drop-shadow(0 6px 10px rgba(52,32,8,.42));
+  pointer-events: none;
+  z-index: 2;
+  animation: chestIdle 1.5s ease-in-out infinite;
+}
+
+/* Once open the chest hands the row over and clears out of it. */
+.chest[data-open="true"] {
+  animation: chestBurst 620ms cubic-bezier(.2,.9,.3,1.4) both;
+  z-index: 1;
+}
+
+/*
+ * The row waits inside the chest rather than sitting under it. On chest levels the reveal
+ * is driven by a transition rather than the timed rewardRise keyframes below, because the
+ * chest decides when it happens.
+ */
+.rewards[data-chest="true"] .reward {
+  transition: opacity 260ms ease-out, transform 340ms cubic-bezier(.2,.9,.3,1.5);
+}
+
+.rewards[data-held="true"] .reward { opacity: 0; transform: scale(.4); }
+
+.rewards[data-chest="true"] .reward:nth-child(2) { transition-delay: 70ms; }
+.rewards[data-chest="true"] .reward:nth-child(3) { transition-delay: 140ms; }
+
+.rewards { z-index: 3; }
+
 /* Prompt ----------------------------------------------------------------- */
 
 .tapHint {
@@ -212,10 +261,10 @@
   .star[data-slot="0"] { animation-delay: 180ms; }
   .star[data-slot="1"] { animation-delay: 360ms; }
   .star[data-slot="2"] { animation-delay: 540ms; }
-  .reward { animation: rewardRise 260ms ease-out both; }
-  .rewards .reward:nth-child(1) { animation-delay: 700ms; }
-  .rewards .reward:nth-child(2) { animation-delay: 800ms; }
-  .rewards .reward:nth-child(3) { animation-delay: 900ms; }
+  .rewards[data-chest="false"] .reward { animation: rewardRise 260ms ease-out both; }
+  .rewards[data-chest="false"] .reward:nth-child(1) { animation-delay: 700ms; }
+  .rewards[data-chest="false"] .reward:nth-child(2) { animation-delay: 800ms; }
+  .rewards[data-chest="false"] .reward:nth-child(3) { animation-delay: 900ms; }
 }
 
 @keyframes starLand {
@@ -228,6 +277,26 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* A slow breath so a closed chest reads as waiting rather than as a flat sticker. */
+@keyframes chestIdle {
+  0%,100% { transform: translate(-50%,-50%) scale(1); }
+  50% { transform: translate(-50%,-52%) scale(1.035); }
+}
+
+/*
+ * The lid throws the rewards out and the chest clears away entirely — left even faintly
+ * behind the row it reads as a smudge rather than as scenery.
+ */
+@keyframes chestBurst {
+  0%   { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  35%  { opacity: 1; transform: translate(-50%,-56%) scale(1.22); }
+  70%  { opacity: .7; transform: translate(-50%,-52%) scale(1.06); }
+  100% { opacity: 0; transform: translate(-50%,-50%) scale(.9); }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .overlay, .panel, .tapHint { animation: none!important; }
+  .overlay, .panel, .tapHint, .chest { animation: none!important; }
+  /* The chest still yields to the row, it just does not perform getting there. */
+  .chest[data-open="true"] { opacity: 0; }
+  .rewards[data-chest="true"] .reward { transition: none; }
 }

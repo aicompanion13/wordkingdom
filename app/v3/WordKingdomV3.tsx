@@ -35,7 +35,7 @@ import {
   GENERATED_LEVELS,
   GOLDEN_LEVEL_1,
 } from "@/game/v3/board-session-factory";
-import { EconomyManagerV3, ENERGY_CAP, ENERGY_REGEN_MS, HINT_POOL_CAP } from "@/game/v3/economy-manager";
+import { EconomyManagerV3, ENERGY_CAP, ENERGY_REGEN_MS, HINT_POOL_CAP, hintsThatLand } from "@/game/v3/economy-manager";
 import { FeedbackOverlay } from "@/game/v3/feedback/FeedbackOverlay";
 import { useLongPress } from "@/game/v3/feedback/useLongPress";
 import { JuiceAnimationSystem } from "@/game/v3/juice-animation-system";
@@ -221,11 +221,13 @@ const RAID_FIRST_LEVEL = 3;
 const RAID_GUARANTEED_INTERVAL = 4;
 const isScheduledRaidTopUp = (level: number) =>
   level > RAID_FIRST_LEVEL && (level - RAID_FIRST_LEVEL) % RAID_GUARANTEED_INTERVAL === 0;
+/** Below this level hints are free; from here on they are drawn from the pool. */
 const HINT_POOL_INTRO_LEVEL = 4;
-const HINT_POOL_REFILL_INTERVAL = 4;
-const HINT_POOL_REFILL_AMOUNT = 2;
-const isScheduledHintRefill = (level: number) =>
-  level > HINT_POOL_INTRO_LEVEL && (level - HINT_POOL_INTRO_LEVEL) % HINT_POOL_REFILL_INTERVAL === 0;
+/**
+ * Hints now arrive with every completed level via the track reward, so there is no separate
+ * refill schedule. The FTUE is graded generously for the same reason the boards are easy.
+ */
+const FULL_STARS_THROUGH_LEVEL = 10;
 
 type Screen = "hub" | "board" | "summary";
 type Tab = "shop" | "teams" | "home" | "events" | "albums";
@@ -1351,6 +1353,10 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     let stars = 1;
     if (scoreSnapshot.score >= 2600 && accuracy >= 0.75) stars = 2;
     if (scoreSnapshot.score >= 4500 && accuracy >= 0.9 && hintsUsedRef.current <= 1) stars = 3;
+    // The first ten levels are the tutorial. They are deliberately easy, so clearing the
+    // objective is mastery enough — a scored 1-star result there would read as a failure
+    // for doing exactly what the game asked.
+    if (runNode.current.level <= FULL_STARS_THROUGH_LEVEL) stars = 3;
     const baseCoins = Math.max(100, Math.round(scoreSnapshot.score / 8));
     const starMultiplier = stars === 3 ? 1.5 : stars === 2 ? 1.25 : 1;
     const baseSummary = {
@@ -1375,11 +1381,14 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       runNode.current.areaId,
       boardSession.current?.shownWords() ?? [],
     );
+    let hintsGranted = 0;
     if (progress.complete) {
       const oceanRewardPending = runNode.current.level >= 2
         && runNode.current.level <= 5
         && !ftueProgressRef.current.oceanRewardedLevels.includes(runNode.current.level);
       const deferForestUnlock = runNode.current.level === 5 && oceanRewardPending;
+      // Measured before the grant, so a pool that is already full reports honestly.
+      hintsGranted = hintsThatLand(economy.current.snapshot().hints, runNode.current.reward.hints ?? 0);
       economy.current.completeNode(runNode.current, baseSummary.totalCoins, baseSummary.stars, !deferForestUnlock);
       if (runNode.current.level === 1) {
         updateFtueProgress((current) => recordLevelOneCompletion(current, baseSummary));
@@ -1398,7 +1407,22 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       }
     }
     persist(economy.current.snapshot());
-    setSummary({ ...baseSummary, node: runNode.current, objectiveComplete: progress.complete, reward: runNode.current.reward, packResult: rewardPack });
+    // Levels 2-5 hand collectibles out as the FTUE's ocean stickers rather than album
+    // cards, so the tray counts those instead of the pack it never opened.
+    const collectiblesGranted = rewardPack
+      ? rewardPack.cards.length
+      : progress.complete
+        ? oceanStickersForLevel(runNode.current.level).length
+        : 0;
+    setSummary({
+      ...baseSummary,
+      node: runNode.current,
+      objectiveComplete: progress.complete,
+      reward: runNode.current.reward,
+      packResult: rewardPack,
+      hintsGranted,
+      collectiblesGranted,
+    });
     setAnimating(false);
     setScreen("summary");
     if (progress.complete) {
@@ -1458,10 +1482,6 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     if (isScheduledRaidTopUp(level) && pvp.current.snapshot().readyActions.raid < 1) {
       pvp.current.addReadyAction("raid");
       persistPvp();
-    }
-    if (isScheduledHintRefill(level) && economy.current) {
-      persist(economy.current.grantHints(HINT_POOL_REFILL_AMOUNT));
-      setToast(`+${HINT_POOL_REFILL_AMOUNT} 💡 Hints earned!`);
     }
     const tutorial = pvp.current.pendingTutorial(level);
     if (tutorial && tutorial !== "album") {
@@ -2513,6 +2533,36 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
         {tutorialLibraryOpen && <TutorialLibrary maxLevel={Math.min(10, Math.max(player.currentLevel, ...player.completedLevels, 1))} onClose={() => setTutorialLibraryOpen(false)} />}
       </main>;
     }
+    /*
+     * A cleared level gets the Level Complete panel — the design the whole game now uses.
+     * A missed objective keeps the older popup, because failing needs two choices (retry or
+     * go back) and the panel is deliberately a single tap-to-continue surface.
+     */
+    if (summary.objectiveComplete) {
+      return <main data-chapter-theme={summaryTheme.id} className={`${base.shell} ${base.summaryShell} ${styles.summaryShell}`} style={summaryStyle} onClickCapture={playUiTap}>
+        <TopBar player={player} coinPulse={coinCounterPulse} onShop={() => { returnHome(); setTab("shop"); }} onSettings={() => setSettingsOpen(true)} />
+        <div className={styles.gameTopBarSpacer} aria-hidden="true" />
+        <div className={styles.summaryAtmosphere} aria-hidden="true"><i /><i /><i /><i /><i /><span>🪙</span><span>🪙</span></div>
+        <CelebrationBurst />
+        <ConquestCompletePanel
+          summary={summary}
+          title={summary.node.level === 10 ? "FOREST ALBUM COMPLETE!" : `LEVEL ${summary.node.level} COMPLETE!`}
+          cta=""
+          onContinue={() => {
+            // The chest showed how many cards were won; the pack reveal names them.
+            if (summary.packResult) { setPackReveal(summary.packResult); return; }
+            if (ftueProgressRef.current.unlockedAlbumPages.includes(summary.node.level)) {
+              setToast("📖 New Album page unlocked!");
+            }
+            returnHome();
+          }}
+        />
+        {packReveal && <PackModal result={packReveal} onClose={() => { closePackReveal(); returnHome(); }} />}
+        {settingsOpen && <SettingsModal account={account} signOutUrl={signOutUrl} player={player} onToggle={updateSetting} onRestart={restartProgress} onHowToPlay={() => { setSettingsOpen(false); setTutorialLibraryOpen(true); }} onClose={() => setSettingsOpen(false)} />}
+        {albumTransition && <AlbumTransition state={albumTransition} reducedMotion={prefersReducedMotion} />}
+      </main>;
+    }
+
     return <main data-chapter-theme={summaryTheme.id} className={`${base.shell} ${base.summaryShell} ${styles.summaryShell}`} style={summaryStyle} onClickCapture={playUiTap}>
       <TopBar player={player} coinPulse={coinCounterPulse} onShop={() => { returnHome(); setTab("shop"); }} onSettings={() => setSettingsOpen(true)} />
       <div className={styles.gameTopBarSpacer} aria-hidden="true" />
@@ -2737,9 +2787,11 @@ function ConquestCompletePanel({ summary, title, cta, onContinue }: { summary: V
     rewards={{
       runCoins: summary.totalCoins,
       levelCoins: summary.node.reward.coins,
-      hints: summary.objectiveComplete && isScheduledHintRefill(summary.node.level) ? HINT_POOL_REFILL_AMOUNT : 0,
-      cards: summary.packResult?.cards.length ?? 0,
+      hints: summary.objectiveComplete ? summary.hintsGranted ?? 0 : 0,
+      cards: summary.objectiveComplete ? summary.collectiblesGranted ?? 0 : 0,
     }}
+    hintsAtCap={summary.objectiveComplete && (summary.hintsGranted ?? 0) === 0 && Boolean(summary.node.reward.hints)}
+    chest={summary.objectiveComplete && summary.packResult ? summary.packResult.tier : null}
     onContinue={onContinue}
   />;
 }
