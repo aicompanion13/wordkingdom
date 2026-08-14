@@ -132,9 +132,9 @@
 /* Pill centres, measured from the artwork rather than estimated from the layout. */
 .scoreLabel    { left: 28.76%; top: 42.50%; }
 .timeLabel     { left: 71.24%; top: 42.50%; }
-.accuracyLabel { left: 28.87%; top: 56.38%; }
-.longestLabel  { left: 71.51%; top: 56.25%; width: 30%; }
-.hintsLabel    { left: 50%;    top: 70.51%; }
+.accuracyLabel { left: 28.82%; top: 56.94%; }
+.longestLabel  { left: 71.72%; top: 56.84%; width: 30%; }
+.hintsLabel    { left: 50%;    top: 71.20%; }
 /* The reward ribbon is drawn a few pixels left of the panel's centre line. */
 .rewardLabel   { left: 49.35%; top: 83.00%; width: 44%; }
 
