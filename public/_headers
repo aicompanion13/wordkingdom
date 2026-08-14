@@ -1,0 +1,16 @@
+# Cache content-hashed assets immutably. vinext generates this same rule at
+# build time, but only when dist/client/_headers doesn't already exist — this
+# file takes its place, so the rule is repeated here rather than relied on.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Everything else under public/ (art, audio, level data) keeps a stable
+# filename and gets edited in place during active development -- we've
+# swapped the same panel.webp and star-gold.webp URLs several times in one
+# session while chasing an art fix. Without an explicit rule these fall back
+# to the platform default, which can hold a player's browser (and any CDN
+# edge) on pre-fix bytes well after a deploy ships the real fix. Five
+# minutes is short enough that a shipped fix reaches a returning player
+# within one sitting, long enough to spare the CDN on repeat loads.
+/*
+  Cache-Control: public, max-age=300, must-revalidate
