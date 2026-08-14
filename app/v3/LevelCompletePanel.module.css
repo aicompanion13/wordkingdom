@@ -75,9 +75,15 @@
 
 /* Stars ------------------------------------------------------------------ */
 
+/*
+ * Measured from the empty sockets in panel.webp, not eyeballed: their outer boxes span
+ * y 376-589 of 1521, putting the row centre at 31.74%, and their column centres fall at
+ * 26.06 / 50.11 / 74.21%. The gold star art carries no transparent padding, so its own
+ * centre is its geometric centre and these line up concentrically.
+ */
 .star {
   position: absolute;
-  top: 31.07%;
+  top: 31.74%;
   width: 18.5%;
   transform: translate(-50%,-50%);
   pointer-events: none;
@@ -85,7 +91,7 @@
 
 .star[data-slot="0"] { left: 26.06%; }
 .star[data-slot="1"] { left: 50.11%; }
-.star[data-slot="2"] { left: 74.32%; }
+.star[data-slot="2"] { left: 74.21%; }
 
 /* Stat chips and values -------------------------------------------------- */
 
@@ -123,12 +129,14 @@
   pointer-events: none;
 }
 
-.scoreLabel    { left: 28.71%; top: 42.77%; }
-.timeLabel     { left: 71.24%; top: 42.77%; }
-.accuracyLabel { left: 28.82%; top: 56.97%; }
-.longestLabel  { left: 71.20%; top: 56.97%; width: 30%; }
-.hintsLabel    { left: 50%;    top: 71.24%; }
-.rewardLabel   { left: 50%;    top: 82.97%; width: 44%; }
+/* Pill centres, measured from the artwork rather than estimated from the layout. */
+.scoreLabel    { left: 28.76%; top: 42.50%; }
+.timeLabel     { left: 71.24%; top: 42.50%; }
+.accuracyLabel { left: 28.87%; top: 56.38%; }
+.longestLabel  { left: 71.51%; top: 56.25%; width: 30%; }
+.hintsLabel    { left: 50%;    top: 70.51%; }
+/* The reward ribbon is drawn a few pixels left of the panel's centre line. */
+.rewardLabel   { left: 49.35%; top: 83.00%; width: 44%; }
 
 .score    { left: 28.71%; top: 48.7%; }
 .time     { left: 71.24%; top: 48.7%; }
