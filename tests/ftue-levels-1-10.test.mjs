@@ -214,7 +214,7 @@ test("active FTUE sources contain no mojibake replacement sequences", () => {
 test("Ocean reward visuals use the transparent pack, scroll announcement, real Album finger, and staged transition", () => {
   const source = fs.readFileSync(path.resolve("app/v3/WordKingdomV3.tsx"), "utf8");
   const styles = fs.readFileSync(path.resolve("app/v3/V3.module.css"), "utf8");
-  assert.match(source, /ocean-discovery-pack-v2\.png/);
+  assert.match(source, /ocean-discovery-pack-v3\.webp/);
   assert.doesNotMatch(source, /<i>OCEAN<\/i><b>STICKER PACK<\/b>/);
   assert.match(source, /title="New Ocean Stickers!"/);
   assert.match(source, /testId="level-2-album-gesture"/);
