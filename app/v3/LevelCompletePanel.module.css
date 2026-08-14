@@ -78,23 +78,13 @@
 /*
  * Measured from the empty sockets in panel.webp, not eyeballed: their outer boxes span
  * y 376-589 of 1521 (200x213), putting the row centre at 31.74% and the column centres
- * at 26.06 / 50.11 / 74.21%.
- *
- * The socket is NOT the same shape as star-gold.webp: the socket's own box is 200x213
- * (h/w 1.065, a taller star), while the star icon's trimmed canvas is 448x431 (h/w 0.962,
- * a wider one). Centering by the box alone cannot fix a proportion mismatch -- letting the
- * image keep its intrinsic ratio renders it about 10% short for its width, which is what
- * read as "not sitting right": thin rim on one side, thick on the other, not evenly short
- * all round. Height is set explicitly to the socket's own ratio (18.5% * 213/200,
- * expressed against panel height) rather than left to derive from the image, which
- * stretches the star ~10% taller to match. This is a stopgap for a source-asset mismatch;
- * see the Codex handoff for the real fix.
+ * at 26.06 / 50.11 / 74.21%. star-gold.webp was redrawn (v4-3) to the socket's own 213:200
+ * ratio, so it can size from width alone again -- no explicit height override needed.
  */
 .star {
   position: absolute;
   top: 31.74%;
   width: 18.5%;
-  height: 11.96%;
   transform: translate(-50%,-50%);
   pointer-events: none;
 }
