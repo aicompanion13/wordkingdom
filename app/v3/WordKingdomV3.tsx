@@ -2674,22 +2674,15 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   return <main data-chapter-theme={chapterTheme.id} className={`${base.shell} ${base.boardShell} ${styles.boardShell} ${isGoldenRun ? styles.goldenBoard : ""} ${boardLocked ? styles.boardPaused : ""} ${juiceShake ? styles.juiceScreenShake : ""}`} style={chapterStyle} onClickCapture={playUiTap}>
     <TopBar player={player} coinPulse={coinCounterPulse} onShop={() => { returnHome(); setTab("shop"); }} onSettings={() => setSettingsOpen(true)} />
     <div className={styles.gameTopBarSpacer} aria-hidden="true" />
-    <section className={styles.chapterIdentity} aria-label={`${chapterTheme.chapterTitle}, Level ${node.level}`}>
-      <div className={styles.chapterTopRow}>
-        <button className={styles.ftueInlineBack} onClick={returnHome} aria-label="Back to kingdom map">‹</button>
-        {levelClockMs !== null && <output
-          className={styles.levelClock}
-          data-urgent={levelClockUrgent ? "true" : undefined}
-          aria-label={`Time remaining: ${formatLevelClock(levelClockMs)}`}
-        >{formatLevelClock(levelClockMs)}</output>}
-        <div className={styles.chapterBannerLine}>
-          <i aria-hidden="true">{chapterTheme.ornaments[0]}</i>
-          <h1>{chapterTheme.chapterTitle}</h1>
-          <div className={styles.chapterBannerRight}>
-            <span className={styles.levelMedal} aria-hidden="true"><b>{node.level}</b></span>
-            <i aria-hidden="true">{chapterTheme.ornaments[1]}</i>
-          </div>
-        </div>
+    <section
+      className={styles.chapterIdentity}
+      aria-label={`${chapterTheme.chapterTitle}, Level ${node.level}${levelClockMs !== null ? `, ${formatLevelClock(levelClockMs)} remaining` : ""}`}
+    >
+      <div className={styles.kingdomBanner} data-urgent={levelClockUrgent ? "true" : undefined}>
+        <button className={styles.kingdomBannerBack} onClick={returnHome} aria-label="Back to kingdom map" />
+        <h1 className={styles.kingdomBannerName}>{chapterTheme.chapterTitle}</h1>
+        <span className={styles.kingdomBannerLevel} aria-hidden="true">{node.level}</span>
+        {levelClockMs !== null && <output className={styles.kingdomBannerTimer} aria-hidden="true">{formatLevelClock(levelClockMs)}</output>}
       </div>
     </section>
     <ObjectiveTray
