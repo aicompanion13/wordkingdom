@@ -1,0 +1,16 @@
+CRITICAL ROUTING NOTE: These creatives are exclusively for Word Kingdom /v3. Canonical player URL: https://wordkingdom-prod.inspectorkush1.workers.dev/v3. Repository: aicompanion13/wordkingdom. Shared branch: claude/game-access-5fn1b6. Creative-only handoff; do not target another route or branch.
+
+RESOURCE BAR — BOARD VARIANT
+Use case: ui-mockup. Create one independent ultra-wide board resource HUD near 6.59:1. Preserve the approved resource-bar family but add a compact circular cream-chevron back button at far left before the circular prince profile. Continue with blank coin field and crown coin, green plus, blank energy field and red heart, blank stars field and gold star, and settings button with cream gear. Finish all four sides with rounded royal-blue rail, gold trim, cream plates, contained shadow. No bottom seam rail or connector nub. True transparent background; no text or numbers.
+
+KINGDOM BANNER — CALM
+Use case: ui-mockup. Create one independent banner near 8:1 with only three blank runtime regions: large cream kingdom-name plate, fully contained circular level socket, and calm dark-blue timer pill with a small integrated crown. No back arrow. Finished rounded top, bottom and side rails; no projecting seam ornaments or connector tabs. True transparent background; no text or numbers.
+
+KINGDOM BANNER — TARGETED CORRECTION
+Use case: precise-object-edit. Remove only the diamond-and-gold tabs above and below the circular level socket. Restore the blue rails and preserve all other geometry. The level medal must be simple, round and fully contained.
+
+WORD TRAY
+Use case: ui-mockup. Create one independent tray shell near 2038:527 with a blank uninterrupted royal-blue scrolling runway, cream inset band, dimensional gold trim, rounded end caps and contained shadow. Remove the former crown/gem top ornament. No wells, connectors, text or labels.
+
+WORD BUBBLES
+Use case: ui-mockup. Create exactly three identical blank rounded capsules in one row: idle cream with blue/gold rim; found luminous gold; directed cream with blue trim and cyan focus light. Every capsule is self-contained on four sides with no crown, connector, text or label.

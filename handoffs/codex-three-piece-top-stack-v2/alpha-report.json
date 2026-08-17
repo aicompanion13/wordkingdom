@@ -1,0 +1,74 @@
+[
+  {
+    "file": "resource-bar-hub-v2.png",
+    "width": 1819,
+    "height": 276,
+    "alphaHistogram": {
+      "0": 20759,
+      "255": 481285
+    }
+  },
+  {
+    "file": "resource-bar-board-v2.png",
+    "width": 1819,
+    "height": 276,
+    "alphaHistogram": {
+      "0": 34985,
+      "255": 467059
+    }
+  },
+  {
+    "file": "kingdom-banner-independent-calm-v2.png",
+    "width": 2048,
+    "height": 256,
+    "alphaHistogram": {
+      "0": 25964,
+      "255": 498324
+    }
+  },
+  {
+    "file": "kingdom-banner-independent-urgent-v2.png",
+    "width": 2048,
+    "height": 256,
+    "alphaHistogram": {
+      "0": 25964,
+      "255": 498324
+    }
+  },
+  {
+    "file": "word-tray-independent-v2.png",
+    "width": 2038,
+    "height": 527,
+    "alphaHistogram": {
+      "0": 95114,
+      "255": 978912
+    }
+  },
+  {
+    "file": "word-bubble-idle-v2.png",
+    "width": 1800,
+    "height": 506,
+    "alphaHistogram": {
+      "0": 122920,
+      "255": 787880
+    }
+  },
+  {
+    "file": "word-bubble-found-v2.png",
+    "width": 1800,
+    "height": 506,
+    "alphaHistogram": {
+      "0": 199749,
+      "255": 711051
+    }
+  },
+  {
+    "file": "word-bubble-directed-v2.png",
+    "width": 1800,
+    "height": 506,
+    "alphaHistogram": {
+      "0": 127797,
+      "255": 783003
+    }
+  }
+]
