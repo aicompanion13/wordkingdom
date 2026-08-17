@@ -1,0 +1,74 @@
+[
+  {
+    "file": "kingdom-identity-banner-calm.png",
+    "width": 2048,
+    "height": 256,
+    "alphaValues": [
+      0,
+      255
+    ],
+    "zero": 52077,
+    "full": 472211,
+    "semi": 0
+  },
+  {
+    "file": "kingdom-identity-banner-urgent.png",
+    "width": 2048,
+    "height": 256,
+    "alphaValues": [
+      0,
+      255
+    ],
+    "zero": 52077,
+    "full": 472211,
+    "semi": 0
+  },
+  {
+    "file": "word-tray-frame.png",
+    "width": 2038,
+    "height": 527,
+    "alphaValues": [
+      0,
+      255
+    ],
+    "zero": 183824,
+    "full": 890202,
+    "semi": 0
+  },
+  {
+    "file": "word-slot-idle.png",
+    "width": 1800,
+    "height": 506,
+    "alphaValues": [
+      0,
+      255
+    ],
+    "zero": 34210,
+    "full": 876590,
+    "semi": 0
+  },
+  {
+    "file": "word-slot-found.png",
+    "width": 1800,
+    "height": 506,
+    "alphaValues": [
+      0,
+      255
+    ],
+    "zero": 49846,
+    "full": 860954,
+    "semi": 0
+  },
+  {
+    "file": "word-slot-directed.png",
+    "width": 1800,
+    "height": 506,
+    "alphaValues": [
+      0,
+      255
+    ],
+    "zero": 49075,
+    "full": 861725,
+    "semi": 0
+  }
+]
