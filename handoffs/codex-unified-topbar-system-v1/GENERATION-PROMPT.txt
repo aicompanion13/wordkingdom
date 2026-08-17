@@ -1,0 +1,10 @@
+CRITICAL ROUTING NOTE: This creative is exclusively for Word Kingdom /v3. Canonical player URL: https://wordkingdom-prod.inspectorkush1.workers.dev/v3. Repository: aicompanion13/wordkingdom. Shared branch: claude/game-access-5fn1b6. Creative-only handoff; do not target another route or branch.
+
+Use case: ui-mockup
+Asset type: production raster resource HUD / top bar shell for a mobile word puzzle game
+
+Redesign the existing resource HUD so it belongs to the same connected art family as the supplied production kingdom banner and word tray. It must work both as a finished standalone bar on the hub screen and as the top segment of a zero-gap three-part royal header on the board screen.
+
+Create one isolated extremely wide bar at approximately 6.59:1. Preserve the six live regions in order: circular prince portrait, blank coin readout with crown coin, green plus, blank energy readout with red heart, blank stars readout with gold star, compact settings button with cream gear. Match the banner/tray's royal-blue side rails, gold trim, cream parchment, turquoise gems, rounded toy-like Royal Match energy, and top-left lighting. Finish the top and side edges. Give the bottom a continuous gold rivet rail plus a shallow centered turquoise connector gem that works both standalone and as the upper half of the board seam.
+
+TRUE TRANSPARENT BACKGROUND. No baked text, numbers, labels, pseudo-text, watermark, phone mockup, duplicate option, or separate loose object. Keep icons and portrait; all numeric values remain runtime.

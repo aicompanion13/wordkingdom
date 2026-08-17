@@ -1,0 +1,65 @@
+[
+  {
+    "file": "word-kingdom-topbar-unified-v1.png",
+    "width": 1819,
+    "height": 276,
+    "alphaHistogram": {
+      "0": 57240,
+      "255": 444804
+    }
+  },
+  {
+    "file": "kingdom-identity-banner-calm.png",
+    "width": 2048,
+    "height": 256,
+    "alphaHistogram": {
+      "0": 52077,
+      "255": 472211
+    }
+  },
+  {
+    "file": "kingdom-identity-banner-urgent.png",
+    "width": 2048,
+    "height": 256,
+    "alphaHistogram": {
+      "0": 52077,
+      "255": 472211
+    }
+  },
+  {
+    "file": "word-tray-frame.png",
+    "width": 2038,
+    "height": 527,
+    "alphaHistogram": {
+      "0": 183824,
+      "255": 890202
+    }
+  },
+  {
+    "file": "word-slot-idle.png",
+    "width": 1800,
+    "height": 506,
+    "alphaHistogram": {
+      "0": 34210,
+      "255": 876590
+    }
+  },
+  {
+    "file": "word-slot-found.png",
+    "width": 1800,
+    "height": 506,
+    "alphaHistogram": {
+      "0": 49846,
+      "255": 860954
+    }
+  },
+  {
+    "file": "word-slot-directed.png",
+    "width": 1800,
+    "height": 506,
+    "alphaHistogram": {
+      "0": 49075,
+      "255": 861725
+    }
+  }
+]
