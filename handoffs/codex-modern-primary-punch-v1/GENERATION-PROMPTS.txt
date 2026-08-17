@@ -1,0 +1,30 @@
+CRITICAL ROUTING NOTE: These creatives are exclusively for Word Kingdom /v3. Canonical player URL: https://wordkingdom-prod.inspectorkush1.workers.dev/v3. Repository: aicompanion13/wordkingdom. Shared branch: claude/game-access-5fn1b6. Creative-only handoff; do not target another route or branch.
+
+PRIMARY EXECUTION CONTRACT
+Match optioncmodernreference.png precisely: premium modern mobile-game UI; saturated blue gradients #2F6BFF to #1B4FDB, red #FF3B3B to #E82A2A, gold-yellow #FFC72C to #FFB23D, white readout plates. Use soft diffuse elevation, radial glossy spheres with upper-left highlight, subtle top glass sheen, smooth multi-stop gradients, generous rounding and thin/no hard outlines. Avoid retro/8-bit execution, flat two-color shapes, thick uniform outlines, hard offset sticker shadows, parchment, crowns, gems, rivets, filigree and bevel-heavy medieval metal.
+
+HUB RESOURCE BAR
+One isolated 6.59:1 saturated-blue rounded resource bar: circular prince profile, blank white coin pill with neutral glossy coin icon, glossy red plus, blank white energy pill with red heart, blank white star pill with yellow star, glossy blue settings sphere with white gear. No values or text.
+
+BOARD RESOURCE BAR
+Same as hub, adding a glossy red circular back control with bold white chevron before the profile. Compress all seven regions cleanly. No values or text.
+
+KINGDOM IDENTITY
+One isolated white elevated 8:1 card with large blank glossy-blue name pill, blank glossy yellow level sphere and blank glossy-red timer pill with simple white clock icon. No back control and no text.
+
+WORD TRAY
+One isolated white 3.87:1 elevated card containing an uninterrupted very-light-blue runway. Minimal pale-blue inset edge, no wells, connectors or decoration.
+
+WORD PILLS
+Exactly three identical blank pills: idle white/light-blue; found saturated blue with small white check at far left; directed white/light-blue with vivid blue edge and restrained cyan focus glow.
+
+ANNOUNCEMENT SHARED CONTRACT
+One isolated 2.5:1 rounded Primary Punch announcement card. Decoration confined to the left 18%. Blank glossy white runtime zone x 22–94%, y 22–78%. No right ornament, text, letters, numbers, labels or pseudo-text.
+
+GREAT WORD: blue outer card; yellow glossy badge with white checkmark.
+ROYAL COMBO: blue outer card; red glossy badge with two interlocking yellow links.
+BONUS FOUND: yellow outer card; blue glossy badge with white gift and small yellow coin sparkle.
+KEEP GOING: blue outer card; red glossy badge with two white forward chevrons.
+ON FIRE: red outer card; yellow glossy badge with clean white/blue flame.
+ONE LAST WORD: yellow outer card; blue glossy badge with white flag and one yellow star.
+HURRY UP: intense red outer card; yellow glossy badge with red alarm clock and contained alarm rays.

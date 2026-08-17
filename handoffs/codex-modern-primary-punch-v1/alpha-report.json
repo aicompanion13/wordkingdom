@@ -1,0 +1,137 @@
+[
+  {
+    "file": "resource-bar-primary-hub.png",
+    "width": 1819,
+    "height": 276,
+    "alphaHistogram": {
+      "0": 30717,
+      "255": 471327
+    }
+  },
+  {
+    "file": "resource-bar-primary-board.png",
+    "width": 1819,
+    "height": 276,
+    "alphaHistogram": {
+      "0": 40583,
+      "255": 461461
+    }
+  },
+  {
+    "file": "kingdom-banner-primary-calm.png",
+    "width": 2048,
+    "height": 256,
+    "alphaHistogram": {
+      "0": 68588,
+      "255": 455700
+    }
+  },
+  {
+    "file": "kingdom-banner-primary-urgent.png",
+    "width": 2048,
+    "height": 256,
+    "alphaHistogram": {
+      "0": 68588,
+      "255": 455700
+    }
+  },
+  {
+    "file": "word-tray-primary.png",
+    "width": 2038,
+    "height": 527,
+    "alphaHistogram": {
+      "0": 394324,
+      "255": 679702
+    }
+  },
+  {
+    "file": "word-pill-idle.png",
+    "width": 1800,
+    "height": 506,
+    "alphaHistogram": {
+      "0": 181666,
+      "255": 729134
+    }
+  },
+  {
+    "file": "word-pill-found.png",
+    "width": 1800,
+    "height": 506,
+    "alphaHistogram": {
+      "0": 120562,
+      "255": 790238
+    }
+  },
+  {
+    "file": "word-pill-directed.png",
+    "width": 1800,
+    "height": 506,
+    "alphaHistogram": {
+      "0": 134824,
+      "255": 775976
+    }
+  },
+  {
+    "file": "great-word.png",
+    "width": 1200,
+    "height": 480,
+    "alphaHistogram": {
+      "0": 26711,
+      "255": 549289
+    }
+  },
+  {
+    "file": "royal-combo.png",
+    "width": 1200,
+    "height": 480,
+    "alphaHistogram": {
+      "0": 26107,
+      "255": 549893
+    }
+  },
+  {
+    "file": "bonus-found.png",
+    "width": 1200,
+    "height": 480,
+    "alphaHistogram": {
+      "0": 26653,
+      "255": 549347
+    }
+  },
+  {
+    "file": "keep-going.png",
+    "width": 1200,
+    "height": 480,
+    "alphaHistogram": {
+      "0": 26282,
+      "255": 549718
+    }
+  },
+  {
+    "file": "on-fire.png",
+    "width": 1200,
+    "height": 480,
+    "alphaHistogram": {
+      "0": 31233,
+      "255": 544767
+    }
+  },
+  {
+    "file": "one-more.png",
+    "width": 1200,
+    "height": 480,
+    "alphaHistogram": {
+      "0": 36552,
+      "255": 539448
+    }
+  },
+  {
+    "file": "hurry-up.png",
+    "width": 1200,
+    "height": 480,
+    "alphaHistogram": {
+      "0": 26417,
+      "255": 549583
+    }
+  }
+]

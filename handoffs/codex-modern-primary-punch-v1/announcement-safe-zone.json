@@ -1,0 +1,17 @@
+{
+  "assetWidth": 1200,
+  "assetHeight": 480,
+  "safeZonePercent": {
+    "x": 22,
+    "y": 22,
+    "width": 72,
+    "height": 56
+  },
+  "safeZonePixels": {
+    "x": 264,
+    "y": 106,
+    "width": 864,
+    "height": 269
+  },
+  "note": "All seven banners use the same unobstructed runtime-text zone."
+}
