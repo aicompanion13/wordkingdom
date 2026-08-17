@@ -33,6 +33,14 @@ instantly player-visible.
 - `app/v3/V3.module.css` — all styling (~3k lines). Design tokens live on
   `.v3Shell/.boardShell/.summaryShell`: `--royal-*` colors, `--game-display`
   font. Match this language for any new visuals.
+- **Visual direction, in progress**: `/v3` is transitioning off the royal-
+  blue/gold/cream look toward a named style, **"Bubble Candy Kingdom"** —
+  bold saturated blue/red/gold-yellow, glossy modern candy-cartoon
+  (soft blurred elevation shadows, radial-gradient glossy spheres, subtle
+  glass-highlight sheen — explicitly NOT flat cartoon-sticker/8-bit
+  outlines). Use this name and direction for any new `/v3` visual work or
+  Codex brief until the redesign lands, then rewrite this section to
+  describe the shipped tokens in place of `--royal-*`.
 - `game/v3/` — pure game logic: board sessions, economy, packs/albums, PvP,
   FTUE flow, generated levels (`data/generated-levels/`), golden tutorial
   levels ("golden" = the authored, test-locked levels 1–10).
