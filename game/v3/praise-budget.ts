@@ -4,12 +4,13 @@ export type CelebrationBannerKind =
   | "bonus-found"
   | "keep-going"
   | "on-fire"
-  | "one-more";
+  | "one-more"
+  | "hurry-up";
 
 /*
- * Praise banners are rationed so they stay special. "one-more" (an urgency cue) and
- * "bonus-found" (it reports a real Royal Dictionary entry) carry information rather than
- * flattery, so they are exempt from the budget and always show.
+ * Praise banners are rationed so they stay special. "one-more" and "hurry-up" (urgency
+ * cues) and "bonus-found" (it reports a real Royal Dictionary entry) carry information
+ * rather than flattery, so they are exempt from the budget and always show.
  *
  * Tutorial instructions, power unlocks and Raid results never reach here at all — they
  * are ConceptCard scrolls, not celebration banners — so they cannot spend the allowance.

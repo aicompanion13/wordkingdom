@@ -10,21 +10,43 @@
 .loginIntroChrome button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.loginIntro video{display:none}.loginIntro{background:radial-gradient(circle at 50% 20%,#397ec0,#0b265e 65%,#051633)}}
 .hubContent{position:relative;z-index:1;padding-bottom:95px}
+/*
+ * Bubble Candy Kingdom resource bar. Two art variants, both 1819x276: the hub bar has six
+ * regions (profile, coins, shop +, energy, stars, settings); the board bar adds a back
+ * button before the profile. Geometry measured directly from the production art via
+ * connected-component analysis of the readout pills and icon colors. Readout text sits in
+ * the right portion of each pill, clear of its icon.
+ */
 .royalTopBar{position:fixed;z-index:30;top:0;left:50%;width:100%;margin:0;aspect-ratio:1819/276;overflow:visible;transform:translateX(-50%);filter:drop-shadow(0 6px 14px rgba(4,12,34,.4));pointer-events:none}
 .royalTopBar::before{display:none}
 .royalTopBarArt{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none;user-select:none}
-.royalTopBarEnergy,.royalTopBarStars,.royalTopBarCoins{position:absolute;top:46.59%;transform:translate(-50%,-50%);display:grid;place-items:center;overflow:hidden;color:#6a351b;font-family:var(--game-display);font-weight:700;font-size:clamp(12px,4vw,17px);line-height:1;letter-spacing:.01em;text-shadow:0 1px 0 rgba(255,255,255,.7);white-space:nowrap}
-.royalTopBarCoins{left:27.78%;width:12%}
-.royalTopBarEnergy{left:56.83%;width:13.2%}
-.royalTopBarStars{left:81.01%;width:14.5%}
-.royalTopBarProfile,.royalTopBarShop,.royalTopBarSettings{position:absolute;top:46.59%;transform:translate(-50%,-50%);width:44px;height:44px;margin:0;border:0;border-radius:50%;background:transparent;padding:0;cursor:pointer;pointer-events:auto;-webkit-tap-highlight-color:transparent}
-.royalTopBarProfile{left:8.37%}
-.royalTopBarShop{left:36.11%}
-.royalTopBarSettings{left:95.03%}
-.royalTopBarShop:focus-visible,.royalTopBarSettings:focus-visible{outline:3px solid #fff4bf;outline-offset:2px;box-shadow:0 0 0 5px rgba(39,99,144,.9)}
-.royalTopBarShop:active,.royalTopBarSettings:active{transform:translate(-50%,-50%) scale(.94)}
-.royalTopBarShop:disabled,.royalTopBarSettings:disabled{cursor:not-allowed;opacity:.55}
-@media(prefers-reduced-motion:reduce){.royalTopBarShop,.royalTopBarSettings{transition:none}}
+.royalTopBarEnergy,.royalTopBarStars,.royalTopBarCoins{position:absolute;top:43.84%;transform:translate(-50%,-50%);display:grid;place-items:center;overflow:hidden;color:#123a9c;font-family:var(--game-display);font-weight:700;font-size:clamp(12px,4vw,17px);line-height:1;letter-spacing:.01em;text-shadow:0 1px 0 rgba(255,255,255,.7);white-space:nowrap}
+.royalTopBarCoins{left:28.33%;width:12.47%}
+.royalTopBarEnergy{left:58.92%;width:12.5%}
+.royalTopBarStars{left:81.28%;width:12.09%}
+.royalTopBarProfile,.royalTopBarShop,.royalTopBarSettings,.royalTopBarBack{position:absolute;top:45%;transform:translate(-50%,-50%);width:44px;height:44px;margin:0;border:0;border-radius:50%;background:transparent;padding:0;cursor:pointer;pointer-events:auto;-webkit-tap-highlight-color:transparent}
+.royalTopBarProfile{left:18.09%}
+.royalTopBarShop{left:48.6%}
+.royalTopBarSettings{left:93.68%}
+/* Board variant: back button added, everything else shifted right to make room for it. */
+.royalTopBarBoard .royalTopBarCoins{left:38.5%;width:8%;font-size:clamp(10px,3.2vw,14px)}
+.royalTopBarBoard .royalTopBarEnergy{left:62.46%;width:10.56%}
+.royalTopBarBoard .royalTopBarStars{left:81.17%;width:9.54%}
+.royalTopBarBoard .royalTopBarCoins,
+.royalTopBarBoard .royalTopBarEnergy,
+.royalTopBarBoard .royalTopBarStars{top:46.56%}
+.royalTopBarBoard .royalTopBarProfile,
+.royalTopBarBoard .royalTopBarShop,
+.royalTopBarBoard .royalTopBarSettings,
+.royalTopBarBoard .royalTopBarBack{top:47.5%}
+.royalTopBarBoard .royalTopBarProfile{left:20.23%}
+.royalTopBarBoard .royalTopBarShop{left:45.63%}
+.royalTopBarBoard .royalTopBarSettings{left:93.5%}
+.royalTopBarBack{left:7.64%}
+.royalTopBarShop:focus-visible,.royalTopBarSettings:focus-visible,.royalTopBarBack:focus-visible{outline:3px solid #fff4bf;outline-offset:2px;box-shadow:0 0 0 5px rgba(39,99,144,.9)}
+.royalTopBarShop:active,.royalTopBarSettings:active,.royalTopBarBack:active{transform:translate(-50%,-50%) scale(.94)}
+.royalTopBarShop:disabled,.royalTopBarSettings:disabled,.royalTopBarBack:disabled{cursor:not-allowed;opacity:.55}
+@media(prefers-reduced-motion:reduce){.royalTopBarShop,.royalTopBarSettings,.royalTopBarBack{transition:none}}
 @media(prefers-reduced-motion:reduce){.royalTopBar{filter:none}}
 .mobileBottomNav{height:calc(clamp(64px,18vw,72px) + env(safe-area-inset-bottom))!important;align-items:center!important;border-top-width:2px!important;padding:5px max(3px,env(safe-area-inset-left)) calc(5px + env(safe-area-inset-bottom)) max(3px,env(safe-area-inset-right))!important}
 .mobileBottomNav button{height:clamp(48px,13.8vw,56px)!important;min-width:0;display:grid;grid-template-rows:1fr auto;align-content:center;justify-items:center;border-radius:clamp(10px,3vw,13px)!important;padding:4px 2px 5px;line-height:1}
@@ -986,13 +1008,12 @@
 }
 
 /*
- * v3 creative pass. One universal banner (not per-kingdom) with the kingdom name, level
- * number and level timer rendered at runtime over blank sockets in the art. Geometry
- * measured directly from kingdom-identity-banner-calm.webp (2048x256):
- *   back button   centre x  6.81%, width 12.5%, top 6% / height 88%
- *   name plate    centre x 38.28%, y 51.17%, box 48.0% x 58.98%
- *   level socket  centre x 67.68%, y 49.61%, box  8.15% x 40.23%
- *   timer field   centre x 86.57%, y 54.69%, box 18.02% x 46.48%
+ * Bubble Candy Kingdom banner, no back button (it now lives on the board resource bar).
+ * Kingdom name, level number and level timer render at runtime over blank sockets.
+ * Geometry measured directly from kingdom-banner-primary-calm.png (2048x256):
+ *   name plate    centre x 33.69%, y 55.27%, box 59.57% x 58.20%
+ *   level socket  centre x 70.53%, y 55.47%, box 10.89% x 56.25%
+ *   timer field   centre x 91.25%, y 57.23% (right of the clock icon, clear of it)
  * Calm/urgent is a whole-image swap, not a tint -- the timer field's fill colour is baked
  * into each state, matching what the CSS-only levelClock pill used to do with a gradient.
  */
@@ -1006,29 +1027,15 @@
   background-image: url('/kingdom-banner/kingdom-identity-banner-urgent.webp');
 }
 
-.kingdomBannerBack {
-  position: absolute;
-  left: 6.81%;
-  top: 6%;
-  width: 12.5%;
-  height: 88%;
-  transform: translateX(-50%);
-  border: 0;
-  padding: 0;
-  background: transparent;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
 .kingdomBannerName {
   position: absolute;
-  left: 38.28%;
-  top: 51.17%;
-  width: 44%;
+  left: 33.69%;
+  top: 55.27%;
+  width: 51%;
   margin: 0;
   transform: translate(-50%,-50%);
   overflow: hidden;
-  color: #17509e;
+  color: #fff;
   font-family: var(--game-display);
   font-weight: 700;
   font-size: clamp(13px,4.6vw,21px);
@@ -1037,37 +1044,38 @@
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
-  text-shadow: 0 1px 0 rgba(255,255,255,.6);
+  text-shadow: 0 1px 2px rgba(0,20,60,.35);
 }
 
 .kingdomBannerLevel {
   position: absolute;
-  left: 67.68%;
-  top: 49.61%;
+  left: 70.53%;
+  top: 55.47%;
   transform: translate(-50%,-50%);
-  color: #6a4318;
+  color: #8f5600;
   font-family: var(--game-display);
   font-weight: 700;
   font-size: clamp(12px,4vw,17px);
   line-height: 1;
-  text-shadow: 0 1px 0 rgba(255,255,255,.55);
+  text-shadow: 0 1px 0 rgba(255,255,255,.4);
 }
 
 .kingdomBannerTimer {
   position: absolute;
-  left: 86.57%;
-  top: 54.69%;
+  left: 91.25%;
+  top: 57.23%;
+  width: 12.5%;
   transform: translate(-50%,-50%);
-  color: #fff7d2;
+  color: #fff;
   font-family: var(--game-display);
   font-weight: 700;
   font-size: clamp(11px,3.6vw,15px);
   font-variant-numeric: tabular-nums;
   line-height: 1;
+  text-align: center;
   text-shadow: 0 1px 2px rgba(0,0,0,.4);
 }
 .kingdomBanner[data-urgent="true"] .kingdomBannerTimer {
-  color: #fff;
   animation: kingdomBannerTimerPulse 900ms ease-in-out infinite;
 }
 @keyframes kingdomBannerTimerPulse { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.3); } }
@@ -1387,28 +1395,52 @@
   border-color: #efb832;
   background: linear-gradient(145deg,rgba(255,249,224,.98),rgba(235,205,128,.98));
 }
+/*
+ * Announcement art is blank (see CELEBRATION_BANNERS in WordKingdomV3.tsx) so its message
+ * can be localized. Text-safe zone measured from the 1200x480 production art: x 22%, y
+ * 22%, 72% wide, 56% tall -- the same zone in all seven banners.
+ */
 .celebrationBanner {
   position: absolute;
   z-index: 6;
   left: 50%;
   top: 8px;
   transform: translateX(-50%);
-  width: min(250px,66vw);
-  max-height: 140px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: min(300px,78vw);
+  aspect-ratio: 1200 / 480;
   pointer-events: none;
   animation: celebrationPop 200ms cubic-bezier(.2,.85,.3,1.3) both;
 }
 .celebrationBanner[data-leaving="true"] {
   animation: celebrationOut 220ms ease-in both;
 }
-.celebrationBanner img {
+.celebrationBannerArt {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: fill;
   filter: drop-shadow(0 10px 18px rgba(20,10,0,.35));
+}
+.celebrationBannerText {
+  position: absolute;
+  left: 22%;
+  top: 22%;
+  width: 72%;
+  height: 56%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0 4%;
+  color: #123a9c;
+  font-family: var(--game-display);
+  font-weight: 700;
+  font-size: clamp(13px,4.4vw,19px);
+  line-height: 1.15;
+  letter-spacing: .01em;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(255,255,255,.4);
 }
 @keyframes celebrationPop {
   from { opacity: 0; transform: translateX(-50%) scale(.85); }

@@ -38,9 +38,19 @@ instantly player-visible.
   bold saturated blue/red/gold-yellow, glossy modern candy-cartoon
   (soft blurred elevation shadows, radial-gradient glossy spheres, subtle
   glass-highlight sheen — explicitly NOT flat cartoon-sticker/8-bit
-  outlines). Use this name and direction for any new `/v3` visual work or
-  Codex brief until the redesign lands, then rewrite this section to
-  describe the shipped tokens in place of `--royal-*`.
+  outlines). Shipped so far: the top resource bar, kingdom identity banner,
+  word tray/pills, and all seven announcement banners (`/topbar/resource-
+  bar-*-v3.webp`, `/kingdom-banner/*`, `/objective-tray/*`, `/banners/*`) —
+  use these as the reference example of the style. The rest of `/v3` (board
+  tiles, buttons, panels) still carries the old `--royal-*` look. Use this
+  name and direction for any new `/v3` visual work or Codex brief until the
+  redesign fully lands, then rewrite this section to describe the shipped
+  tokens in place of `--royal-*`.
+- **Localizable announcement banners**: the six celebration banners plus a
+  new `hurry-up` kind (fires once per level when the timer goes urgent) are
+  blank art with runtime text overlay — see `CELEBRATION_BANNERS` in
+  `WordKingdomV3.tsx` and `.celebrationBannerText` in `V3.module.css`. Swap
+  that table to localize; never bake message text into new banner art.
 - `game/v3/` — pure game logic: board sessions, economy, packs/albums, PvP,
   FTUE flow, generated levels (`data/generated-levels/`), golden tutorial
   levels ("golden" = the authored, test-locked levels 1–10).

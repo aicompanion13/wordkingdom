@@ -148,13 +148,20 @@ const EMPTY_SCORE: ScoreManagerSnapshot = {
   wordsFound: 0,
   idleRemainingRatio: 0,
 };
-const CELEBRATION_BANNERS: Record<CelebrationBannerKind, { src: string; alt: string }> = {
-  "great-word": { src: "/banners/great-word.webp", alt: "Great Word!" },
-  "royal-combo": { src: "/banners/royal-combo.webp", alt: "Royal Combo!" },
-  "bonus-found": { src: "/banners/bonus-found.webp", alt: "Bonus Found!" },
-  "keep-going": { src: "/banners/keep-going.webp", alt: "Keep Going!" },
-  "on-fire": { src: "/banners/on-fire.webp", alt: "On Fire!" },
-  "one-more": { src: "/banners/one-more.webp", alt: "One More!" },
+/*
+ * Announcement art is blank so its message can be localized: the text below is the
+ * English copy, rendered at runtime over the safe zone measured on the art (see
+ * `.celebrationBannerText` in V3.module.css). Swapping languages later means swapping
+ * this table, not the art.
+ */
+const CELEBRATION_BANNERS: Record<CelebrationBannerKind, { src: string; text: string }> = {
+  "great-word": { src: "/banners/great-word.webp", text: "Great Word!" },
+  "royal-combo": { src: "/banners/royal-combo.webp", text: "Royal Combo!" },
+  "bonus-found": { src: "/banners/bonus-found.webp", text: "Bonus Found!" },
+  "keep-going": { src: "/banners/keep-going.webp", text: "Keep Going!" },
+  "on-fire": { src: "/banners/on-fire.webp", text: "On Fire!" },
+  "one-more": { src: "/banners/one-more.webp", text: "One Last Word!" },
+  "hurry-up": { src: "/banners/hurry-up.webp", text: "Hurry Up!" },
 };
 const GREAT_WORD_MIN_LENGTH = 7;
 const ROYAL_COMBO_THRESHOLD = scoringConfig.comboLadder[3];
@@ -393,6 +400,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
   const obstacleEngine = useRef<ObstacleManager | null>(null);
   const runNode = useRef<TrackNode | null>(null);
   const runArea = useRef<AreaDefinition>(areas[0]);
+  const hurryUpFired = useRef(false);
   const runStartedAt = useRef(0);
   const pendingFinish = useRef(false);
   const resumeAfterPack = useRef(false);
@@ -861,6 +869,13 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     }, CELEBRATION_HOLD_MS);
   };
 
+  /* Fires once per level the first time the clock crosses into urgent, not on every tick. */
+  useEffect(() => {
+    if (screen !== "board" || !levelClockUrgent || hurryUpFired.current) return;
+    hurryUpFired.current = true;
+    fireCelebration("hurry-up");
+  }, [screen, levelClockUrgent]);
+
   const playComboSfx = (comboMultiplier: number) => {
     const comboIndex = scoringConfig.comboLadder.findIndex(
       (value) => Math.abs(value - comboMultiplier) < 0.001,
@@ -1013,6 +1028,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     });
     runNode.current = node;
     runArea.current = area;
+    hurryUpFired.current = false;
     boardSession.current = session;
     const nextScorer = new ScoreManager(activatedAt);
     scoreIdleUnsubscribe.current?.();
@@ -1092,6 +1108,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     boardSession.current = session;
     runNode.current = track.node(player.currentLevel);
     runArea.current = activeArea;
+    hurryUpFired.current = false;
     const nextScorer = new ScoreManager(activatedAt);
     scoreIdleUnsubscribe.current?.();
     celebrationShown.current = { royalCombo: false, onFire: false };
@@ -1154,6 +1171,7 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     boardSession.current = session;
     runNode.current = track.node(player.currentLevel);
     runArea.current = activeArea;
+    hurryUpFired.current = false;
     const nextScorer = new ScoreManager(activatedAt);
     scoreIdleUnsubscribe.current?.();
     celebrationShown.current = { royalCombo: false, onFire: false };
@@ -2672,14 +2690,13 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
     "--theme-background-image": chapterTheme.backgroundImage ? `url("${chapterTheme.backgroundImage}")` : "none",
   } as CSSProperties;
   return <main data-chapter-theme={chapterTheme.id} className={`${base.shell} ${base.boardShell} ${styles.boardShell} ${isGoldenRun ? styles.goldenBoard : ""} ${boardLocked ? styles.boardPaused : ""} ${juiceShake ? styles.juiceScreenShake : ""}`} style={chapterStyle} onClickCapture={playUiTap}>
-    <TopBar player={player} coinPulse={coinCounterPulse} onShop={() => { returnHome(); setTab("shop"); }} onSettings={() => setSettingsOpen(true)} />
+    <TopBar player={player} coinPulse={coinCounterPulse} onShop={() => { returnHome(); setTab("shop"); }} onSettings={() => setSettingsOpen(true)} onBack={returnHome} />
     <div className={styles.gameTopBarSpacer} aria-hidden="true" />
     <section
       className={styles.chapterIdentity}
       aria-label={`${chapterTheme.chapterTitle}, Level ${node.level}${levelClockMs !== null ? `, ${formatLevelClock(levelClockMs)} remaining` : ""}`}
     >
       <div className={styles.kingdomBanner} data-urgent={levelClockUrgent ? "true" : undefined}>
-        <button className={styles.kingdomBannerBack} onClick={returnHome} aria-label="Back to kingdom map" />
         <h1 className={styles.kingdomBannerName}>{chapterTheme.chapterTitle}</h1>
         <span className={styles.kingdomBannerLevel} aria-hidden="true">{node.level}</span>
         {levelClockMs !== null && <output className={styles.kingdomBannerTimer} aria-hidden="true">{formatLevelClock(levelClockMs)}</output>}
@@ -2709,7 +2726,8 @@ export default function WordKingdomV3({ account, signOutUrl }: { account: Player
       >
         <div className={base.boardMessage} role="status" aria-live="polite">{message}</div>
         {celebration && <div className={styles.celebrationBanner} data-leaving={celebrationLeaving ? "true" : undefined} role="status" aria-live="polite">
-          <img src={CELEBRATION_BANNERS[celebration].src} alt={CELEBRATION_BANNERS[celebration].alt} />
+          <img className={styles.celebrationBannerArt} src={CELEBRATION_BANNERS[celebration].src} alt="" aria-hidden="true" draggable={false} />
+          <span className={styles.celebrationBannerText}>{CELEBRATION_BANNERS[celebration].text}</span>
         </div>}
         <div className={`${base.letterGrid} ${styles.boardLetterGrid}`} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerCancel}>
           {isGoldenRun && ftueActive && goldenTutorial.phase === "FIRST_WORD" && <div className={styles.shoreGuideLine} aria-hidden="true"><i /><span>➜</span></div>}
@@ -2903,9 +2921,15 @@ function OceanRewardExperience({ level, phase, summary, revealCount, collectedCo
   </section>;
 }
 
-function TopBar({ player, locked = false, coinPulse = false, onShop, onSettings }: { player: V3PlayerState; locked?: boolean; coinPulse?: boolean; onShop: () => void; onSettings: () => void }) {
-  return <header className={styles.royalTopBar} aria-label="Resources">
-    <img className={styles.royalTopBarArt} src="/topbar/word-kingdom-topbar-v2.webp" alt="" aria-hidden="true" draggable={false} />
+function TopBar({ player, locked = false, coinPulse = false, onShop, onSettings, onBack }: { player: V3PlayerState; locked?: boolean; coinPulse?: boolean; onShop: () => void; onSettings: () => void; onBack?: () => void }) {
+  const board = Boolean(onBack);
+  return <header className={`${styles.royalTopBar} ${board ? styles.royalTopBarBoard : ""}`} aria-label="Resources">
+    <img
+      className={styles.royalTopBarArt}
+      src={board ? "/topbar/resource-bar-board-v3.webp" : "/topbar/resource-bar-hub-v3.webp"}
+      alt="" aria-hidden="true" draggable={false}
+    />
+    {board && <button disabled={locked} className={styles.royalTopBarBack} onClick={onBack} aria-label="Back to kingdom map" />}
     <output className={styles.royalTopBarCoins} aria-label={`Coins: ${formatNumber(player.coins)}`}>{formatResourceNumber(player.coins)}</output>
     <output className={styles.royalTopBarEnergy} aria-label={`Energy: ${player.energy}/${ENERGY_CAP}`}>{player.energy}/{ENERGY_CAP}</output>
     <output className={styles.royalTopBarStars} aria-label={`Stars: ${player.stars}`}>{player.stars}</output>
