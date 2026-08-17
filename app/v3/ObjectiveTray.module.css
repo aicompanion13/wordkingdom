@@ -1,13 +1,14 @@
 /*
- * Objective tray, v3 creative pass. Live words stay in HTML; every decorative surface is
- * the supplied art. Geometry is measured from tray-frame-v3.webp (2038x527): the blue
- * runway that holds the wells spans x 48-1991 (2.35%-97.69%) and y 151-483, centre 60.15%.
- * The rail sits a touch inside that so wells clear the rounded gold end-caps.
+ * Objective tray, Bubble Candy Kingdom pass. Live words stay in HTML; every decorative
+ * surface is the supplied art. tray-frame-v3.webp ships as a simple pale-blue pill (no
+ * separate frame/well distinction) -- it was delivered on a 2038x527 canvas with ~25%
+ * dead transparent space at the bottom, cropped out at integration time to 1894x389 so
+ * the container's aspect-ratio matches its visible content and the rail centers correctly.
  */
 .tray {
   position: relative;
   width: min(360px, calc(100vw - 24px));
-  aspect-ratio: 2038 / 527;
+  aspect-ratio: 1894 / 389;
   margin-inline: auto;
   background: url('/objective-tray/tray-frame-v3.webp') center / 100% 100% no-repeat;
 }
@@ -16,7 +17,7 @@
   position: absolute;
   left: 3.5%;
   right: 3.5%;
-  top: 60.15%;
+  top: 50%;
   transform: translateY(-50%);
   display: flex;
   align-items: center;

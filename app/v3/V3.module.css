@@ -999,9 +999,10 @@
 .boardShell > :global([class*="cascadeTrack"]),
 .boardShell > :global([class*="activeRail"]) { display: none!important; }
 
+/* Width matches .tray (ObjectiveTray.module.css) so the two cards share the same edges. */
 .chapterIdentity {
   position: relative;
-  width: min(100%,920px);
+  width: min(360px, calc(100vw - 24px));
   display: grid;
   justify-items: center;
   margin: 5px auto 7px;
@@ -2434,7 +2435,7 @@
   }
 
   .chapterIdentity {
-    width: 100%;
+    width: min(360px, calc(100vw - 24px));
     flex: 0 0 auto;
     gap: 2px;
     margin: 3px auto 4px;
