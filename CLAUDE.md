@@ -10,7 +10,7 @@ This rule applies to every Claude task, Codex task, handoff, prompt, implementat
 - Codex and Claude share this branch. Before every edit, inspect the latest remote head and reconcile the other agent's work.
 - Never force-push, reset away, or silently overwrite newer collaborator commits. Push only a reconciled fast-forward update.
 - After validation, commit and push the complete intended change so both agents use the same canonical source, then confirm the `wordkingdom-prod` `/v3` deployment.
-- Every handoff or generated prompt must repeat this critical routing note.
+- Repeat this critical routing note only in handoffs/prompts where Codex will edit, commit, or push into the repo — that's what the note protects. A pure creative-asset request (Codex generates art/audio and hands files back for Claude to integrate, never touching the branch) doesn't need it.
 - If these requirements cannot be followed, stop and report the blocker before editing or publishing.
 
 Mobile word-search game (Next.js 16 + React 19 on Cloudflare Workers via
