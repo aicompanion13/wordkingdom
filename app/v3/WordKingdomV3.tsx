@@ -2905,7 +2905,7 @@ function OceanRewardExperience({ level, phase, summary, revealCount, collectedCo
 
 function TopBar({ player, locked = false, coinPulse = false, onShop, onSettings }: { player: V3PlayerState; locked?: boolean; coinPulse?: boolean; onShop: () => void; onSettings: () => void }) {
   return <header className={styles.royalTopBar} aria-label="Resources">
-    <img className={styles.royalTopBarArt} src="/topbar/word-kingdom-topbar-v3.webp" alt="" aria-hidden="true" draggable={false} />
+    <img className={styles.royalTopBarArt} src="/topbar/word-kingdom-topbar-v2.webp" alt="" aria-hidden="true" draggable={false} />
     <output className={styles.royalTopBarCoins} aria-label={`Coins: ${formatNumber(player.coins)}`}>{formatResourceNumber(player.coins)}</output>
     <output className={styles.royalTopBarEnergy} aria-label={`Energy: ${player.energy}/${ENERGY_CAP}`}>{player.energy}/{ENERGY_CAP}</output>
     <output className={styles.royalTopBarStars} aria-label={`Stars: ${player.stars}`}>{player.stars}</output>
