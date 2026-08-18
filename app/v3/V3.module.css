@@ -1460,9 +1460,9 @@
   padding: 0 4%;
   color: #123a9c;
   font-family: var(--game-display);
-  font-weight: 700;
-  font-size: clamp(13px,4.4vw,19px);
-  line-height: 1.15;
+  font-weight: 800;
+  font-size: clamp(20px,8vw,32px);
+  line-height: 1.1;
   letter-spacing: .01em;
   text-align: center;
   text-shadow: 0 1px 0 rgba(255,255,255,.4);
