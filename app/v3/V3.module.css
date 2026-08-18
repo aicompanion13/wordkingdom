@@ -1558,11 +1558,14 @@
   will-change: transform,filter,opacity;
 }
 .tileLetter { position: relative; z-index: 1; display: block; line-height: 1; pointer-events: none; }
-.tileFace[data-badge] { border-width: 2.5px; }
-.tileFace[data-badge="attack"] { background: linear-gradient(145deg,#ffdcd6,#f0978a); border-color: #d64f3f; }
-.tileFace[data-badge="steal"] { background: linear-gradient(145deg,#ecdcfb,#c495ec); border-color: #8a4fc9; }
-.tileFace[data-badge="raid"] { background: linear-gradient(145deg,#fff0bf,#f0c458); border-color: #d69a1e; }
-.tileFace[data-badge="shield"] { background: linear-gradient(145deg,#d3ebff,#7fbdf5); border-color: #2f7fce; }
+/* Power-badge accents, updated to Codex's suggested Bubble Candy Kingdom palette. Layered
+   as a tint over the idle tile art rather than a flat gradient, so the glossy face still
+   reads through. */
+.tileFace[data-badge] { border: 2.5px solid; border-radius: 7px; }
+.tileFace[data-badge="attack"] { background: linear-gradient(145deg,rgba(255,75,85,.28),rgba(255,75,85,.1)), url('/board-frame/tile-idle.webp') center / 100% 100% no-repeat; border-color: #ff4b55; }
+.tileFace[data-badge="steal"] { background: linear-gradient(145deg,rgba(155,98,232,.28),rgba(155,98,232,.1)), url('/board-frame/tile-idle.webp') center / 100% 100% no-repeat; border-color: #9b62e8; }
+.tileFace[data-badge="raid"] { background: linear-gradient(145deg,rgba(255,196,63,.28),rgba(255,196,63,.1)), url('/board-frame/tile-idle.webp') center / 100% 100% no-repeat; border-color: #ffc43f; }
+.tileFace[data-badge="shield"] { background: linear-gradient(145deg,rgba(50,167,240,.28),rgba(50,167,240,.1)), url('/board-frame/tile-idle.webp') center / 100% 100% no-repeat; border-color: #32a7f0; }
 .tileBadgeWatermark {
   position: absolute;
   inset: 6%;
@@ -1573,8 +1576,8 @@
   pointer-events: none;
   filter: drop-shadow(0 2px 3px rgba(0,0,0,.3));
 }
-.boldTile[class*="selected"] .tileFace { border-color: #fff0a0; color: #fff; background: linear-gradient(145deg,#ffd95e,#df7d17); box-shadow: inset 0 2px 0 #fff4b2,0 0 14px #ffc438; }
-.boldTile[class*="hinted"] .tileFace { outline: 2px solid #fff09a; }
+.boldTile[class*="selected"] .tileFace { border: 0; color: #6a3d00; background: url('/board-frame/tile-selected.webp') center / 100% 100% no-repeat!important; box-shadow: none; }
+.boldTile[class*="hinted"] .tileFace { outline: 2px solid #6de3ff; }
 .acceptedWordTile { background: linear-gradient(180deg,#2d83c4,#0b4d91)!important; box-shadow: 0 2px 0 #07366e,0 0 14px #ffd64d!important; }
 .acceptedWordTile:not(.bonusWordTile) { animation: none!important; }
 .acceptedWordTile:not(.bonusWordTile) .tileFace { animation: acceptedWordConfirm 220ms cubic-bezier(.18,.78,.28,1.22) var(--word-stagger,0ms) both; }
@@ -1693,13 +1696,25 @@
     linear-gradient(145deg,var(--royal-cream-100),var(--royal-cream-200) 62%,var(--royal-cream-300))!important;
   box-shadow: var(--panel-shadow)!important;
 }
-/* Let the chapter backdrop tint through the board's own frame instead of
-   sitting on a fully opaque card, so more of the theme art reads around
-   the (still fully opaque) letter grid. */
+/*
+ * Bubble Candy Kingdom board card. board-card-frame.webp (1024x1536, a tall portrait
+ * reference shape) doesn't work as a stretched full-card background: the actual card is
+ * much wider-relative-to-height than the source art (row count varies 6-8, so height is
+ * content-driven, not fixed), and stretching a portrait image that much onto a squatter
+ * box blows up the corner-rounding into an oversized blob and squashes the gems. Instead
+ * this recreates the card in CSS using colours sampled directly from the art (rim blue
+ * #034cc6, gold accent line #f9e29b, pale interior fill #edf5fd), which scales cleanly at
+ * any height. The two gems are still the real cropped sprite (below), not CSS.
+ */
 .boardShell :global([class*="boardCard"]) {
+  border-color: #034cc6!important;
   background:
-    linear-gradient(120deg,rgba(255,255,255,.38),transparent 34%),
-    linear-gradient(145deg,rgba(255,253,240,.9),rgba(255,241,199,.86) 62%,rgba(239,210,139,.82))!important;
+    linear-gradient(160deg,rgba(255,255,255,.5),transparent 30%),
+    linear-gradient(180deg,#edf5fd 0%,#dde9fa 100%)!important;
+  box-shadow:
+    inset 0 0 0 3px #f9e29b,
+    0 3px 0 rgba(3,45,140,.35),
+    0 8px 16px rgba(3,30,90,.28)!important;
 }
 .themeObjectiveRail::after,
 .powerProgress::after {
@@ -1758,24 +1773,23 @@
   border-radius: 22px!important;
   padding: 9px!important;
 }
+/* Crisp gem accents on top of the ones baked into the stretched background above --
+   plain background stretch distorts them slightly, so a small undistorted sprite here
+   covers that. */
 .boardShell :global([class*="boardCard"])::before,
 .boardShell :global([class*="boardCard"])::after {
+  content: "";
   position: absolute;
   z-index: 3;
-  top: 45%;
-  width: 19px;
-  height: 19px;
-  display: grid;
-  place-items: center;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  color: #97611d;
-  background: #edc55e;
-  box-shadow: 0 2px 0 rgba(111,58,23,.4);
+  top: 48%;
+  width: 30px;
+  height: 30px;
+  transform: translateY(-50%);
+  background: url('/board-frame/board-gem-accent.webp') center / 100% 100% no-repeat;
   pointer-events: none;
 }
-.boardShell :global([class*="boardCard"])::before { content: "●"; left: -10px; }
-.boardShell :global([class*="boardCard"])::after { content: "●"; right: -10px; }
+.boardShell :global([class*="boardCard"])::before { left: -15px; }
+.boardShell :global([class*="boardCard"])::after { right: -15px; transform: translateY(-50%) scaleX(-1); }
 .boardLetterGrid {
   border: 3px solid #fff!important;
   border-radius: 18px!important;
@@ -1784,16 +1798,18 @@
     linear-gradient(145deg,#174f9a,#071c50)!important;
   box-shadow: inset 0 0 18px rgba(0,0,0,.35),0 4px 0 rgba(113,60,23,.4)!important;
 }
+/* Bubble Candy Kingdom tiles: tile-idle.webp/tile-selected.webp carry their own rim and
+   fill, so the old outer bezel + gradient face are dropped in favour of a single
+   background image per state -- cheap to repeat across up to 56 on-screen tiles. */
 .boldTile {
-  border-width: 1.5px!important;
-  border-radius: 10px!important;
-  background: linear-gradient(180deg,#2f8cca,#155ca2 58%,#093a79)!important;
-  box-shadow: 0 2px 0 rgba(1,9,29,.4)!important;
+  border: 0!important;
+  background: none!important;
+  box-shadow: none!important;
 }
 .tileFace {
-  border-color: #fff;
-  background: #f6dfa0;
-  box-shadow: 0 1px 0 rgba(255,230,132,.7);
+  border: 0;
+  background: url('/board-frame/tile-idle.webp') center / 100% 100% no-repeat;
+  box-shadow: none;
 }
 .tileLetter {
   color: var(--royal-ink);
@@ -2610,9 +2626,9 @@
     width: 100%;
     height: auto;
     min-height: 0;
-    display: grid;
-    grid-template-rows: 22px auto 40px;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     border-width: 3px!important;
     border-radius: 16px!important;
     padding: 4px!important;
