@@ -17,7 +17,7 @@
  * connected-component analysis of the readout pills and icon colors. Readout text sits in
  * the right portion of each pill, clear of its icon.
  */
-.royalTopBar{position:fixed;z-index:30;top:0;left:50%;width:100%;margin:0;aspect-ratio:1819/276;overflow:visible;transform:translateX(-50%);filter:drop-shadow(0 6px 14px rgba(4,12,34,.4));pointer-events:none}
+.royalTopBar{position:fixed;z-index:30;top:0;left:50%;width:min(360px,calc(100vw - 24px));margin:0;aspect-ratio:1819/276;overflow:visible;transform:translateX(-50%);filter:drop-shadow(0 6px 14px rgba(4,12,34,.4));pointer-events:none}
 .royalTopBar::before{display:none}
 .royalTopBarArt{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none;user-select:none}
 .royalTopBarEnergy,.royalTopBarStars,.royalTopBarCoins{position:absolute;top:43.84%;transform:translate(-50%,-50%);display:grid;place-items:center;overflow:hidden;color:#123a9c;font-family:var(--game-display);font-weight:700;font-size:clamp(12px,4vw,17px);line-height:1;letter-spacing:.01em;text-shadow:0 1px 0 rgba(255,255,255,.7);white-space:nowrap}
