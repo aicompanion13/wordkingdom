@@ -1,0 +1,26 @@
+Built-in ImageGen prompt set — Bubble Candy Kingdom Tile Board v1
+
+1. BOARD CARD FRAME
+Use case: stylized-concept. Create a tall rounded mobile-game board card with a glossy
+white/pale-blue body, saturated royal-blue rim, sparing warm-gold highlight, cyan side
+gem badges at 45% height, top-left glass sheen, and transparent exterior. Large clean
+interior; no text, icons, crowns, parchment, filigree, or watermark.
+
+2. GRID FRAME OVERLAY
+Use case: style-transfer. Preserve the current 1536-square overlay construction and very
+large transparent center while replacing medieval ornament with thin glossy blue rails,
+crisp gold accent lines, cyan glass corner gems, a compact top-center badge, and three
+small bottom drops. No text, crown, opaque center, or filigree.
+
+3. IDLE TILE
+Use case: stylized-concept. One straight-on empty rounded-square tile with a glossy
+white/pale-blue face, saturated blue rim, very thin gold accent, subtle inset depth, and
+transparent exterior. It must remain clear at 38px and contain no letter or icon.
+
+4. SELECTED TILE
+Use case: precise-object-edit. Preserve the idle tile geometry exactly; change only its
+materials and lighting to a luminous gold/amber selected state with a cyan inner accent
+and controlled golden glow. No text, icon, or geometry change.
+
+Reference roles used: shipped resource bar for finish/palette; current crown-jewel frame
+and phone mock for geometry only.

@@ -1,0 +1,42 @@
+{
+  "board-card-frame.png": {
+    "width": 1024,
+    "height": 1536,
+    "mode": "RGBA",
+    "alpha_histogram": {
+      "0": 401017,
+      "255": 1171847
+    },
+    "binary_alpha": true
+  },
+  "grid-frame-overlay.png": {
+    "width": 1536,
+    "height": 1536,
+    "mode": "RGBA",
+    "alpha_histogram": {
+      "0": 2320762,
+      "255": 38534
+    },
+    "binary_alpha": true
+  },
+  "tile-idle.png": {
+    "width": 512,
+    "height": 512,
+    "mode": "RGBA",
+    "alpha_histogram": {
+      "0": 73069,
+      "255": 189075
+    },
+    "binary_alpha": true
+  },
+  "tile-selected.png": {
+    "width": 512,
+    "height": 512,
+    "mode": "RGBA",
+    "alpha_histogram": {
+      "0": 77197,
+      "255": 184947
+    },
+    "binary_alpha": true
+  }
+}
