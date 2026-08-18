@@ -982,7 +982,7 @@
 .boardShell > *:first-child { padding-top: max(8px,env(safe-area-inset-top)); }
 .boardShell > .royalTopBar,
 .summaryShell > .royalTopBar { position:fixed; z-index:30; padding-top:0; }
-.gameTopBarSpacer { width:100%; height:clamp(54px,16.5vw,71px); flex:0 0 auto; pointer-events:none; }
+.gameTopBarSpacer { width:100%; height:clamp(46px,13.5vw,58px); flex:0 0 auto; pointer-events:none; }
 .boardShell[data-chapter-theme="coral"] { color: #142c63; }
 .boardShell[data-chapter-theme="forest"] { color: #142c63; }
 .boardShell {
@@ -1070,20 +1070,23 @@
   position: absolute;
   right: 2.2%;
   top: 50%;
-  width: 24%;
+  width: 21%;
   height: 70%;
   box-sizing: border-box;
   transform: translateY(-50%);
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   border-radius: 999px;
-  padding-left: 16%;
+  padding: 0 6px;
+  overflow: hidden;
   color: #fff;
   background: linear-gradient(180deg,#ff777d 0%,#ff3e4b 48%,#e91f32 100%);
   box-shadow: inset 0 2px 0 rgba(255,255,255,.42),0 3px 6px rgba(178,27,45,.22);
   font-family: var(--game-display);
   font-weight: 700;
-  font-size: clamp(11px,3.6vw,15px);
+  font-size: clamp(10px,3vw,13px);
   font-variant-numeric: tabular-nums;
   line-height: 1;
   text-align: center;
@@ -1091,11 +1094,10 @@
 }
 .kingdomBannerTimer::before {
   content: "◷";
-  position: absolute;
-  left: 10%;
-  top: 50%;
-  transform: translateY(-51%);
-  font: 700 1.15em/1 Arial,sans-serif;
+  position: static;
+  flex: 0 0 auto;
+  transform: none;
+  font: 700 1.05em/1 Arial,sans-serif;
 }
 .kingdomBanner[data-urgent="true"] .kingdomBannerTimer {
   background: linear-gradient(180deg,#ff5b69 0%,#ee2438 48%,#c8102b 100%);
