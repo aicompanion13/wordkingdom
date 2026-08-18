@@ -1697,22 +1697,22 @@
   box-shadow: var(--panel-shadow)!important;
 }
 /*
- * Bubble Candy Kingdom board card. board-card-frame.webp (1024x1536, a tall portrait
- * reference shape) doesn't work as a stretched full-card background: the actual card is
- * much wider-relative-to-height than the source art (row count varies 6-8, so height is
- * content-driven, not fixed), and stretching a portrait image that much onto a squatter
- * box blows up the corner-rounding into an oversized blob and squashes the gems. Instead
- * this recreates the card in CSS using colours sampled directly from the art (rim blue
- * #034cc6, gold accent line #f9e29b, pale interior fill #edf5fd), which scales cleanly at
- * any height. The two gems are still the real cropped sprite (below), not CSS.
+ * Bubble Candy Kingdom board card, using the real board-card-frame.webp art via a 9-slice
+ * border-image (rather than stretching it, which blows the corner rounding into an
+ * oversized blob and squashes the gems on this much-squatter-than-source card). The 17%
+ * slice keeps the rounded corners a fixed size while the middle stretches to fit whatever
+ * height the grid's row count needs; "fill" paints the pale interior too, so the CSS
+ * gradient below is just a same-tone fallback for the instant before the image loads.
+ * The border-width driving the slice used to be fought over by several responsive
+ * breakpoints (down to 2-3px, too thin for the image to render into) -- both the base
+ * rule here and the mobile breakpoint below now set border-image explicitly so neither
+ * starves it.
  */
 .boardShell :global([class*="boardCard"]) {
   border-color: #034cc6!important;
-  background:
-    linear-gradient(160deg,rgba(255,255,255,.5),transparent 30%),
-    linear-gradient(180deg,#edf5fd 0%,#dde9fa 100%)!important;
+  border-image: url('/board-frame/board-card-frame.webp') 170 fill / 30px / 0 stretch!important;
+  background: #edf5fd!important;
   box-shadow:
-    inset 0 0 0 3px #f9e29b,
     0 3px 0 rgba(3,45,140,.35),
     0 8px 16px rgba(3,30,90,.28)!important;
 }
@@ -1769,13 +1769,13 @@
 
 .boardShell :global([class*="boardCard"]) {
   position: relative;
-  border-width: 4px!important;
+  border-width: 30px!important;
   border-radius: 22px!important;
   padding: 9px!important;
 }
-/* Crisp gem accents on top of the ones baked into the stretched background above --
-   plain background stretch distorts them slightly, so a small undistorted sprite here
-   covers that. */
+/* Crisp gem accents on top of the ones baked into the border-image's left/right edge --
+   a 9-slice edge still stretches along its own length, so the baked-in gem gets a slight
+   vertical squeeze; this small undistorted sprite sits on top and hides that. */
 .boardShell :global([class*="boardCard"])::before,
 .boardShell :global([class*="boardCard"])::after {
   content: "";
@@ -2629,7 +2629,9 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    border-width: 3px!important;
+    /* Matches the base rule's border-width -- this is the one actually active on phones
+       (this media query), so it's what the border-image slice renders into. */
+    border-width: 30px!important;
     border-radius: 16px!important;
     padding: 4px!important;
   }
