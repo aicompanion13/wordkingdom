@@ -1710,7 +1710,7 @@
  */
 .boardShell :global([class*="boardCard"]) {
   border-color: #034cc6!important;
-  border-image: url('/board-frame/board-card-frame.webp') 170 fill / 30px / 0 stretch!important;
+  border-image: url('/board-frame/board-card-frame.webp') 170 fill / 14px / 0 stretch!important;
   background: #edf5fd!important;
   box-shadow:
     0 3px 0 rgba(3,45,140,.35),
@@ -1769,7 +1769,7 @@
 
 .boardShell :global([class*="boardCard"]) {
   position: relative;
-  border-width: 30px!important;
+  border-width: 14px!important;
   border-radius: 22px!important;
   padding: 9px!important;
 }
@@ -2631,7 +2631,7 @@
     align-items: stretch;
     /* Matches the base rule's border-width -- this is the one actually active on phones
        (this media query), so it's what the border-image slice renders into. */
-    border-width: 30px!important;
+    border-width: 14px!important;
     border-radius: 16px!important;
     padding: 4px!important;
   }
@@ -2666,10 +2666,10 @@
     aspect-ratio: 1;
     justify-self: center;
     align-self: center;
-    gap: 2px!important;
-    border-width: 3px!important;
+    gap: 1px!important;
+    border-width: 2px!important;
     border-radius: 14px!important;
-    padding: 5px!important;
+    padding: 3px!important;
   }
 
   .boldTile {
