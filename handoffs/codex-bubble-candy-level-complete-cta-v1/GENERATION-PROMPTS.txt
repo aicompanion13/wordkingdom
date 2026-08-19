@@ -1,0 +1,51 @@
+BUILT-IN IMAGEGEN — FINAL PROMPT SET
+
+PANEL
+Restyle the current 923×1521 blank Level Complete panel while preserving the measured
+title, three-star, five-stat, and three-reward socket layout. Use the shipped Bubble Candy
+resource bar and selected tile as material references: saturated candy blue, glossy white
+and ice-blue surfaces, rounded pill geometry, colored glassy chips, restrained warm-yellow
+accents, broad top-left sheen, soft elevation. Remove crown, parchment, medieval frame,
+heavy gold, text, icons, and stars. Transparent exterior; blank runtime sockets.
+
+STAR
+One rounded, inflated five-point earned star. Lemon yellow to orange candy gradient,
+amber edge, broad top-left gloss, subtle blue contact shadow. Slightly taller than wide,
+h/w about 1.065. Transparent background; no badge or extra effects.
+
+REWARD COIN
+One front-facing golden-yellow candy coin with a simple embossed crown, orange rim, and
+single clean top-left sheen. Bold at 24px; no text or backing badge.
+
+REWARD HINT
+One royal hint lightbulb: rounded yellow-orange glass bulb, compact saturated-blue screw
+base, simple crown mark, broad top-left sheen. No rays or backing badge.
+
+REWARD CARD
+One compact rounded purple-to-magenta royal card pack with a slim bright-blue edge, small
+warm-yellow crown, and broad top-left sheen. No text, letters, or loose cards.
+
+CHEST CLOSED
+Redesign the existing three-quarter-view chest as a toy-like saturated-blue body with
+clean yellow structural bands and a coral-red diamond latch. Broad color blocks, soft
+rounded corners, restrained bevels, top-left sheen. No contents or effects.
+
+CHEST OPEN
+Open the newly designed chest without changing identity, camera, footprint, palette, or
+lighting. Hinge lid upward; keep the deep-blue interior completely empty. No rewards,
+coins, cards, hints, glow, or sparkles.
+
+PRIMARY CTA — IDLE
+One blank horizontal 3.2:1 pill button. Coral-to-cherry-red glossy candy gradient, broad
+white top-left highlight, slim warm-yellow edge, soft dark-red elevation lip and contact
+shadow. Symmetrical and 9-slice-friendly; no text or icons.
+
+PRIMARY CTA — PRESSED
+Preserve the idle button identity and canvas. Compress the visible face vertically by
+about 8%, move it slightly into the lower lip, modestly darken red, reduce highlight and
+shadow. No text or icons.
+
+GLOBAL CONSTRAINTS
+No baked text, labels, numbers, watermarks, or checkerboard. Genuine transparent exterior,
+fully opaque production edges, consistent top-left lighting, modern Bubble Candy Kingdom
+finish rather than medieval parchment/gold styling.

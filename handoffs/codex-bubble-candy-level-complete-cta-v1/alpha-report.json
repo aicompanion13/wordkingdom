@@ -1,0 +1,92 @@
+{
+  "panel.png": {
+    "width": 923,
+    "height": 1521,
+    "mode": "RGBA",
+    "alpha_histogram": {
+      "0": 98540,
+      "255": 1305343
+    },
+    "binary_alpha": true
+  },
+  "star-gold.png": {
+    "width": 448,
+    "height": 477,
+    "mode": "RGBA",
+    "alpha_histogram": {
+      "0": 99032,
+      "255": 114664
+    },
+    "binary_alpha": true
+  },
+  "reward-coin.png": {
+    "width": 452,
+    "height": 485,
+    "mode": "RGBA",
+    "alpha_histogram": {
+      "0": 87489,
+      "255": 131731
+    },
+    "binary_alpha": true
+  },
+  "reward-hint.png": {
+    "width": 1254,
+    "height": 1254,
+    "mode": "RGBA",
+    "alpha_histogram": {
+      "0": 714601,
+      "255": 857915
+    },
+    "binary_alpha": true
+  },
+  "reward-card.png": {
+    "width": 455,
+    "height": 567,
+    "mode": "RGBA",
+    "alpha_histogram": {
+      "0": 94246,
+      "255": 163739
+    },
+    "binary_alpha": true
+  },
+  "chest-closed.png": {
+    "width": 582,
+    "height": 642,
+    "mode": "RGBA",
+    "alpha_histogram": {
+      "0": 128302,
+      "255": 245342
+    },
+    "binary_alpha": true
+  },
+  "chest-open.png": {
+    "width": 582,
+    "height": 642,
+    "mode": "RGBA",
+    "alpha_histogram": {
+      "0": 104373,
+      "255": 269271
+    },
+    "binary_alpha": true
+  },
+  "primary-cta-idle.png": {
+    "width": 1200,
+    "height": 360,
+    "mode": "RGBA",
+    "alpha_histogram": {
+      "0": 107353,
+      "255": 324647
+    },
+    "binary_alpha": true
+  },
+  "primary-cta-pressed.png": {
+    "width": 1200,
+    "height": 360,
+    "mode": "RGBA",
+    "alpha_histogram": {
+      "0": 125378,
+      "255": 306622
+    },
+    "binary_alpha": true
+  }
+}
